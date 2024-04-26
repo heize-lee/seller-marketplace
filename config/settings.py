@@ -73,10 +73,21 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# 공용 DB
+# env
+from dotenv import load_dotenv
+import os
+load_dotenv()
+db_key = os.getenv("DB_KEY")
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+   'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'seller_maketplace', # db name
+        'USER': 'postgres',
+        'PASSWORD': db_key,
+        'HOST': 'hanslab.org',  # 또는 PostgreSQL 서버의 IP 주소
+        'PORT': '25432',       # PostgreSQL의 기본 포트 번호
     }
 }
 
