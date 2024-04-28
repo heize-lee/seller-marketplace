@@ -83,7 +83,7 @@ db_key = os.getenv("DB_KEY")
 DATABASES = {
    'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'seller_maketplace', # db name
+        'NAME': 'seller_marketplace', # db name
         'USER': 'postgres',
         'PASSWORD': db_key,
         'HOST': 'hanslab.org',  # 또는 PostgreSQL 서버의 IP 주소
