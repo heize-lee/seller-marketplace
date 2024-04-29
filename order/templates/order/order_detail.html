@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- title -->
+    {% block title %}<title>Order</title>{% endblock %}
+    <!-- style -->
+    {% block extra-style %} {% endblock %}
+</head>
+<!-- body -->
+<body>
+{% block content %}
+    <h1>주문 / 결제 페이지</h1>
+    <h2>{{object}}</h2>
+
+
+{% endblock %}
+</body>
+</html>
