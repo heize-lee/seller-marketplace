@@ -1,0 +1,51 @@
+{% block header %}
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <!-- include summernote css/js -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#id_description').summernote({
+            height: 300
+        });
+    });
+</script>
+{% endblock %}
+{% block contents %}
+<div class="row mt-5">
+    <div class="col-md-6 col-md-offset-3 text-center">
+        <h1>상품 생성하기</h1>
+    </div>
+</div>
+<div class="row mt-5">
+    <div class="col-md-6 col-md-offset-3">
+        {{ error }}
+    </div>
+</div>
+<div class="row mt-5">
+    <div class="col-md-6 col-md-offset-3">
+        <form method="POST" action=".">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {% if field.name == 'description' %}
+                <textarea class="form-control" name="{{ field.name }}" id="{{ field.id_for_label }}"></textarea>
+                {% else %}
+                <input type="{{ field.field.widget.input_type }}" class="form-control" id="{{ field.id_for_label }}"
+                    placeholder="{{ field.label }}" name="{{ field.name }}" />
+                {% endif %}
+            </div>
+            {% if field.errors %}
+            <span style="color: red">{{ field.errors }}</span>
+            {% endif %}
+            {% endfor %}
+            <button type="submit" class="btn btn-primary">생성</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

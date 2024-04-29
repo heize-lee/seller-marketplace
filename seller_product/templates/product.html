@@ -1,0 +1,29 @@
+{% load humanize %}
+{% block contents %}
+
+    
+        <table class="table table-light">
+            
+                <tr>
+                    <th space="col">#</th>
+                    <th space="col">상품명</th>
+                    <th space="col">가격</th>
+                    <th space="col">등록날짜</th>
+                </tr>
+            
+            <tbody class="text-dark">
+                {% for product in product_list %}
+                <tr>
+                    <th space="row">{{ product.product_id }}</th>
+                    <th><a href="/product/{{ product.product_id }}">{{ product.product_name }}</a></th>
+                    <th>{{ product.price|stringformat:"d" }} 원</th>
+                    <th>{{ product.created_date|date:'Y-m-d' }}</th>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+   
+
+{% for product in product_list %}
+{% endfor %}
+{% endblock %}
