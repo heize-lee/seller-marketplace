@@ -8,6 +8,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
+superuser 아이디 pc 비밀번호 1
 """
 
 from pathlib import Path
