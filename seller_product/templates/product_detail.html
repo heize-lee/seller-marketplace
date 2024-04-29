@@ -4,6 +4,7 @@
            
 <li class="list-group-item">가격: {{ product.price|intcomma }} 원</li>
 <li class="list-group-item">등록날짜: {{ product.created_date|date:'Y-m-d' }}</li>
+<li class="list-group-item">{{ product.category }}</li>
 <li class="list-group-item">{{ product.description|safe }}</li>
          
     

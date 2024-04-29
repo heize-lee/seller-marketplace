@@ -35,6 +35,12 @@
                 <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                 {% if field.name == 'description' %}
                 <textarea class="form-control" name="{{ field.name }}" id="{{ field.id_for_label }}"></textarea>
+                {% elif field.name == 'category' %}
+                        <select class="form-control" id="{{ field.id_for_label }}" name="{{ field.name }}">
+                            {% for category in form.category.field.queryset %}
+                                <option value="{{ category.pk }}">{{ category.category_name }}</option>
+                            {% endfor %}
+                        </select>
                 {% else %}
                 <input type="{{ field.field.widget.input_type }}" class="form-control" id="{{ field.id_for_label }}"
                     placeholder="{{ field.label }}" name="{{ field.name }}" />
