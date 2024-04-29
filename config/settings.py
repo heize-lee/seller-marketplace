@@ -12,6 +12,11 @@ superuser 아이디 pc 비밀번호 1
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+db_key = os.getenv("DB_KEY")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,6 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'seller_product',
+    'order',
+
 ]
 
 MIDDLEWARE = [
@@ -77,10 +84,20 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
+    
+    # postgresql
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'seller_mkt', # db name
+    #     'USER': 'postgres',
+    #     'PASSWORD': db_key,
+    #     'HOST': 'hanslab.org',  # 또는 PostgreSQL 서버의 IP 주소
+    #     'PORT': '25432',       # PostgreSQL의 기본 포트 번호
+    # }
 }
 
 
