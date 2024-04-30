@@ -1,14 +1,84 @@
-<!-- accounts/templates/accounts/registration/register.html -->
+{% load static %}
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>ㅇㄹㅁ너리ㅓㅁㅈ디ㅏㄹ 회원가ㅓ입</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
   </head>
   <body>
-    <h1>회원ㅇㅇㄴㄹㅇㄹ가입</h1>
-    <form method="post">
-      {% csrf_token %} {{ form.as_p }}
-      <button type="submit">가입하기</button>
-    </form>
+    <div class="signup-container">
+      <h1 class="create_an_">Create an account</h1>
+      <p class="or_sign_in">Or sign in with</p>
+      <!-- Social sign-in links -->
+      <div class="social-links">
+        <!-- Social buttons can be added here -->
+      </div>
+      <form action="/signup" method="post">
+        <label for="email" class="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="example.email@gmail.com"
+          required
+          class="example.em"
+        />
+
+        <label for="password" class="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Enter at least 8+ characters"
+          required
+          class="enter_at_l"
+        />
+
+        <label for="confirm_password" class="password">Confirm Password</label>
+        <input
+          type="password"
+          id="confirm_password"
+          name="confirm_password"
+          placeholder="Enter at least 8+ characters"
+          required
+          class="enter_at_l"
+        />
+
+        <label for="nickname" class="nickname">Nickname</label>
+        <input
+          type="text"
+          id="nickname"
+          name="nickname"
+          placeholder="Nickname"
+          required
+          class="text"
+        />
+
+        <label for="phone_number" class="phone_numb">Phone number</label>
+        <input
+          type="text"
+          id="phone_number"
+          name="phone_number"
+          placeholder="Phone number"
+          required
+          class="text"
+        />
+
+        <input type="checkbox" id="terms" name="terms" required />
+        <label for="terms" class="by_signing"
+          >By signing up, I agree with the Terms of Use</label
+        >
+
+        <input type="checkbox" id="privacy" name="privacy" required />
+        <label for="privacy" class="by_signing"
+          >By signing up, I agree with the Privacy Policy</label
+        >
+
+        <button type="submit" class="sign_up">Sign Up</button>
+      </form>
+    </div>
   </body>
 </html>

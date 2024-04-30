@@ -129,8 +129,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
+# style.css
 STATIC_URL = '/static/'
-
+# 정적 파일이 저장될 폴더 지정 (선택적, 배포 시 중요)
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# 개발 중에는 다음과 같이 설정할 수 있습니다.
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
@@ -144,3 +147,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = '/accounts/login/'
 LOGOUT_URL = '/accounts/logout/'
 LOGIN_REDIRECT_URL = '/'
+
+# user profile image
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+# user model
+AUTH_USER_MODEL = 'accounts.CustomUser'

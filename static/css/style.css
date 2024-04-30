@@ -1,179 +1,72 @@
-.example {
-    font-size: 14px;
-    font-family: "Poppins";
-    font-weight: 400;
+/* Base setup */
+body,
+html {
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+  background: #f4f4f4;
+  color: #131a1f;
 }
 
-.em {
-    color: rgba(188, 193, 202, 1);
-    width: 193px;
-    height: 22px;
+/* Signup container styling */
+.signup-container {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+  background: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.email {
-    font-weight: 700;
-    color: rgba(66, 73, 86, 1);
-    width: 41px;
-    height: 22px;
+h1,
+label,
+p,
+input,
+button {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
 }
 
-.sign_in {
-    font-size: 16px;
-    font-weight: 400;
-    color: rgba(255, 255, 255, 1);
-    width: 53px;
-    height: 26px;
+input,
+button {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
-.enter_at_l {
-    color: rgba(188, 193, 202, 1);
-    width: 194px;
-    height: 22px;
+button {
+  background-color: #4caf50;
+  color: white;
+  font-size: 16px;
+  border: none;
 }
 
-.password {
-    font-weight: 700;
-    color: rgba(66, 73, 86, 1);
-    width: 71px;
-    height: 22px;
+input[type="checkbox"] {
+  width: auto;
 }
 
-.seller {
-    font-size: 32px;
-    font-family: "Montserrat";
-    font-weight: 700;
-    color: transparent;
-    width: 126px;
-    height: 48px;
-}
-
-.forgot_pas {
-    font-size: 14px;
-    font-weight: 400;
-    color: rgba(23, 26, 31, 1);
-    width: 125px;
-    height: 22px;
-}
-
-.remember_m {
-    font-size: 14px;
-    font-weight: 400;
-    color: rgba(23, 26, 31, 1);
-    width: 105px;
-    height: 22px;
-}
-
-.don't_have {
-    font-size: 14px;
-    font-weight: 400;
-    color: rgba(23, 26, 31, 1);
-    width: 223px;
-    height: 22px;
-}
-
-.or {
-    font-size: 14px;
-    font-weight: 400;
-    color: rgba(23, 26, 31, 1);
-    width: 22px;
-    height: 22px;
-}
-
-.sign_up {
-    font-size: 16px;
-    font-family: "Poppins";
-    font-weight: 400;
-    color: rgba(255, 255, 255, 1);
-    width: 60px;
-    height: 26px;
-}
-
+/* Classes from the provided CSS that may need more specificity or correction */
 .create_an_ {
-    font-size: 32px;
-    font-family: "Montserrat";
-    font-weight: 700;
-    color: rgba(23, 26, 31, 1);
-    width: 307px;
-    height: 48px;
+  font-size: 32px;
+  font-weight: 700;
+  color: #171a1f;
 }
 
-.or_sign_in {
-    font-size: 14px;
-    font-family: "Poppins";
-    font-weight: 400;
-    color: rgba(23, 26, 31, 1);
-    width: 98px;
-    height: 22px;
-}
-
-.text {
-    font-size: 14px;
-    font-family: "Poppins";
-    font-weight: 400;
-    color: rgba(86, 94, 109, 1);
-    width: 0px;
-    height: 22px;
-}
-
-.by_signing {
-    font-size: 14px;
-    font-family: "Poppins";
-    font-weight: 400;
-    color: rgba(23, 26, 31, 1);
-    width: 302px;
-    height: 22px;
-}
-
-.example.em {
-    font-size: 14px;
-    font-family: "Poppins";
-    font-weight: 400;
-    color: rgba(188, 193, 202, 1);
-    width: 193px;
-    height: 22px;
-}
-
-.email {
-    font-size: 14px;
-    font-family: "Poppins";
-    font-weight: 700;
-    color: rgba(66, 73, 86, 1);
-    width: 41px;
-    height: 22px;
-}
-
-.enter_at_l {
-    font-size: 14px;
-    font-family: "Poppins";
-    font-weight: 400;
-    color: rgba(188, 193, 202, 1);
-    width: 194px;
-    height: 22px;
-}
-
-.password {
-    font-size: 14px;
-    font-family: "Poppins";
-    font-weight: 700;
-    color: rgba(66, 73, 86, 1);
-    width: 71px;
-    height: 22px;
-}
-
-.nickname {
-    font-size: 14px;
-    font-family: "Poppins";
-    font-weight: 700;
-    color: rgba(66, 73, 86, 1);
-    width: 75px;
-    height: 22px;
-}
-
+.or_sign_in,
+.by_signing,
+.email,
+.password,
+.nickname,
 .phone_numb {
-    font-size: 14px;
-    font-family: "Poppins";
-    font-weight: 700;
-    color: rgba(66, 73, 86, 1);
-    width: 106px;
-    height: 22px;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.example.em,
+.enter_at_l,
+.text {
+  color: #bcc1ca;
+  font-size: 14px;
 }
