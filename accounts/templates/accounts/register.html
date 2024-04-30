@@ -1,0 +1,14 @@
+<!-- accounts/templates/accounts/registration/register.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ㅇㄹㅁ너리ㅓㅁㅈ디ㅏㄹ 회원가ㅓ입</title>
+  </head>
+  <body>
+    <h1>회원ㅇㅇㄴㄹㅇㄹ가입</h1>
+    <form method="post">
+      {% csrf_token %} {{ form.as_p }}
+      <button type="submit">가입하기</button>
+    </form>
+  </body>
+</html>

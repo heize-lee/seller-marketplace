@@ -1,0 +1,179 @@
+.example {
+    font-size: 14px;
+    font-family: "Poppins";
+    font-weight: 400;
+}
+
+.em {
+    color: rgba(188, 193, 202, 1);
+    width: 193px;
+    height: 22px;
+}
+
+.email {
+    font-weight: 700;
+    color: rgba(66, 73, 86, 1);
+    width: 41px;
+    height: 22px;
+}
+
+.sign_in {
+    font-size: 16px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 1);
+    width: 53px;
+    height: 26px;
+}
+
+.enter_at_l {
+    color: rgba(188, 193, 202, 1);
+    width: 194px;
+    height: 22px;
+}
+
+.password {
+    font-weight: 700;
+    color: rgba(66, 73, 86, 1);
+    width: 71px;
+    height: 22px;
+}
+
+.seller {
+    font-size: 32px;
+    font-family: "Montserrat";
+    font-weight: 700;
+    color: transparent;
+    width: 126px;
+    height: 48px;
+}
+
+.forgot_pas {
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(23, 26, 31, 1);
+    width: 125px;
+    height: 22px;
+}
+
+.remember_m {
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(23, 26, 31, 1);
+    width: 105px;
+    height: 22px;
+}
+
+.don't_have {
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(23, 26, 31, 1);
+    width: 223px;
+    height: 22px;
+}
+
+.or {
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(23, 26, 31, 1);
+    width: 22px;
+    height: 22px;
+}
+
+.sign_up {
+    font-size: 16px;
+    font-family: "Poppins";
+    font-weight: 400;
+    color: rgba(255, 255, 255, 1);
+    width: 60px;
+    height: 26px;
+}
+
+.create_an_ {
+    font-size: 32px;
+    font-family: "Montserrat";
+    font-weight: 700;
+    color: rgba(23, 26, 31, 1);
+    width: 307px;
+    height: 48px;
+}
+
+.or_sign_in {
+    font-size: 14px;
+    font-family: "Poppins";
+    font-weight: 400;
+    color: rgba(23, 26, 31, 1);
+    width: 98px;
+    height: 22px;
+}
+
+.text {
+    font-size: 14px;
+    font-family: "Poppins";
+    font-weight: 400;
+    color: rgba(86, 94, 109, 1);
+    width: 0px;
+    height: 22px;
+}
+
+.by_signing {
+    font-size: 14px;
+    font-family: "Poppins";
+    font-weight: 400;
+    color: rgba(23, 26, 31, 1);
+    width: 302px;
+    height: 22px;
+}
+
+.example.em {
+    font-size: 14px;
+    font-family: "Poppins";
+    font-weight: 400;
+    color: rgba(188, 193, 202, 1);
+    width: 193px;
+    height: 22px;
+}
+
+.email {
+    font-size: 14px;
+    font-family: "Poppins";
+    font-weight: 700;
+    color: rgba(66, 73, 86, 1);
+    width: 41px;
+    height: 22px;
+}
+
+.enter_at_l {
+    font-size: 14px;
+    font-family: "Poppins";
+    font-weight: 400;
+    color: rgba(188, 193, 202, 1);
+    width: 194px;
+    height: 22px;
+}
+
+.password {
+    font-size: 14px;
+    font-family: "Poppins";
+    font-weight: 700;
+    color: rgba(66, 73, 86, 1);
+    width: 71px;
+    height: 22px;
+}
+
+.nickname {
+    font-size: 14px;
+    font-family: "Poppins";
+    font-weight: 700;
+    color: rgba(66, 73, 86, 1);
+    width: 75px;
+    height: 22px;
+}
+
+.phone_numb {
+    font-size: 14px;
+    font-family: "Poppins";
+    font-weight: 700;
+    color: rgba(66, 73, 86, 1);
+    width: 106px;
+    height: 22px;
+}
