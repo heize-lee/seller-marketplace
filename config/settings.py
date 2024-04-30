@@ -82,12 +82,14 @@ db_key= os.getenv('DB_KEY')
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'seller_marketplace',
-        'USER': 'postgres',
-        'PASSWORD': db_key,
-        'HOST': 'hanslab.org',
-        'PORT': '25432'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+        # 'ENGINE': 'django.db.backends.postgresql',
+        # 'NAME': 'seller_marketplace',
+        # 'USER': 'postgres',
+        # 'PASSWORD': db_key,
+        # 'HOST': 'hanslab.org',
+        # 'PORT': '25432'
     }
 }
 
