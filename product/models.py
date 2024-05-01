@@ -10,7 +10,7 @@ class Category(models.Model):
         return f'/category/{self.slug}/'
     
 
-# Create your models here.
+
 class Product(models.Model):
     product_id = models.AutoField(primary_key=True)
     product_name = models.CharField(max_length=100)
@@ -30,3 +30,7 @@ class Product(models.Model):
 
     def get_absolute_url(self):
         return f'/product/{self.pk}/'
+# table 생성 default 이름 : customer_cart
+class Cart(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
+    amount = models.IntegerField(default=0)

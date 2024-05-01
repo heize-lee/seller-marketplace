@@ -12,16 +12,18 @@
                     <span>{{product.price}}원</span>
                 </div>
                 <p class="lead">
-                    {{product.description}}
+                    {{product.description}} 
+                    
                 </p>
                 <div class="mt-auto" name="this">
                     <div class="bg-light d-flex justify-content-between">
                         <span class="mx-2">
-                            <a href="" class="link-dark text-decoration-none mx-2 fs-3">-</a>
-                            <span>1</span>
-                            <a href="" class="link-dark text-decoration-none mx-2 fs-4">+</a>
+                            <input type="hidden" id="csrfToken" value="{{csrf_token}}">
+                            <button type="button" onclick="modifyCartAmount({{product.pk}}, -1)" class="btn btn-success">-</button>
+                            <span id="currentQuantity">1</span>
+                            <button type="button" onclick="modifyCartAmount({{product.pk}}, 1)" class="btn btn-danger">+</button>
                         </span>
-                        <span class="">총가격</span>
+                        <span id="currentPrice">{{product.price}}원</span>
                     </div>
                     <div>
                         <div class="d-grid gap-2">
@@ -37,5 +39,27 @@
     <div class="container">
         <div class="fs-3 fw-bold">작품정보</div>
     </div>
-    
+    <script>
+        function getCsrfToken(){
+            return document.getElementById('csrfToken').value;
+        }
+        function modifyCartAmount(product_id, change){
+            var xhr = new XMLHttpRequest();
+                xhr.open('POST', '{% url "product:modify_cart" %}', true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.setRequestHeader('X-CSRFToken', getCsrfToken());
+                
+                xhr.send(`productId=${product_id}&amountChange=${change}`);
+                xhr.onload = function() {
+                    if (this.status === 200) {
+                        var response = JSON.parse(this.responseText);
+                        document.getElementById('currentQuantity').textContent = response.newQuantity;
+                        document.getElementById('currentPrice').textContent = response.newQuantity * {{product.price}} +'원';
+                        console.log('Update successful:', response.message);
+                    } else {
+                        console.error('Error updating:', this.statusText);
+                    }
+                };
+        }
+    </script>
 {% endblock %}
