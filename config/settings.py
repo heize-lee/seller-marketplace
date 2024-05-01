@@ -57,7 +57,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -134,9 +134,11 @@ STATIC_URL = '/static/'
 # 정적 파일이 저장될 폴더 지정 (선택적, 배포 시 중요)
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # 개발 중에는 다음과 같이 설정할 수 있습니다.
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
+
+# profile_picture
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -144,13 +146,10 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # django.contrib.auth
+# ACCOUNT_SIGNUP_REDIRECT_URL = '/'  # 회원가입 후 리다이렉션할 URL
+LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/accounts/login/'
 LOGOUT_URL = '/accounts/logout/'
-LOGIN_REDIRECT_URL = '/'
-
-# user profile image
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
 
 # user model
 AUTH_USER_MODEL = 'accounts.CustomUser'
