@@ -15,7 +15,7 @@ from django.conf import settings
 urlpatterns = [
     path('order/', include('order.urls')),
     path('admin/', admin.site.urls),
-    path('product/', ProductList.as_view()),
+    path('product/', ProductList.as_view(), name='product'),
     path('product/<int:pk>/', ProductDetail.as_view()),
     path('product/create/', ProductCreate.as_view()),
     path('accounts/', include('accounts.urls')),  # accounts 앱의 URL 설정을 포함

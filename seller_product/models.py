@@ -24,10 +24,11 @@ class Product(models.Model):
     product_name = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.TextField()
-    quantity = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField()   #물건 재고 수량
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     created_date = models.DateTimeField(auto_now_add=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products', null=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products', default=get_default_category_id)
+    image = models.ImageField(upload_to='product_images/', null=True, blank=True)   #질문 거리 image 필드 이미지 안넣으면 현재는 상품 생성 안됨.
 
     def __str__(self):
         return self.product_name

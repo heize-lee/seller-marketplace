@@ -1,2 +1,8 @@
+{% extends 'base.html' %}
 <!-- templates/home.html -->
+{% block content %}
+
 <h1>HOME</h1>
+<button><a href="{% url 'product' %}">상품</a></button>
+
+{% endblock %}

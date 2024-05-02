@@ -1,15 +1,23 @@
+{% extends 'base.html' %}
 {% load humanize %}
-{% block contents %}
+{% block content %}
 
            
-<li class="list-group-item">가격: {{ product.price|intcomma }} 원</li>
-<li class="list-group-item">등록날짜: {{ product.created_date|date:'Y-m-d' }}</li>
-<li class="list-group-item">{{ product.category }}</li>
-<li class="list-group-item">{{ product.description|safe }}</li>
          
-    
+
+<h2>{{ product.product_name }}</h2>
+  <p>가격: {{ product.price|intcomma }} 원</p>
+  <p>등록날짜: {{ product.created_date|date:'Y-m-d' }}</p>
+  <p>{{ product.category }}</p>
+  <p>{{ product.description|safe }}</p>
+  <form action="{% url 'order:order' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="product" value="{{ product.pk }}">
+    <input type="number" name="order_quantity" min="1" value="1" required>
+    <button type="submit">주문하기</button>
+  </form>
+  
 <a href="/product/">목록보기</a>
-<a href="/order/">주문하기</a>
     
 
 {% endblock %}
