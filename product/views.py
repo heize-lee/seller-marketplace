@@ -39,7 +39,7 @@ def modify_cart(request):
     product_id = request.POST['productId']
     product = Product.objects.get(pk=product_id)
     cart, _ = Cart.objects.get_or_create(product=product)    
-    cart.amount+=int(request.POST['amountChange'])
+    cart.amount=int(request.POST['amountChange'])
     if cart.amount>0:
         cart.save()
         

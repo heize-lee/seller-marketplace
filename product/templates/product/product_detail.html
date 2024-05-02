@@ -19,16 +19,16 @@
                     <div class="bg-light d-flex justify-content-between">
                         <span class="mx-2">
                             <input type="hidden" id="csrfToken" value="{{csrf_token}}">
-                            <button type="button" onclick="modifyCartAmount({{product.pk}}, -1)" class="btn btn-success">-</button>
+                            <button type="button" onclick="aa(this)" class="btn btn-success">-</button>
                             <span id="currentQuantity">1</span>
-                            <button type="button" onclick="modifyCartAmount({{product.pk}}, 1)" class="btn btn-danger">+</button>
+                            <button type="button" onclick="aa(this)" class="btn btn-danger">+</button>
                         </span>
                         <span id="currentPrice">{{product.price}}원</span>
                     </div>
                     <div>
                         <div class="d-grid gap-2">
                             <button class="btn btn-info text-light" type="button">장바구니</button>
-                            <button class="btn btn-info text-light" type="button">구매하기</button>
+                            <button class="btn btn-info text-light" type="button" onclick="modifyCartAmount({{product.pk}},document.getElementById('currentQuantity').textContent )">구매하기</button>
                         </div>
                     </div>
                     
@@ -50,16 +50,30 @@
                 xhr.setRequestHeader('X-CSRFToken', getCsrfToken());
                 
                 xhr.send(`productId=${product_id}&amountChange=${change}`);
-                xhr.onload = function() {
-                    if (this.status === 200) {
-                        var response = JSON.parse(this.responseText);
-                        document.getElementById('currentQuantity').textContent = response.newQuantity;
-                        document.getElementById('currentPrice').textContent = response.newQuantity * {{product.price}} +'원';
-                        console.log('Update successful:', response.message);
-                    } else {
-                        console.error('Error updating:', this.statusText);
-                    }
-                };
+                // xhr.onload = function() {
+                //     if (this.status === 200) {
+                //         var response = JSON.parse(this.responseText);
+                //         document.getElementById('currentQuantity').textContent = response.newQuantity;
+                //         // document.getElementById('currentPrice').textContent = response.newQuantity * {{product.price}} +'원';
+                //         console.log('Update successful:', response.message);
+                //     } else {
+                //         console.error('Error updating:', this.statusText);
+                //     }
+                // };
         }
+        function aa(element){
+            if (element.textContent ===  '+'){
+                a =  document.getElementById('currentQuantity').textContent
+                document.getElementById('currentQuantity').textContent = Number(a) + 1
+                document.getElementById('currentPrice').textContent = (Number(a)+1) * {{product.price}} +'원'
+            }
+            if (element.textContent ===  '-' && document.getElementById('currentQuantity').textContent>1 ){
+                    a =  document.getElementById('currentQuantity').textContent
+                    document.getElementById('currentQuantity').textContent = Number(a) - 1
+                    document.getElementById('currentPrice').textContent = (Number(a)-1) * {{product.price}} +'원'
+
+            }
+            } 
+            
     </script>
 {% endblock %}
