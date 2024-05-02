@@ -1,37 +1,6 @@
 {% extends 'base.html' %}
 {% load humanize %}
 {% block content %}
-
-    
-        <table class="table table-light">
-            
-                <tr>
-                    <th space="col">#</th>
-                    <th space="col">상품명</th>
-                    <th space="col">가격</th>
-                    <th space="col">등록날짜</th>
-                </tr>
-            
-            <tbody class="text-dark">
-                {% for product in product_list %}
-                <tr>
-                    <th space="row">{{ product.product_id }}</th>
-                    <th><a href="/product/{{ product.product_id }}">{{ product.product_name }}</a></th>
-                    <th>{{ product.price|stringformat:"d" }} 원</th>
-                    <th>{{ product.created_date|date:'Y-m-d' }}</th>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-   
-
-{% for product in product_list %}
-{% endfor %}
-
-
-
-
-
  
     <div class="container px-0 my-4" >
         <div class="d-flex mx-auto">
@@ -48,18 +17,19 @@
 
 
     <div class="container">
-        
+        <h3>전체</h3>
         <div class="row col-sm-12 ms-auto">
-            {% for p in product_list %}
+            {% for product in product_list %}
             <div class="col-sm-3">
                 <div class=" mb-3">
                     <div class="embed-responsive embed-responsive-4by3">
-                    <a href="/product/{{ p.product_id }}"><img class="card-img-top embed-responsive-item" src="https://picsum.photos/seed/{{ p.id }}/800/200" width="150" height="180" alt="random_image" /></a>  
+                    <a href="/product/{{ product.product_id }}"><img class="card-img-top embed-responsive-item" src="{{product.image.url}}" width="150" height="180" alt="random_image" /></a>  
                     </div> 
                         <span class="badge text-bg-light ">브랜드명</span>
-                        <a href="/product/{{ p.product_id }}" class="link-dark text-decoration-none"><h4 class="card-title h5">{{p.product_name}}</h4></a>
-                        <p>{{p.product_description}}</p>
-                        <div class="d-flex justify-content-end">{{p.price}}원</div>          
+                        <a href="/product/{{ product.product_id }}" class="link-dark text-decoration-none"><h4 class="card-title h5">{{product.product_name}}</h4></a>
+                        {{ product.description|striptags }} 
+
+                        <div class="d-flex justify-content-end">{{product.price}}원</div>          
                 </div>
             </div>
             {% endfor %}

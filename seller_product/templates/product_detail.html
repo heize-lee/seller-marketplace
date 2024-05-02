@@ -1,70 +1,78 @@
 {% extends 'base.html' %}
-{% load humanize %}
+{% load static %}
 {% block content %}
 
            
          
 
-<h2>{{ product.product_name }}</h2>
-  <p>가격: {{ product.price|intcomma }} 원</p>
-  <p>등록날짜: {{ product.created_date|date:'Y-m-d' }}</p>
-  <p>{{ product.category }}</p>
-  <p>{{ product.description|safe }}</p>
-  <form action="{% url 'order:order' %}" method="post">
-    {% csrf_token %}
-    <input type="hidden" name="product" value="{{ product.pk }}">
-    <input type="number" name="order_quantity" min="1" value="1" required>
-    <button type="submit">주문하기</button>
-  </form>
+
   
 <a href="/product/">목록보기</a>
-    
 
-
-
-
-    <div class="container px-4 px-lg-5 my-5">
-        <div class="row gx-4 gx-lg-5">
-            <div class="col-md-6" >
-                <img class="card-img-top mb-5 " src="https://picsum.photos/seed/{{ product.id }}/800/200" alt="">
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-lg-6">
+      <!-- 대표 이미지 칸 -->
+      <div class="card mb-3 border-0">
+        {% if product.image %}
+          <img src="{{ product.image.url }}" class="card-img-top" alt="상품 이미지">
+        {% else %}
+          <img src="{% static 'path/to/placeholder_image.jpg' %}" class="card-img-top" alt="상품 이미지 없음">
+        {% endif %}
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <!-- 상품 정보 -->
+      <div class="card border-0">
+        <div class="card-body">
+          <h2>{{ product.product_name }}</h2>
+          <br><br><br>
+          <p>가격: <strong>{{ product.price|stringformat:"d" }} 원</strong></p>
+          <p>등록날짜: <strong>{{ product.created_date|date:'Y-m-d' }}</strong></p>
+          <p>카테고리: <strong>{{ product.category }}</strong></p>
+          <!-- 수량 선택 폼 -->
+          <form action="{% url 'order:order' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="product" value="{{ product.pk }}">
+            <div class="row">
+              <div class="col">
+                <!-- <input type="number" name="order_quantity" class="form-control mb-3" min="1" value="1" required> -->
+                <span class="mx-2">
+                  <input type="hidden" id="csrfToken" value="{{csrf_token}}">
+                  <button type="button" onclick="aa(this)" class="btn btn-success">-</button>
+                  <span id="currentQuantity">1</span>
+                  <button type="button" onclick="aa(this)" class="btn btn-danger">+</button>
+              </span>
+              </div>
+              <div class="col">
+                <button type="submit" class="btn btn-dark btn-block mb-3" onclick="modifyCartAmount({{product.pk}},document.getElementById('currentQuantity').textContent)" >바로구매</button>
+              </div>
             </div>
-            <div class="col-md-6 d-flex flex-column" >
-                <div class="small mb-1">브랜드명</div>
-                <h1 class="display-5 fw-bolder">{{product.product_name}}</h1>
-                <div class="fs-5 mb-5">
-                    <span>{{product.price}}원</span>
-                </div>
-                <p class="lead">
-                    {{product.description}} 
-                    
-                </p>
-                <div class="mt-auto" name="this">
-                    <div class="bg-light d-flex justify-content-between">
-                        <span class="mx-2">
-                            <input type="hidden" id="csrfToken" value="{{csrf_token}}">
-                            <button type="button" onclick="aa(this)" class="btn btn-success">-</button>
-                            <span id="currentQuantity">1</span>
-                            <button type="button" onclick="aa(this)" class="btn btn-danger">+</button>
-                        </span>
-                        <span id="currentPrice">{{product.price}}원</span>
-                    </div>
-                    <div>
-                        <div class="d-grid gap-2">
-                           <form action="{% url 'order:order' %}" method="post">
-                            {% csrf_token %}
-                            <button class="btn btn-info text-light" type="button">장바구니</button>
-                            <button class="btn btn-info text-light" type="button" onclick="modifyCartAmount({{product.pk}},document.getElementById('currentQuantity').textContent )">구매하기</button>
-                            </form>
-                        </div>
-                    </div>
-                    
-                </div>
-            </div> 
+          </form>
+          <!-- 목록 보기 링크 -->
+          <a href="/product/" class="btn btn-secondary">목록보기</a>
+          <button id="copyUrlBtn" class="btn btn-primary">URL 복사</button>
         </div>
+      </div>
     </div>
-    <div class="container">
-        <div class="fs-3 fw-bold">작품정보</div>
+  </div>
+
+  <hr>
+
+  <!-- 상품 설명 -->
+  <div class="row mt-4">
+    <div class="col">
+      <div class="card border-0">
+        <div class="card-body">
+          <h3>Product Info</h3>
+          <p>{{ product.description|safe }}</p>
+        </div>
+      </div>
     </div>
+  </div>
+</div>
+
+
     <script>
         function getCsrfToken(){
             return document.getElementById('csrfToken').value;
@@ -99,7 +107,17 @@
                     document.getElementById('currentPrice').textContent = (Number(a)-1) * {{product.price}} +'원'
 
             }
-            } 
+          } 
+          document.getElementById('copyUrlBtn').addEventListener('click', function() {
+          var urlField = document.createElement('input');
+          urlField.setAttribute('type', 'text');
+          urlField.setAttribute('value', window.location.href);
+          document.body.appendChild(urlField);
+          urlField.select();
+          document.execCommand('copy');
+          document.body.removeChild(urlField);
+          alert('현재 페이지 URL이 복사되었습니다.');
+        });
             
     </script>
 {% endblock %}

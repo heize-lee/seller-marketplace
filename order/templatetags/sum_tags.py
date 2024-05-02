@@ -7,6 +7,8 @@ register = template.Library()
 
 @register.simple_tag
 def sum_prices(object):
-    return sum(item.total_price for item in object)
+    # AttributeError at /order/
+    # 'Cart' object has no attribute 'total_price'
+    return sum(item.payment_total_price for item in object)
 
 # 처음엔 무료배송 나중에 배송비 추가

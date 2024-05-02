@@ -3,6 +3,7 @@ from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView
 from .models import Product,Category, Cart
 from .forms import RegisterForm
+from django.shortcuts import redirect
 
 # from order.forms import RegisterForm as OrderForm
 
@@ -20,7 +21,7 @@ def category_page(request,slug):
 
     return render(
         request,
-        'product/product_list.html',
+        'product.html',
         {
             'product_list': product_list,
             'categories': Category.objects.all(),
@@ -43,6 +44,16 @@ class ProductDetail(DetailView):
     queryset = Product.objects.all()
     context_object_name = 'product'
 
+    def post(self, request, *args, **kwargs):
+        # 상품 디테일 페이지에서 바로구매를 누르면 해당 상품이 카트 테이블에 추가
+        product = self.get_object()
+        user = request.user
+        cart_item = Cart.objects.get_or_create(user=user, product=product)
+        cart_item.save()
+        
+        # 주문 페이지로 리디렉션합니다.
+        return redirect('order')
+
     # def get_context_data(self, **kwargs):
     #     context = super().get_context_data(**kwargs)
     #     context['form'] = OrderForm(self.request)
@@ -60,10 +71,10 @@ class ProductDetail(DetailView):
 from django.http import JsonResponse
 
 def modify_cart(request):
-    
+    user=request.user
     product_id = request.POST['productId']
     product = Product.objects.get(pk=product_id)
-    cart, _ = Cart.objects.get_or_create(product=product)    
+    cart, _ = Cart.objects.get_or_create(user=user, product=product)    
     cart.amount=int(request.POST['amountChange'])
     if cart.amount>0:
         cart.save()

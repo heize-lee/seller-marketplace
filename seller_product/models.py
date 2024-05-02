@@ -48,5 +48,6 @@ class Cart(models.Model):
     product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     amount = models.IntegerField(default=0)
+    payment_total_price=models.IntegerField(default=0)
 
 
