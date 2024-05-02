@@ -3,15 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}My Website{% endblock %}</title>
+    <title>{% block title %} SELLER {% endblock %}</title>
   </head>
   <body>
     <header>
       <h1>Welcome to My Website</h1>
+      {% include 'navbar.html' %}
     </header>
-
     <main>{% block content %} Content goes here {% endblock %}</main>
-
     <footer>
       <p>&copy; 2024 My Website</p>
     </footer>

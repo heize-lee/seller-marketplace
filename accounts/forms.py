@@ -1,14 +1,16 @@
 
-# forms.py
-
+# accounts/forms.py
 from django import forms
 from .models import CustomUser
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 
+# login
+# class LoginForm(AuthenticationForm):
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
 
-
-
+# register
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.')
     nickname = forms.CharField(max_length=150, required=False, help_text='Optional. Enter your nickname.')  # 닉네임 필드 추가

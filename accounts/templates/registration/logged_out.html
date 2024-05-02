@@ -1,0 +1,21 @@
+<!-- logged_out.html -->
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Logged Out</title>
+  </head>
+  <body>
+    <h1>You have been logged out successfully.</h1>
+  </body>
+</html> -->
+
+{% extends 'base.html' %} {% block content %}
+<h2>로그아웃 되었습니다.</h2>
+<p>
+  성공적으로 로그아웃되었습니다. 다시 로그인 하려면
+  <a href="{% url 'login' %}">여기</a>를 클릭하세요.
+</p>
+{% endblock %}
