@@ -27,7 +27,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-q^fj-+ude!xg=#isimfq2_x_&p&v^gj0#kwodccp183q$%yibo'
+
+SECRET_KEY = 'secret_key'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -44,11 +45,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'django.contrib.humanize',
     'seller_product',
     'order',  
 
     'accounts',
+
+    # merge-mhs ***확인
+    # 'product',
 
 ]
 
@@ -85,6 +90,8 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 
+
+db_key= os.getenv('DB_KEY')
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
@@ -98,7 +105,6 @@ DATABASES = {
      'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-
     }
     
     # postgresql
@@ -160,6 +166,8 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR/'accounts', 'static'),]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+MEDIA_URL='/media/'
+MEDIA_ROOT=os.path.join(BASE_DIR,'_media')
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 

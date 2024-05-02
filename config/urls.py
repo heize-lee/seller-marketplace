@@ -14,10 +14,13 @@ from django.conf import settings
 
 urlpatterns = [
     path('order/', include('order.urls')),
+
+# merge-mhs 확인***
+
+    path('product/', include('seller_product.urls', namespace='product')),
+
     path('admin/', admin.site.urls),
-    path('product/', ProductList.as_view(), name='product'),
-    path('product/<int:pk>/', ProductDetail.as_view()),
-    path('product/create/', ProductCreate.as_view()),
+    
     path('accounts/', include('accounts.urls')),  # accounts 앱의 URL 설정을 포함
     path('', views.home_view, name='home'),  # 루트 URL에 home_view를 연결합니다.
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # profile_picture

@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.conf import settings
 class Category(models.Model):
     category_id = models.DecimalField(primary_key=True, max_digits=10, decimal_places=0)
     category_name = models.CharField(max_length=100)
@@ -36,4 +36,10 @@ class Product(models.Model):
     class Meta:
         verbose_name = '상품'
         verbose_name_plural = '상품'
+
+# table 생성 default 이름 : customer_cart
+class Cart(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    amount = models.IntegerField(default=0)
 

@@ -13,9 +13,9 @@ def order(request):
     # 이전에 해당 상품에 대한 장바구니 정보가 있으면 get(product=product)
     # 없으면 새로 생성해서 적용
     # try:
-    #     order = Product.objects.get(user=user, product=product) 
+    #     order = Order.objects.get(user=user, product=product) 
     # except:
-    #     order = product.objects.create(product=product) # create(user=request.user, quantity=0,
+    #     order = Order.objects.create(product=product) # create(user=request.user, quantity=0,
     # finally:
     #     pass    
     # product.save()

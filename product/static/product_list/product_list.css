@@ -1,0 +1,19 @@
+
+.name_black{
+    color: black; 
+    font-size: 24px; 
+    font-family: Inknut Antiqua; 
+    font-weight: 400; 
+    letter-spacing: 0.20px; 
+    word-wrap: break-word
+}
+
+.name_color{
+    color: #0ECEDA; 
+    font-size: 24px; 
+    font-family: Inknut Antiqua; 
+    font-weight: 400; 
+    letter-spacing: 0.20px; 
+    word-wrap: break-word"
+}
+
