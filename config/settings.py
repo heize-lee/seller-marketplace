@@ -76,6 +76,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.static',    # static
+                # 'accounts.context_processors.navbar_login_form',    # 추가한 컨텍스트 프로세서
             ],
         },
     },
@@ -151,7 +152,9 @@ STATIC_URL = '/static/'
 # 정적 파일이 저장될 폴더 지정 (선택적, 배포 시 중요)
 STATIC_ROOT = os.path.join(BASE_DIR/'accounts', 'staticfiles')
 # 개발 중에는 다음과 같이 설정할 수 있습니다.
+
 STATICFILES_DIRS = [os.path.join(BASE_DIR/'accounts', 'static'),]
+
 
 # profile_picture
 MEDIA_URL = '/media/'
@@ -164,9 +167,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # django.contrib.auth
 # ACCOUNT_SIGNUP_REDIRECT_URL = '/'  # 회원가입 후 리다이렉션할 URL
-LOGIN_REDIRECT_URL = '/'
-LOGIN_URL = '/accounts/login/'
-LOGOUT_URL = '/accounts/logout/'
+
+LOGIN_URL = '/accounts/login/'  # login
+# LOGIN_REDIRECT_URL = 'desired_login_redirect_url'
+LOGIN_REDIRECT_URL = '/'  # 로그인 후 리다이렉션할 URL
+
+LOGOUT_URL = '/accounts/logout/'  # logout
+# LOGOUT_REDIRECT_URL = 'desired_logout_redirect_url'
+LOGOUT_REDIRECT_URL = '/'
 
 # user model
 AUTH_USER_MODEL = 'accounts.CustomUser'
