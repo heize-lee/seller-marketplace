@@ -1,0 +1,9 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div class="Login-container">
+  <h1 class="create_an_">Login</h1>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit">Login</button>
+  </form>
+</div>
+{% endblock %}
