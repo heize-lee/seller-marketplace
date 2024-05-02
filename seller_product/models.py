@@ -1,11 +1,14 @@
 from django.db import models
 from django.conf import settings
 class Category(models.Model):
-    category_id = models.DecimalField(primary_key=True, max_digits=10, decimal_places=0)
     category_name = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=200, unique=True, allow_unicode=True)
 
     def __str__(self):
         return self.category_name
+    
+    # def get_absolute_url(self):
+    #     return f'/category/{self.slug}/'
     
     class Meta:
         verbose_name = '카테고리'
@@ -37,9 +40,13 @@ class Product(models.Model):
         verbose_name = '상품'
         verbose_name_plural = '상품'
 
+    #  def get_absolute_url(self):
+        # return f'/product/{self.pk}/'
+
 # table 생성 default 이름 : customer_cart
 class Cart(models.Model):
     product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     amount = models.IntegerField(default=0)
+
 

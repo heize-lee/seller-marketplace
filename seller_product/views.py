@@ -12,6 +12,21 @@ class ProductList(ListView):
     model = Product
     template_name = 'product.html'
     context_object_name = 'product_list'
+    #     ordering = '-pk'
+
+def category_page(request,slug):  
+    category = Category.objects.get(slug=slug)
+    product_list = Product.objects.filter(category=category)
+
+    return render(
+        request,
+        'product/product_list.html',
+        {
+            'product_list': product_list,
+            'categories': Category.objects.all(),
+            'category':category
+        }
+    )
 
 class ProductCreate(FormView):
     template_name = 'register_product.html'
@@ -23,6 +38,7 @@ class ProductCreate(FormView):
         return super().form_valid(form)
  
 class ProductDetail(DetailView):
+    model=Product   
     template_name = 'product_detail.html'
     queryset = Product.objects.all()
     context_object_name = 'product'
@@ -32,26 +48,6 @@ class ProductDetail(DetailView):
     #     context['form'] = OrderForm(self.request)
     #     return context
 
-# class ProductList(ListView):
-#     model = Product
-#     ordering = '-pk'
-
-# def category_page(request,slug):  
-#     category = Category.objects.get(slug=slug)
-#     product_list = Product.objects.filter(category=category)
-
-#     return render(
-#         request,
-#         'product/product_list.html',
-#         {
-#             'product_list': product_list,
-#             'categories': Category.objects.all(),
-#             'category':category
-#         }
-#     )
-
-# class ProductDetail(DetailView):
-#     model=Product
 #     def get_context_data(self, **kwargs):
 #         context = super().get_context_data(**kwargs)
 #          # 현재 페이지의 Product 객체를 가져옵니다.
