@@ -131,10 +131,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 # style.css
-STATIC_URL = '/static/'
-# 정적 파일이 저장될 폴더 지정 (선택적, 배포 시 중요)
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-# 개발 중에는 다음과 같이 설정할 수 있습니다.
+STATIC_URL = '/static/' # 정적 파일이 저장될 폴더 지정 (선택적, 배포 시 중요)
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # 개발 중에는 다음과 같이 설정할 수 있습니다.
+
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 # profile_picture
@@ -147,14 +146,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # django.contrib.auth
-# ACCOUNT_SIGNUP_REDIRECT_URL = '/'  # 회원가입 후 리다이렉션할 URL
-
 LOGIN_URL = '/accounts/login/'  # login
-# LOGIN_REDIRECT_URL = 'desired_login_redirect_url'
 LOGIN_REDIRECT_URL = '/'  # 로그인 후 리다이렉션할 URL
 
 LOGOUT_URL = '/accounts/logout/'  # logout
-# LOGOUT_REDIRECT_URL = 'desired_logout_redirect_url'
 LOGOUT_REDIRECT_URL = '/'
 
 # user model

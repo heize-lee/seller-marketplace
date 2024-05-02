@@ -5,10 +5,14 @@ from .models import CustomUser
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 
-# login
-# class LoginForm(AuthenticationForm):
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
+
+# profile
+from django.contrib.auth.models import User
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['email', 'nickname', 'phone_number', 'profile_picture']
 
 # register
 class SignUpForm(UserCreationForm):

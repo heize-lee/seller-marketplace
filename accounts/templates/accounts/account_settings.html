@@ -1,0 +1,27 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div class="account-settings">
+  <h1>Account Settings</h1>
+
+  <!-- 프로필 업데이트 폼 -->
+  <h2>Profile</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %} {{ profile_form.as_p }}
+    <button type="submit" name="update_profile">Update Profile</button>
+  </form>
+
+  <ul>
+    <li>
+      <button onclick="window.location.href='/accounts/password_change/';">
+        Change Password
+      </button>
+    </li>
+    <li>
+      <button onclick="window.location.href='/accounts/password_reset/';">
+        Change Reset
+      </button>
+    </li>
+    <!-- 다른 필요한 링크들을 여기에 추가 -->
+  </ul>
+</div>
+
+{% endblock %}
