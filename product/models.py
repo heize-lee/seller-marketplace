@@ -32,7 +32,7 @@ class Product(models.Model):
 # table 생성 default 이름 : customer_cart
 class Cart(models.Model):
     product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
-    author = models.ForeignKey(User,on_delete=models.CASCADE)
+    author = models.ForeignKey(User,on_delete=models.CASCADE,null=True)
     amount = models.IntegerField(default=0)
 
     
