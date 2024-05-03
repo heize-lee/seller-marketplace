@@ -77,6 +77,8 @@
         function getCsrfToken(){
             return document.getElementById('csrfToken').value;
         }
+        // 값을 저장해서 다음페이지로 보내든가 modify를 없애고 submit에서 값을 받아서 할지 선택 
+        // submit 액션이 먼저 실해되고 modify()가 나중에 실행되어서 저장된 값이 전달이 안됨
         function modifyCartAmount(product_id, change){
             var xhr = new XMLHttpRequest();
                 xhr.open('POST', '{% url "product:modify_cart" %}', true);
