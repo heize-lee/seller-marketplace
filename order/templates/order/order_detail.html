@@ -1,0 +1,364 @@
+{% extends 'base.html' %}
+{% load sum_tags %}
+
+    <!-- title -->
+    {% block title %}<title>Order</title>{% endblock %}
+    <!-- style -->
+    {% block extra-style %}
+    <style>
+        .content_header {
+            width:100%;
+            border-bottom: 1px solid black;
+        }
+        .PaymentSection_content{
+            margin-top: 20px;
+            margin-bottom: 20px;
+            /* padding-top: 20px;
+            padding-bottom: 20px; */
+        }
+        .content_title{
+            width: 70px;
+            padding-right: 12px;            
+                            
+           
+        }
+
+    </style>
+    {% endblock %}
+<!-- body -->
+
+{% block content %}
+<div class="container">
+    <!-- h1>32px h2>24px  아이디어스 28px  -->
+   
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin: 40px 0 40px 0;">
+        <span class="headline4-bold-small">주문 결제</span>
+        <!-- 1 -->
+        <div style="display:flex;">
+            <div style="margin-right: 8px;">01</div><div style="margin-right: 8px;">장바구니</div>
+        <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="BaseIcon mr-[8px] last:hidden" style="width: 20px; height: 20px; opacity: 1; fill: currentcolor; --BaseIcon-color: #d9d9d9;">
+            <g clip-path="url(#clip0_124_2947)">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M9.53039 5.46973L15.5304 11.4697C15.7967 11.736 15.8209 12.1527 15.603 12.4463L15.5304 12.5304L9.53039 18.5304L8.46973 17.4697L13.9391 12.0001L8.46973 6.53039L9.53039 5.46973Z"></path>
+            </g>
+            <defs>
+                <clipPath id="clip0_124_2947"><rect width="24" height="24"></rect></clipPath></defs>
+            </svg>
+        <!-- 2 active 확인필요-->
+            <div style="display: flex;" class="flex DesktopOrderStepper--active">
+                <div style="margin-right: 8px;">02</div><div style="margin-right: 8px;">주문결제</div>
+            </div>
+            <svg data-v-9bea824c="" data-v-efa8f703="" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="BaseIcon mr-[8px] last:hidden" style="width: 20px; height: 20px; opacity: 1; fill: currentcolor; --BaseIcon-color: #d9d9d9;">
+                <g clip-path="url(#clip0_124_2947)">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.53039 5.46973L15.5304 11.4697C15.7967 11.736 15.8209 12.1527 15.603 12.4463L15.5304 12.5304L9.53039 18.5304L8.46973 17.4697L13.9391 12.0001L8.46973 6.53039L9.53039 5.46973Z"></path>
+                </g>
+                <defs>
+                    <clipPath id="clip0_124_2947"><rect width="24" height="24"></rect></clipPath>
+                </defs>
+            </svg>
+        <!-- 3 -->
+            <div style="display:flex;">
+                <div style="margin-right: 8px;">03</div><div style="margin-right: 8px;">주문완료</div>
+            </div>            
+        </div>
+    </div>
+
+
+    
+
+    <!-- 카트나 상품페이지에서 담긴 유저의 구매목록 -->
+    <div style="justify-content: space-between;    display: flex;    margin-bottom: 80px;"> 
+    
+        <div style="width:800px; margin-top:16px; margin-right:80px;">
+            <div style="margin-bottom: 28px;">
+                <div class="PaymentSection_title">
+                    <div class="content_header"><span>주문 고객</span>
+                        <!---->
+                    </div>                    
+                </div>
+                <div>
+                    <div class="PaymentSection_content">
+                        <div class="">
+                            <span class="content_title">이름</span>
+                            <span class="PaymentMember_content">{{user}}-{{user.role}}</span>
+                        </div>
+                        <div class="">
+                            <span class="content_title">전화번호</span>
+                            <span class="PaymentMember_content">{{user.phone_number}}</span>
+                            <button type="outline" class="CoreButton BaseButtonRectangle body3-regular-small BaseButtonRectangle__outline ml-[20px]" style="background-color: rgb(255, 255, 255); color: rgb(51, 51, 51); height: 28px; width: 76px; flex-direction: row; --core-button-padding-x: 8; --button-rectangle-border-color: #acacac;">
+                                <!---->
+                                <span>변경</span>
+                            </button>
+                        </div>
+                        <div class="PaymentMember__description">주문, 배송시 등록된 번호로 SMS를 발송해 드립니다.</div>
+                        <!---->
+                    </div>
+                        
+                </div>
+                </div>
+                <div class="DesktopPaymentProductDelivery mb-[28px]">
+                    <div class="DeliveryInformation white--background w-full flex flex-col">
+                        <div class="flex justify-between items-center py-[16px] border-b border-[#333333]">
+                            <div class="content_header">배송 정보</div>
+                            <!---->
+                        </div>
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;
+                            flex-direction: column;
+                            padding-top: 20px;
+                            padding-bottom: 20px;"
+                            flex-direction: column;
+                            padding-top: 20px;
+                            padding-bottom: 20px;
+                            class="flex flex-col justify-center items-center py-[20px]">
+                                <div class="PaymentSection_content">
+                                <p class="mb-[8px] subtitle3-bold-medium">등록된 배송지가 없습니다</p>
+                                <p class="mb-[16px] body1-regular-medium">배송지 추가하기 버튼을 눌러 주소를 입력해주세요</p>
+                                <button type="outline" class="CoreButton BaseButtonRectangle subtitle3-bold-small BaseButtonRectangle__outline" style="background-color: rgb(255, 255, 255); color: #0ECEDA; height: 44px; width: 280px; flex-direction: row; --core-button-padding-x: 16; --button-rectangle-border-color: #ef7014;">
+                                    <svg  width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="BaseIcon CoreButton__icon" style="width: 20px; height: 20px; opacity: 1; fill: currentcolor; --BaseIcon-color: #333333; margin-right: 2px;">
+                                        <g clip-path="url(#clip0_124_2960)"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.75 5V11.25H19V12.75H12.75V19H11.25V12.75H5V11.25H11.25V5H12.75Z"></path>
+                                        </g>
+                                        <defs><clipPath id="clip0_124_2960"><rect width="24" height="24"></rect></clipPath>
+                                        </defs>
+                                    </svg>
+                                    <span >배송지 추가하기</span>
+                                </button>
+                                </div>
+                            </div>
+                            <!---->
+                        </div>
+                        <!---->
+                    </div>
+                    <div  class="DesktopPaymentProductDelivery__divider">
+
+                    </div>
+                </div>
+                <div class="DesktopPaymentSection mb-[28px]">
+                    <div class="DesktopPaymentSection__title">
+                        <div class="content_header">
+                            <span>주문 정보 ({{ object|length }})</span>
+                            <!---->
+                        </div>
+                        <div class="DesktopPaymentSection__right">
+                            <button  type="button" class="CoreButton BaseButtonIcon" style="background-color: transparent; color: rgb(51, 51, 51); height: 20px; flex-direction: column;">
+                                <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="BaseIcon CoreButton__icon" style="width: 20px; height: 20px; opacity: 1; fill: currentcolor; --BaseIcon-color: #333333; margin-bottom: 0px;">
+                                    <g clip-path="url(#clip0_124_2948)">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M11.4697 8.46967C11.736 8.2034 12.1527 8.1792 12.4463 8.39705L12.5304 8.46967L18.5304 14.4697L17.4697 15.5303L12.0001 10.061L6.53039 15.5303L5.46973 14.4697L11.4697 8.46967Z"></path>
+                                    </g>
+                                    <defs><clipPath id="clip0_124_2948"><rect width="24" height="24"></rect></clipPath></defs>
+                                </svg>
+                                <!---->
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="DesktopPaymentProductOrderList mt-[12px]">
+                            {% for item in object %}
+                            <div class="flex flex-col w-full mb-[12px]">
+                                <div>브랜드 - ***</div>
+                                <div class="DesktopPaymentProductOrderList__productItem">
+                                    <div class="BaseImage BaseImage__fixedWidth BaseImage__fixedHeight mr-[12px]" style="--BaseImage-width: 64; --BaseImage-height: 64; --BaseImage-radius: 2;">
+                                        <div class="BaseImage__image">                                            
+                                            <img style="width: 50px;"src="{{ product.image.url }}"loading="lazy">
+                                        </div>
+                                    </div>
+                                    <div class="DesktopPaymentProductOrderList__productInfo">
+                                        <div class="DesktopPaymentProductOrderList__productName mb-[12px]">
+                                            <div class="flex flex-auto items-start">
+                                                <div class="flex flex-auto items-center">{{item.product.product_name}}</div>
+                                                <!---->
+                                            </div>
+                                        </div>
+                                       <div >
+                                            <div class="flex justify-between items-center mb-[12px]">
+                                                <span class="body3-regular-small gray-666--text whitespace-pre-wrap">• 메뉴 : {{item.product.product_name}}</span>
+                                                <span class="body3-regular-small gray-666--text whitespace-pre-wrap">{{item.amount}}개({{item.payment_total_price}})</span>
+                                                <div class="flex justify-end w-[124px]">
+                                                    <span class="body3-regular-medium gray-333--text">{{item.amount}}개</span>
+                                                    <span class="body3-regular-medium gray-333--text mx-[4px]">/</span>
+                                                    <span class="body3-bold-medium gray-333--text">{{item.product.price}}원</span>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                        <!---->
+                                       
+                                    </div>
+                                </div>
+                                <div class="DesktopPaymentProductOrderList__artistTotal">
+                                    <div class="flex justify-between mb-[8px]">
+                                        <span class="body3-regular-small gray-333--text">배송비</span>
+                                        <span class="body3-bold-small gray-333--text">무료배송</span>
+                                    </div>
+                                    <!---->
+                                </div>
+                            </div>
+                            <!---->
+
+                            {% endfor %}
+                        </div>
+                        <!---->
+                    </div>
+                </div>
+                <!----><!---->
+                <div class="DesktopPaymentSection DesktopPaymentProductPayMethod">
+                    <div class="DesktopPaymentSection__title">
+                        <div class="content_header">
+                            <span >결제 수단</span>                           
+                            <!---->
+                        </div>
+                        <div class="DesktopPaymentSection__right">
+                            <span>간편 비밀번호 결제</span>
+                            <!---->
+                        </div>
+                    </div>
+                   
+                    </div>
+                    </div>
+                    <d style="width: 400px;">
+                        <div  class="DesktopPaymentProductTotal__wrapper">
+                            <div  class="DesktopPaymentProductTotal">
+                                <div   class="DesktopPaymentSection">
+                                    <div  class="DesktopPaymentSection__title">
+                                        <div  class="content_header"><span >결제 정보</span>
+                                            <!---->
+                                        </div>
+                                        
+                                    </div>
+                                    <div >
+                                        <div  class="DesktopPaymentProductTotal__row mt-[20px]">
+                                            <div  class="body1-regular-small">작품금액</div>
+                                            <div  class="DesktopPaymentProductTotal__price">{% sum_prices object %}원</div>
+                                        </div>
+                                        <div  class="DesktopPaymentProductTotal__row">
+                                            <div  class="body1-regular-small">배송비</div>
+                                            <div  class="DesktopPaymentProductTotal__price">무료배송</div>
+                                        </div>
+                                        <!---->
+                                        <!---->
+                                        <!---->
+                                        <!---->
+                                        <div  class="DesktopPaymentProductTotal__divider"></div>
+                                        <div  class="flex justify-between mt-[16px] mb-[16px]">
+                                            <div  class="subtitle3-bold-small">최종 결제금액</div>
+                                            <div  class="text-right">
+                                                <div  class="subtitle1-bold-small">{% sum_prices object %}원</div>
+                                               
+                                            </div>
+                                        </div>
+                                        <div class="DesktopPaymentDonation mb-[16px]"><label   class="BaseCheckbox BaseCheckbox__size--small BaseCheckbox__verticalAlign--center BaseCheckbox__state--unChecked" style="--BaseCheckbox--label-margin: 4;">
+                                                <div  class="BaseCheckbox__wrapper"><input  class="BaseCheckbox__input" type="checkbox"><span  class="BaseCheckbox__button"><svg   width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="BaseIcon BaseCheckbox__icon" style="width: 24px; height: 24px; opacity: 1; fill: currentcolor; --BaseIcon-color: #d9d9d9;">
+                                                            <g clip-path="url(#clip0_2582_8708)">
+                                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M7.76086 11.5393L10.1343 13.9131L16.2648 7.7827L17.3255 8.84336L10.6648 15.504C10.3964 15.7725 9.97496 15.7948 9.68099 15.5711L9.60419 15.504L6.7002 12.6L7.76086 11.5393Z"></path>
+                                                            </g>
+                                                            <defs>
+                                                                <clipPath id="clip0_2582_8708">
+                                                                    <rect width="24" height="24"></rect>
+                                                                </clipPath>
+                                                            </defs>
+                                                        </svg></span><span  class="BaseCheckbox__textSlot">
+                                                        
+                                                    </span></div>
+                                            </label></div>
+                                        <div class="PaymentNotice DesktopPaymentProductTotal__terms">
+                                            <div  class="PaymentNotice__title"><span  class="body2-regular-small gray-333--text">결제 시 개인정보 제공에 동의합니다.</span>
+                                                 </div>
+                                            <div class="PaymentNotice__content" style="display: none;">‣ 제공받는 자 : <b style=" font-weight: bold;">{{user.role}}</b><br>‣ 목적 : <b style=" font-weight: bold;">판매자와 구매자 사이의 원활한 거래 진행, 상품의 배송을 위한 배송지 확인, 고객상담 및 불만처리 등</b><br>‣ 정보 : 주문자 정보(성명, 연락처), 수령인 정보(성명, 연락처, 주소)<br>‣ 보유기간 : <b style=" font-weight: bold;">발송완료 후 15일</b><br><br>아이디어스는 통신판매중개자이며 통신판매의 당사자가 아닙니다. 따라서 아이디어스는 상품 거래정보 및 거래에 대하여 책임을 지지 않습니다.<br>고객님께서는 개인정보 제공에 대하여 동의를 거부하실 수 있으나, 거부 시 상품 구매가 어렵습니다.</div>
+                                        </div>
+                                            <form method="post">
+                                                {% csrf_token %}                                                
+                                                <!-- 모달 버튼 -->
+                                                <button type="button"
+                                                class="btn btn-sm btn-outline-primary"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#pay-modal"
+                                                data-bs-userName="{{user.nickname}}"                                                
+                                                data-bs-price="{{price}}"
+                                                >결제하기</button>
+                                        
+                                            </form>
+                                        <!---->
+                                        <!-- 모달 -->
+                                        <div class="modal fade" id="pay-modal" tabindex="-1">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">상품 결제</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <!-- 결제 폼-->
+                                                        <form id="payment-btn" action="{% url 'order:order_done' %}" method="post">
+                                                            {% csrf_token %}
+                                                            <!-- 주문자 이름 -->
+                                                            <div class="mb-3">
+                                                                <label class="form-label">주문자명</label>
+                                                                <input class="form-control form-control-sm" id="userName" value="{{user.nickname}}" readonly>
+                                                            </div>
+                                                            <!-- 상품 이름 -->
+                                                            <div class="mb-3">
+                                                                <label class="form-label">총금액</label>
+                                                                <input class="form-control form-control-sm" id="productPrice" value="{% sum_prices object %}" readonly >
+                                                            </div>
+                                                            <!-- 상품 가격 -->
+                                                            <div class="mb-3">
+                                                                <label class="form-label">결제 비밀번호</label>
+                                                                <input class="form-control form-control-sm" id="user-password">
+                                                            </div>
+                                                            <!-- 히든 인풋 -->
+                                                            <input type="hidden" id="productId">
+                                                            <!-- 전송 버튼 -->
+                                                            <button type="button" class="btn btn-outline-primary btn-sm" id="pay-btn" onclick="get_alert_password()"
+                                                                    >결제</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <!---->
+        </div>
+    
+ 
+</div>
+
+
+
+<script>
+    function get_alert_password() {      
+        user_password = document.getElementById('user-password').value
+        if(user_password == '1') {
+            alert('비밀번호가 확인되었습니다. 입력한 비밀번호: ' + user_password );
+            // 비밀번호 맞으면 폼제출
+            document.getElementById('payment-btn').submit();
+        } else {
+            alert('비밀번호가 맞지 않습니다.');
+        }
+    } 
+    {
+     //모달 버튼 변수화
+     const payModal = document.querySelectorAll("#pay-modal");
+    //모달 이벤트
+    payModal.forEach(btn => {
+        btn.addEventListener("show.bs.modal", (event) => {
+            //트리거 버튼 선택
+            const triggerBtn = event.relatedTarget;
+            //데이터 가져옴
+            const userName = triggerBtn.getAttribute("data-bs-userName");
+            // const productName = triggerBtn.getAttribute("data-bs-productName");
+            const productPrice = triggerBtn.getAttribute("data-bs-price");
+
+            //데이터 반영
+            document.querySelector("#userName").value = userName;
+            document.querySelector("#productName").value = productPrice;
+            // document.querySelector("#productPrice").value = productPrice;
+        });
+    });
+    }
+    
+</script>
+{% endblock %}
+

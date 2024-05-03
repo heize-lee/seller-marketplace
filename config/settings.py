@@ -8,13 +8,17 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
+superuser 아이디 pc 비밀번호 1
 """
 
 from pathlib import Path
-from dotenv import load_dotenv
 import os
+from dotenv import load_dotenv
+
 load_dotenv()
-secret_key= os.getenv('SECRET_KEY')
+db_key = os.getenv("DB_KEY")
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -41,7 +45,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'product',
+
+    'django.contrib.humanize',
+    'seller_product',
+    'order',  
+
+    'accounts',
+
+    # merge-mhs ***확인
+    # 'product',
+
 ]
 
 MIDDLEWARE = [
@@ -59,7 +72,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -67,6 +80,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.static',    # static
+                # 'accounts.context_processors.navbar_login_form',    # 추가한 컨텍스트 프로세서
             ],
         },
     },
@@ -80,17 +95,27 @@ db_key= os.getenv('DB_KEY')
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# 공용 DB
+# env
+from dotenv import load_dotenv
+load_dotenv()
+db_key = os.getenv("DB_KEY")
+
 DATABASES = {
-    'default': {
+     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-        # 'ENGINE': 'django.db.backends.postgresql',
-        # 'NAME': 'seller_marketplace',
-        # 'USER': 'postgres',
-        # 'PASSWORD': db_key,
-        # 'HOST': 'hanslab.org',
-        # 'PORT': '25432'
     }
+    
+    # postgresql
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'seller_mkt', # db name
+    #     'USER': 'postgres',
+    #     'PASSWORD': db_key,
+    #     'HOST': 'hanslab.org',  # 또는 PostgreSQL 서버의 IP 주소
+    #     'PORT': '25432',       # PostgreSQL의 기본 포트 번호
+    # }
 }
 
 
@@ -118,7 +143,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
@@ -128,7 +153,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+# style.css
+STATIC_URL = '/static/'
+# 정적 파일이 저장될 폴더 지정 (선택적, 배포 시 중요)
+STATIC_ROOT = os.path.join(BASE_DIR/'accounts', 'staticfiles')
+# 개발 중에는 다음과 같이 설정할 수 있습니다.
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR/'accounts', 'static'),]
+
+
+# profile_picture
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MEDIA_URL='/media/'
 MEDIA_ROOT=os.path.join(BASE_DIR,'_media')
@@ -136,3 +172,17 @@ MEDIA_ROOT=os.path.join(BASE_DIR,'_media')
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# django.contrib.auth
+# ACCOUNT_SIGNUP_REDIRECT_URL = '/'  # 회원가입 후 리다이렉션할 URL
+
+LOGIN_URL = '/accounts/login/'  # login
+# LOGIN_REDIRECT_URL = 'desired_login_redirect_url'
+LOGIN_REDIRECT_URL = '/'  # 로그인 후 리다이렉션할 URL
+
+LOGOUT_URL = '/accounts/logout/'  # logout
+# LOGOUT_REDIRECT_URL = 'desired_logout_redirect_url'
+LOGOUT_REDIRECT_URL = '/'
+
+# user model
+AUTH_USER_MODEL = 'accounts.CustomUser'

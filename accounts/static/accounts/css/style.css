@@ -1,0 +1,46 @@
+/* style.css */
+
+/* 전체 폼 컨테이너 스타일 */
+.signup-container {
+  margin: auto;
+  width: 50%;
+  padding: 20px;
+}
+
+/* 폼 요소 스타일 */
+.signup-form {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.signup-title {
+  text-align: center;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.form-field input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.sign_up {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.error-message {
+  color: red;
+}
