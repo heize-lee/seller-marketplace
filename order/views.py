@@ -6,8 +6,9 @@ from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
-
+from django.views.decorators.http import require_POST, require_GET
 # Create your views here.
+@require_GET
 def order(request):    
      # 현재 로그인한 사용자의 카트 정보를 가져오기
     user = request.user
