@@ -27,7 +27,7 @@ def order(request):
 def order_done(request):
     user = request.user
     cart_items = Cart.objects.filter(user=user)   
-    product_id = cart_items[0].product_id
+    product_id = cart_items.product_id
     product = get_object_or_404(Product, product_id=product_id)  # ID에 해당하는 Product 객체 가져오기
 
     # 결제하기를 눌렀을 때 주문 테이블에 카트 테이블의 내용을 저장
