@@ -72,8 +72,9 @@ from django.http import JsonResponse
 
 
 def modify_cart(request):
-    # Cart.objects.filter(user=user).delete()
+    
     user=request.user
+    Cart.objects.filter(user=user).delete()
     product_id = request.POST['product']
     product = Product.objects.get(pk=product_id)
     cart, _ = Cart.objects.get_or_create(user=user, product=product)    
