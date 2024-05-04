@@ -5,10 +5,13 @@ from .models import CustomUser
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 
-# login
-# class LoginForm(AuthenticationForm):
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
+# profile
+from django.contrib.auth.models import User
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['email', 'nickname', 'phone_number', 'profile_picture']
 
 # register
 class SignUpForm(UserCreationForm):
@@ -18,6 +21,20 @@ class SignUpForm(UserCreationForm):
     profile_picture = forms.ImageField(required=False, help_text='Optional. Upload your profile picture.')  # 프로필 사진 필드 추가
     is_agree_terms = forms.BooleanField(required=False, help_text='Required. Agree to the Terms of Use.')  # 이용 약관 동의 필드 추가
     is_agree_privacy_policy = forms.BooleanField(required=False, help_text='Required. Agree to the Privacy Policy.')  # 개인정보 처리방침 동의 필드 추가
+
+    # 바이어와 셀러를 선택할 수 있는 필드 추가
+    ROLE_CHOICES = (
+        ('buyer', 'Buyer'),
+        ('seller', 'Seller'),
+    )
+    role = forms.ChoiceField(choices=ROLE_CHOICES, help_text='Required. Select your role.')
+
+    def save(self, commit=True):
+        user_instance = super().save(commit=False)
+        user_instance.role = self.cleaned_data['role']  # 폼에서 선택한 역할을 user의 role 필드에 저장합니다.
+        if commit:
+            user_instance.save()
+        return user_instance
 
     class Meta:
         model = CustomUser

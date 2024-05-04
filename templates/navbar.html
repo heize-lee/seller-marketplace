@@ -1,3 +1,4 @@
+{ # <!-- <<<<<<< HEAD
   <nav class="navbar navbar-expand-lg navbar-white bg-white mb-3">
     <div class="container">
         <a class="navbar-brand" href="#!"><span class="name_black">S</span><span class="name_color">E</span><span class="name_black">LLER</span></a>
@@ -25,12 +26,15 @@
             </ul>
             {% if user.is_authenticated %}
   <span>Welcome, {{ user.email }}</span>
+======= --> #}
+<nav>
+  {% if user.is_authenticated %}
   <form action="{% url 'accounts:logout' %}" method="post">
     {% csrf_token %}
     <button type="submit">Logout</button>
   </form>
   {% else %}
-  <a href="{% url 'accounts:login' %}">Login</a>
+  <button onclick="window.location.href='/accounts/login/';">Login</button>
   {% endif %}
         </div>
     </div>
