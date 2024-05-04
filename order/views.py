@@ -11,16 +11,26 @@ from django.contrib.auth.decorators import login_required
 def order(request):    
      # 현재 로그인한 사용자의 카트 정보를 가져오기
     user = request.user
-    cart_items = Cart.objects.filter(user=user)   
-    product_id = cart_items[0].product_id
+    
+    cart_items = Cart.objects.filter(user=user.id)   
+    # cart_items = Cart.objects.all()
+    products = []
+    for one in cart_items: 
+        product_id = one.product_id
+        print(product_id)
+        product = get_object_or_404(Product, product_id=product_id)
+        products.append(product)
+
+
+    # product_id = cart_items[0].product_id
     # product_id = request.POST.get('product_id')  # 요청에서 실제로 사용자가 주문하려는 상품의 ID를 가져오기
-    product = get_object_or_404(Product, product_id=product_id)  # ID에 해당하는 Product 객체 가져오기
+    # product = get_object_or_404(Product, product_id=product_id)  # ID에 해당하는 Product 객체 가져오기
     
         
     context = {
 
     'object': cart_items, 
-    'product': product,
+    'product': products,
     }
     return render(request, template_name='order/order_detail.html', context=context)
 
