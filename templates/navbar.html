@@ -1,10 +1,172 @@
-<nav>
-  {% if user.is_authenticated %}
-  <form action="{% url 'accounts:logout' %}" method="post">
-    {% csrf_token %}
-    <button type="submit">Logout</button>
-  </form>
-  {% else %}
-  <button onclick="window.location.href='/accounts/login/';">Login</button>
-  {% endif %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/navbar.css' %}" />
+
+<nav class="navbar navbar-1">
+  <div class="container-fluid d-flex justify-content-end align-items-center">
+    <form id="logoutForm">
+      {% if request.user.is_authenticated %}
+      <!-- 로그인 상태 -->
+      <div class="dropdown">
+        <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+          {{ user }} 님
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <li><a class="dropdown-item" href="#">주문목록</a></li>
+          <li><a class="dropdown-item" href="#">회원정보 관리</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="#" onclick="logout()">로그아웃</a></li>
+        </ul>
+
+      <button type="button" class="btn btn-link" onclick="window.location.href="#">알림</button>
+      <button type="button" class="btn btn-link" onclick="window.location.href="#">메세지</button>
+      <button type="button" class="btn btn-link" onclick="window.location.href="#">고객센터</button>
+    </div>
+      {% else %}
+      <!-- 로그아웃 상태 -->
+      <button type="button" class="btn btn-link" onclick="window.location.href='/accounts/login/';">로그인</button>
+      <button type="button" class="btn btn-link" onclick="window.location.href='/accounts/register/';">회원가입</button>
+      <button type="button" class="btn btn-link" href="#">고객센터</button>
+      {% endif %}
+    </form>
+  </div>
+</nav>
+
+<script>
+  function logout() {
+    var csrftoken = getCookie('csrftoken'); // CSRF 토큰 가져오기
+  
+    // POST 요청 보내기
+    fetch("{% url 'accounts:logout' %}", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrftoken // 가져온 CSRF 토큰 사용
+      },
+      body: JSON.stringify({}) // 빈 body 전송
+    })
+    .then(response => {
+      // 응답 처리
+      if (response.ok) {
+        // 로그아웃 성공 시 처리
+        window.location.href = "/"; // 로그아웃 후 리다이렉트할 URL
+      } else {
+        // 로그아웃 실패 시 처리
+        console.error("로그아웃 실패");
+      }
+    })
+    .catch(error => {
+      // 오류 처리
+      console.error("오류 발생:", error);
+    });
+  }
+  
+  // CSRF 토큰을 쿠키에서 가져오는 함수
+  function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      var cookies = document.cookie.split(';');
+      for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].trim();
+        // 쿠키 이름으로 시작하는 경우
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          // 쿠키 값 추출
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+  </script>
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  
+  <div class="container-fluid" d-flex justify-content-center align-items-center">
+    <a class="navbar-brand" href="{% url 'home' %}">
+      <img
+        src="{% static 'images/SELLER_logo.png' %}"
+        alt="Logo"
+        width="100"
+        height="24"
+        class="d-inline-block align-text-top"
+        style="display: inline-block; vertical-align: middle;"
+      />
+    </a>
+
+    <form class="d-flex" role="search">
+      <input
+        class="form-control me-2"
+        type="search"
+        placeholder="Search"
+        aria-label="Search"
+      />
+      <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
+    
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <!-- 주문내역 아이콘과 텍스트를 세로로 배열 -->
+        <li class="nav-item">
+          <a class="nav-link" href="#" style="display: flex; flex-direction: column; align-items: center;">
+            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:28px; height:28px; margin-bottom: 2px;">
+              <g clip-path="url(#clip0_124_2976)">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M7.5 17C8.88071 17 10 18.1193 10 19.5C10 20.8807 8.88071 22 7.5 22C6.11929 22 5 20.8807 5 19.5C5 18.1193 6.11929 17 7.5 17ZM16.5 17C17.8807 17 19 18.1193 19 19.5C19 20.8807 17.8807 22 16.5 22C15.1193 22 14 20.8807 14 19.5C14 18.1193 15.1193 17 16.5 17ZM7.5 18.5C6.94772 18.5 6.5 18.9477 6.5 19.5C6.5 20.0523 6.94772 20.5 7.5 20.5C8.05228 20.5 8.5 20.0523 8.5 19.5C8.5 18.9477 8.05228 18.5 7.5 18.5ZM16.5 18.5C15.9477 18.5 15.5 18.9477 15.5 19.5C15.5 20.0523 15.9477 20.5 16.5 20.5C17.0523 20.5 17.5 20.0523 17.5 19.5C17.5 18.9477 17.0523 18.5 16.5 18.5ZM3.57994 2.25C3.9013 2.25 4.18255 2.45389 4.28705 2.74983L4.31514 2.85173L4.799 5.25H18.7534C19.6716 5.25 20.4246 5.95711 20.4976 6.85647L20.5034 7C20.5034 7.08512 20.4972 7.17007 20.4848 7.25418L20.4617 7.37963L18.9062 14.3796C18.7393 15.1303 18.1047 15.6779 17.3502 15.7434L17.1978 15.75H6.81846C6.0374 15.75 5.35786 15.2338 5.14025 14.4963L5.103 14.346L2.965 3.75H1V2.25H3.57994ZM18.7534 6.75H5.101L6.5734 14.0494C6.593 14.1466 6.66746 14.2211 6.76062 14.2432L6.81846 14.25H17.1978C17.2916 14.25 17.3752 14.1979 17.418 14.1185L17.4419 14.0542L18.9974 7.05423L19.0034 7C19.0034 6.88165 18.9212 6.78251 18.8107 6.7566L18.7534 6.75Z"></path>
+              </g>
+              <defs>
+                <clipPath id="clip0_124_2976">
+                  <rect width="24" height="24"></rect>
+                </clipPath>
+              </defs>
+            </svg>
+            <span>주문내역</span>
+          </a>
+        </li>
+    
+        <!-- 장바구니 아이콘과 텍스트를 세로로 배열 -->
+        <li class="nav-item">
+          <a class="nav-link" href="#" style="display: flex; flex-direction: column; align-items: center;">
+            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:28px; height:28px; margin-bottom: 2px;">
+              <g clip-path="url(#clip0_124_2976)">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M7.5 17C8.88071 17 10 18.1193 10 19.5C10 20.8807 8.88071 22 7.5 22C6.11929 22 5 20.8807 5 19.5C5 18.1193 6.11929 17 7.5 17ZM16.5 17C17.8807 17 19 18.1193 19 19.5C19 20.8807 17.8807 22 16.5 22C15.1193 22 14 20.8807 14 19.5C14 18.1193 15.1193 17 16.5 17ZM7.5 18.5C6.94772 18.5 6.5 18.9477 6.5 19.5C6.5 20.0523 6.94772 20.5 7.5 20.5C8.05228 20.5 8.5 20.0523 8.5 19.5C8.5 18.9477 8.05228 18.5 7.5 18.5ZM16.5 18.5C15.9477 18.5 15.5 18.9477 15.5 19.5C15.5 20.0523 15.9477 20.5 16.5 20.5C17.0523 20.5 17.5 20.0523 17.5 19.5C17.5 18.9477 17.0523 18.5 16.5 18.5ZM3.57994 2.25C3.9013 2.25 4.18255 2.45389 4.28705 2.74983L4.31514 2.85173L4.799 5.25H18.7534C19.6716 5.25 20.4246 5.95711 20.4976 6.85647L20.5034 7C20.5034 7.08512 20.4972 7.17007 20.4848 7.25418L20.4617 7.37963L18.9062 14.3796C18.7393 15.1303 18.1047 15.6779 17.3502 15.7434L17.1978 15.75H6.81846C6.0374 15.75 5.35786 15.2338 5.14025 14.4963L5.103 14.346L2.965 3.75H1V2.25H3.57994ZM18.7534 6.75H5.101L6.5734 14.0494C6.593 14.1466 6.66746 14.2211 6.76062 14.2432L6.81846 14.25H17.1978C17.2916 14.25 17.3752 14.1979 17.418 14.1185L17.4419 14.0542L18.9974 7.05423L19.0034 7C19.0034 6.88165 18.9212 6.78251 18.8107 6.7566L18.7534 6.75Z"></path>
+              </g>
+              <defs>
+                <clipPath id="clip0_124_2976">
+                  <rect width="24" height="24"></rect>
+                </clipPath>
+              </defs>
+            </svg>
+            <span>장바구니</span>
+          </a>
+        </li>
+
+        <!-- 내정보 아이콘과 텍스트를 세로로 배열 -->
+        <li class="nav-item">
+        <!-- 내정보 클릭 시 accounts/account_settings로 이동 -->
+          <a class="nav-link" href="{% url 'accounts:account_settings' %}" style="display: flex; flex-direction: column; align-items: center;">
+            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px;opacity:1;fill:currentColor;--BaseIcon-color:#333333;margin-bottom:2px;" class="BaseIcon CoreButton__icon" data-v-9bea824c="" data-v-9af5cf42="">
+            <g clip-path="url(#clip0_124_3001)">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M12.0005 3C16.6498 3 17.8077 8.99775 13.6839 12.1844L13.624 12.228L15.3069 12.9465L15.6812 13.1108L15.9549 13.2351C19.6238 14.9538 21.6364 17.3136 21.7453 20.7061L21.75 21H20.25C20.25 18.1476 18.6226 16.1412 15.3186 14.5935L15.0135 14.4555L13.8716 13.9629L12.0964 13.2063L11.999 13.163L11.0507 13.5711L9.68313 14.153L8.98 14.4583L8.68065 14.5937C5.48037 16.0931 3.85333 18.0382 3.75477 20.7358L3.75 21H2.25C2.25 17.5338 4.16036 15.1255 7.73389 13.3837L8.16278 13.1808L8.82559 12.8889L10.374 12.228L10.3151 12.1843C6.2556 9.04586 7.31828 3.1811 11.7916 3.0041L12.0005 3ZM12.0005 4.5C8.83703 4.5 8.08966 8.88445 11.545 11.2237C11.6271 11.2791 11.7177 11.3355 11.8177 11.3932L12 11.494L12.0242 11.481C12.1338 11.4217 12.2336 11.3641 12.3244 11.3077L12.4539 11.2238C15.9112 8.88428 15.1647 4.5 12.0005 4.5Z"></path></g><defs><clipPath id="clip0_124_3001"><rect width="24" height="24">
+              </rect>
+            </clipPath>
+          </defs>
+        </svg>
+            <span>내 정보</span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
 </nav>
