@@ -26,10 +26,10 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <div class="collapse navbar-collapse col-la " style="margin-left: 200px;" id="navbarSupportedContent">
-                    <form class="d-flex" role="search" style="width: 489px;">
-                      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                      <button class="btn btn-outline-success" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
-                    </form>
+                    
+                      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="search-input">
+                      <button class="btn btn-outline-success" type="submit" onclick="searchItem();"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    
                 </div>
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0 mt-2">
                     <li class="nav-item"><a class="nav-link d-flex flex-column align-items-center" href="#"><i class="fa-solid fa-book-open "></i><div style="font-size: 11px;">주문내역</div></a></li>
@@ -103,9 +103,28 @@
 
     <main>{% block content %} Content goes here {% endblock %}</main>
     
-
+    <script>
+      function searchItem(){
+        let searchValue = document.getElementById('search-input').value.trim();
+        
+        if (searchValue.length>1){
+          location.href = "/product/search/" + searchValue + "/";
+          console.log(searchValue);
+        }
+        else{
+          alert('검색어('+ searchValue +')가 너무 짧습니다.');
+        }
+      }
+      document.getElementById('search-input').addEventListener('keyup',function(event)
+      {
+        if(event.key === 'Enter'){
+          searchItem();
+        }
+      })
+    </script>
     <footer>
       <p>&copy; 2024 My Website</p>
     </footer>
+
   </body>
 </html>

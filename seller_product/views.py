@@ -1,3 +1,5 @@
+from typing import Any
+from django.db.models.query import QuerySet
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView
@@ -92,4 +94,17 @@ def modify_cart(request):
     #     'success':True
     # }
     # return JsonResponse(context)
+from django.db.models import Q
+class ProductSearch(ProductList):
+    def get_queryset(self) :
+        q = self.kwargs['q']
+        product_list = Product.objects.filter(
+            Q(product_name__contains=q) | Q(description__contains=q)
+        ).distinct()
+        return product_list
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        q = self.kwargs['q']
+        context['search_info'] = f"Search: {q}"
 
+        return context

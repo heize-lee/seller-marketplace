@@ -2,6 +2,7 @@
 {% block content %}
 
     <div class="container  my-4">
+        {% if search_info %} <span class="row m-0 " style="font-size: 31px;font-family: Lexend;font-weight: 700;line-height: 48px;">{{ search_info }}</span>{% endif %}
         <span class="row m-0 " style="font-size: 31px;font-family: Lexend;font-weight: 700;line-height: 48px;">{{ category }}</span>
         <div class="mt-4">
             <h3>전체</h3>

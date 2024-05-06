@@ -34,7 +34,7 @@
           <!-- 수량 선택 폼 -->
           <form action="{% url 'product:modify_cart' %}" method="post">
             {% csrf_token %}
-            <input type="hiddcen" name="product" value="{{ product.pk }}">
+            <input type="hidden" name="product" value="{{ product.pk }}">
             <div class="row">
               <div class="col">
                 <!-- <input type="number" name="order_quantity" class="form-control mb-3" min="1" value="1" required> -->
