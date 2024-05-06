@@ -30,23 +30,25 @@
           <p>가격: <strong>{{ product.price|stringformat:"d" }} 원</strong></p>
           <p>등록날짜: <strong>{{ product.created_date|date:'Y-m-d' }}</strong></p>
           <p>카테고리: <strong>{{ product.category }}</strong></p>
+          
           <!-- 수량 선택 폼 -->
-          <form action="{% url 'order:order' %}" method="post">
+          <form action="{% url 'product:modify_cart' %}" method="post">
             {% csrf_token %}
             <input type="hidden" name="product" value="{{ product.pk }}">
             <div class="row">
               <div class="col">
                 <!-- <input type="number" name="order_quantity" class="form-control mb-3" min="1" value="1" required> -->
                 <span class="mx-2">
-                  <input type="hidden" id="csrfToken" value="{{csrf_token}}">
-                  <button type="button" onclick="aa(this)" class="btn btn-success">-</button>
-                  <span id="currentQuantity">1</span>
-                  <button type="button" onclick="aa(this)" class="btn btn-danger">+</button>
+                  <!-- <input type="hidden" id="csrfToken" value="{{csrf_token}}"> -->
+                  <button type="button" onclick="cnt(this)" class="btn btn-success">-</button>
+                  <label for="count" id="currentQuantity" >1</label>
+                  <input type="hidden" id="count" name="count" value="1">
+                  <button type="button" onclick="cnt(this)" class="btn btn-danger">+</button>
               </span>
               </div>
               <div class="col">
                 <!-- submit됐을 때 form 액션이 먼저 실행 -> onclick() 실행 순서입니다 -->
-                <button type="submit" class="btn btn-dark btn-block mb-3" onclick="modifyCartAmount({{product.pk}},document.getElementById('currentQuantity').textContent)" >바로구매</button>
+                <button type="submit" class="btn btn-dark btn-block mb-3"  >바로구매</button>
               </div>
             </div>
           </form>
@@ -75,40 +77,42 @@
 
 
     <script>
-        function getCsrfToken(){
-            return document.getElementById('csrfToken').value;
-        }
+        // function getCsrfToken(){
+        //     return document.getElementById('csrfToken').value;
+        // }
         // 값을 저장해서 다음페이지로 보내든가 modify를 없애고 submit에서 값을 받아서 할지 선택 
         // submit 액션이 먼저 실행되고 modify()가 나중에 실행되어서 저장된 값이 전달이 안됨
         // 역할을 생각하면서 
-        function modifyCartAmount(product_id, change){
-            var xhr = new XMLHttpRequest();
-                xhr.open('POST', '{% url "product:modify_cart" %}', true);
-                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                xhr.setRequestHeader('X-CSRFToken', getCsrfToken());
+        // function modifyCartAmount(product_id, change){
+        //     var xhr = new XMLHttpRequest();
+        //         xhr.open('POST', '{% url "product:modify_cart" %}', true);
+        //         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        //         xhr.setRequestHeader('X-CSRFToken', getCsrfToken());
                 
-                xhr.send(`productId=${product_id}&amountChange=${change}`);
-                // xhr.onload = function() {
-                //     if (this.status === 200) {
-                //         var response = JSON.parse(this.responseText);
-                //         document.getElementById('currentQuantity').textContent = response.newQuantity;
-                //         // document.getElementById('currentPrice').textContent = response.newQuantity * {{product.price}} +'원';
-                //         console.log('Update successful:', response.message);
-                //     } else {
-                //         console.error('Error updating:', this.statusText);
-                //     }
-                // };
-        }
-        function aa(element){
+        //         xhr.send(`productId=${product_id}&amountChange=${change}`);
+        //         xhr.onload = function() {
+        //             if (this.status === 200) {
+        //                 var response = JSON.parse(this.responseText);
+        //                 document.getElementById('currentQuantity').textContent = response.newQuantity;
+        //                 // document.getElementById('currentPrice').textContent = response.newQuantity * {{product.price}} +'원';
+        //                 console.log('Update successful:', response.message);
+        //             } else {
+        //                 console.error('Error updating:', this.statusText);
+        //             }
+        //         };
+        // }
+        function cnt(element){
             if (element.textContent ===  '+'){
                 a =  document.getElementById('currentQuantity').textContent
                 document.getElementById('currentQuantity').textContent = Number(a) + 1
-                document.getElementById('currentPrice').textContent = (Number(a)+1) * {{product.price}} +'원'
+                document.getElementById('count').value = Number(a) + 1
+                // document.getElementById('currentPrice').textContent = (Number(a)+1) * {{product.price}} +'원'
             }
             if (element.textContent ===  '-' && document.getElementById('currentQuantity').textContent>1 ){
                     a =  document.getElementById('currentQuantity').textContent
                     document.getElementById('currentQuantity').textContent = Number(a) - 1
-                    document.getElementById('currentPrice').textContent = (Number(a)-1) * {{product.price}} +'원'
+                    document.getElementById('count').value = Number(a) + 1
+                    // document.getElementById('currentPrice').textContent = (Number(a)-1) * {{product.price}} +'원'
 
             }
           } 
