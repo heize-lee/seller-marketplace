@@ -22,5 +22,7 @@ urlpatterns = [
 
     path('settings/', account_settings, name='account_settings'),  # account_settings
 
+    path('password_change/', views.password_change, name='password_change'),
+    
     path('', include('django.contrib.auth.urls')),
 ]
