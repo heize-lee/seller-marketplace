@@ -2,8 +2,22 @@
 # accounts/forms.py
 from django import forms
 from .models import CustomUser
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm as AuthPasswordChangeForm
 from django.core.exceptions import ValidationError
+
+# password_change
+class PasswordChangeForm(AuthPasswordChangeForm):
+    # clean_new_password2 재정의 시에는 super()함수 호출이 필요하다. (부모에 존재하는 유효성 검사이다.)
+    def clean_new_password1(self):
+        # new_password1에 대한 유효성 검사를 추가로 정의한다.
+        old_password = self.cleaned_data.get('old_password')
+        new_password1 = self.cleaned_data.get('new_password1')
+
+        if old_password and new_password1:
+            if old_password == new_password1:  # 기존 암호와 같을 경우 폼 에러를 일으킨다.
+                raise forms.ValidationError('새로운 암호는 기존 암호와 다르게 입력해주세요')
+        return new_password1
+
 
 # profile
 from django.contrib.auth.models import User
@@ -67,20 +81,3 @@ class SignUpForm(UserCreationForm):
         if CustomUser.objects.filter(phone_number=phone_number).exists():
             raise forms.ValidationError('This phone number is already in use.')
         return phone_number
-    
-
-# 추후구현
-
-# class ProfileForm(forms.ModelForm):
-#     class Meta:
-#         model = CustomUser
-#         fields = ['profile_picture']  # 프로필 사진 필드만 사용
-
-#     def clean_profile_picture(self):
-#         profile_picture = self.cleaned_data.get('profile_picture')
-#         # 프로필 사진이 있는지 확인
-#         if not profile_picture:
-#             raise forms.ValidationError('Please upload a profile picture.')
-#         # 프로필 사진의 유효성 검사 및 파일 형식 확인 등 추가적인 처리
-#         # 예를 들어, 이미지 파일 형식인지 확인하는 코드를 추가할 수 있습니다.
-#         return profile_picture
