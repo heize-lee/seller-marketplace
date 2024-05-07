@@ -1,11 +1,38 @@
 {% extends 'base.html' %}
-<h1>결제 완료페이지</h1>
 
-<h1>{{user}}님의 주문이 완료되었습니다</h1>
-<span>(날짜) 주문하신 상품의 주문번호는 ****입니다.</span>
+{% block content %}
+<div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin: 40px 0 40px 0;">
+        <span style="font-size: 18px; 
+        font-weight: bold; 
+        color: #333; "> 결제 완료</span>
+        <div style="display:flex; color: gray; font-size: small;">
+            <div style="margin-right: 8px; ">01</div><div style="margin-right: 8px;">장바구니</div>
+            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 20px; height: 20px; opacity: 1; fill: currentcolor;">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M9.53039 5.46973L15.5304 11.4697C15.7967 11.736 15.8209 12.1527 15.603 12.4463L15.5304 12.5304L9.53039 18.5304L8.46973 17.4697L13.9391 12.0001L8.46973 6.53039L9.53039 5.46973Z"></path>
+            </svg>
+        
+        <!-- 2 active 확인필요-->
+            <div style="display: flex; color: gray; margin-left: 8px;" class="flex DesktopOrderStepper--active">
+                <div style="margin-right: 8px;">02</div><div style="margin-right: 8px;">주문결제</div>
+            </div>
+            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 20px; height: 20px; opacity: 1; fill: currentcolor;">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.53039 5.46973L15.5304 11.4697C15.7967 11.736 15.8209 12.1527 15.603 12.4463L15.5304 12.5304L9.53039 18.5304L8.46973 17.4697L13.9391 12.0001L8.46973 6.53039L9.53039 5.46973Z"></path>
+            </svg>
+        <!-- 3 -->
+            <div style="display:flex; color: black; font-size: medium; font-weight: bold;">
+                <div style="margin-right: 8px;">03</div><div style="margin-right: 8px;">주문완료</div>
+            </div>            
+        </div>
+    </div>
 
-<!-- 내 정보 - 결제정보   -->
- <button>주문 상세보기</button>
- <!-- 메인페이지 -->
- <button>계속 쇼핑하기</button>
+        <h1>{{user}}님의 주문이 완료되었습니다.</h1>
+        <span>({{object.order_date}}) 주문하신 상품의 주문번호는 {{object.id}}입니다.</span>
 
+        <!-- 내 정보 - 결제정보   -->
+        <button><a href="">주문 상세보기</a></button>
+        <!-- 메인페이지 -->
+        <button><a href="{% url 'product:product' %}">계속 쇼핑하기</a></button>
+    
+</div>
+{% endblock %}

@@ -72,18 +72,22 @@ from django.http import JsonResponse
 
 def modify_cart(request):
     user=request.user
-    product_id = request.POST['productId']
+    Cart.objects.filter(user=user).delete()
+    product_id = request.POST['product']
     product = Product.objects.get(pk=product_id)
     cart, _ = Cart.objects.get_or_create(user=user, product=product)    
-    cart.amount=int(request.POST['amountChange'])
+    cart.amount=int(request.POST['count'])
     if cart.amount>0:
+        cart.total_price = cart.amount * product.price
         cart.save()
-        
+    # order 뷰로 리디렉션
+    return redirect('/order/')    
+
     # 변경된 최종 결과를 반환(JSON)
-    context = {
-        'newQuantity':cart.amount, 
-        'message':'수량이 성공적으로 업데이트 되었습니다.',
-        'success':True
-    }
-    return JsonResponse(context)
+    # context = {
+    #     'newQuantity':cart.amount, 
+    #     'message':'수량이 성공적으로 업데이트 되었습니다.',
+    #     'success':True
+    # }
+    # return JsonResponse(context)
 

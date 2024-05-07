@@ -34,29 +34,29 @@
    
     
     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin: 40px 0 40px 0;">
-        <span class="headline4-bold-small">주문 결제</span>
+        <span style="font-size: 18px; 
+        font-weight: bold; 
+        color: #333;">주문 결제</span>
         <!-- 1 -->
-        <div style="display:flex;">
-            <div style="margin-right: 8px;">01</div><div style="margin-right: 8px;">장바구니</div>
-        <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="BaseIcon mr-[8px] last:hidden" style="width: 20px; height: 20px; opacity: 1; fill: currentcolor; --BaseIcon-color: #d9d9d9;">
-            <g clip-path="url(#clip0_124_2947)">
+        <div style="display:flex; color: gray; font-size: small;">
+            <div style="margin-right: 8px; ">01</div><div style="margin-right: 8px;">장바구니</div>
+            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 20px; height: 20px; opacity: 1; fill: currentcolor;">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M9.53039 5.46973L15.5304 11.4697C15.7967 11.736 15.8209 12.1527 15.603 12.4463L15.5304 12.5304L9.53039 18.5304L8.46973 17.4697L13.9391 12.0001L8.46973 6.53039L9.53039 5.46973Z"></path>
-            </g>            
             </svg>
+        
         <!-- 2 active 확인필요-->
-            <div style="display: flex;" class="flex DesktopOrderStepper--active">
+            <div style="display: flex; color: black; font-size: medium; font-weight: bold; margin-left: 8px;" class="flex DesktopOrderStepper--active">
                 <div style="margin-right: 8px;">02</div><div style="margin-right: 8px;">주문결제</div>
             </div>
-            <svg data-v-efa8f703="" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="BaseIcon mr-[8px] last:hidden" style="width: 20px; height: 20px; opacity: 1; fill: currentcolor; --BaseIcon-color: #d9d9d9;">
-                <g clip-path="url(#clip0_124_2947)">
+            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 20px; height: 20px; opacity: 1; fill: currentcolor;">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M9.53039 5.46973L15.5304 11.4697C15.7967 11.736 15.8209 12.1527 15.603 12.4463L15.5304 12.5304L9.53039 18.5304L8.46973 17.4697L13.9391 12.0001L8.46973 6.53039L9.53039 5.46973Z"></path>
-                </g>                
             </svg>
         <!-- 3 -->
-            <div style="display:flex;">
+            <div style="display:flex; color: gray; font-size: small;">
                 <div style="margin-right: 8px;">03</div><div style="margin-right: 8px;">주문완료</div>
             </div>            
         </div>
+        
     </div>
 
 
@@ -75,7 +75,7 @@
                 <div>
                     <div class="PaymentSection_content">
                         <div class="">
-                            <span class="content_title">이름</span>
+                            <span class="content_title">이메일</span>
                             <span class="PaymentMember_content">{{user}}</span>
                         </div>
                         <div class="">
@@ -114,10 +114,8 @@
                                 <p class="mb-[8px] subtitle3-bold-medium">등록된 배송지가 없습니다</p>
                                 <p class="mb-[16px] body1-regular-medium">배송지 추가하기 버튼을 눌러 주소를 입력해주세요</p>
                                 <button type="outline" class="btn btn-sm btn-outline-primary">
-                                    <svg  width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="BaseIcon CoreButton__icon" style="width: 20px; height: 20px; opacity: 1; fill: currentcolor; --BaseIcon-color: #333333; margin-right: 2px;">
-                                        <g clip-path="url(#clip0_124_2960)"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.75 5V11.25H19V12.75H12.75V19H11.25V12.75H5V11.25H11.25V5H12.75Z"></path>
-                                        </g>
-                                        
+                                    <svg  width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"  style="width: 20px; height: 20px; opacity: 1; fill: currentcolor; margin-right: 2px;">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M12.75 5V11.25H19V12.75H12.75V19H11.25V12.75H5V11.25H11.25V5H12.75Z"></path>
                                     </svg>
                                     <span >배송지 추가하기</span>
                                 </button>
@@ -165,7 +163,7 @@
                                                 <div style=" justify-content: flex-end;">
                                                     <span >{{item.amount}}개</span>
                                                     <span class="mx-[4px]">/</span>
-                                                    <span>{{item.product.price}}원</span>
+                                                    <span>{{item.total_price}}원</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -227,12 +225,15 @@
                                                 <div>{% sum_prices object %}원</div>
                                             </div>
                                         </div>                                    
-                                        <div class="PaymentNotice DesktopPaymentProductTotal__terms">
-                                            <div  class="PaymentNotice__title">
-                                                <input type="checkbox">
+                                        <div class="PaymentNotice">
+                                            <div class="PaymentNotice_title">
+                                                <input type="checkbox" id="agree-checkbox">
                                                 <span style="font-size: small; color:#333;">결제 시 개인정보 제공에 동의합니다.</span>
-                                                 </div>
-                                            <div class="PaymentNotice__content" style="display: none;">
+                                                <button class="btn btn-outline-info" onclick="btn_notice_Click()" style="font-size: 12px; padding: 5px 5px; border: none;">▼</button>
+                                            </div>
+                                            
+                                            <div class="PaymentNotice_content" id="notice-btn" style="display: none;">
+                                                
                                                 ‣ 제공받는 자 : 
                                                 <b style=" font-weight: bold;">{{user.role}}</b>
                                                 <br>
@@ -256,10 +257,12 @@
                                                 <!-- 모달 버튼 -->
                                                 <button type="button"
                                                 class="btn btn-sm btn-outline-primary"
+                                                id="pay-button"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#pay-modal"
                                                 data-bs-userName="{{user}}"                                                
                                                 data-bs-price="{{price}}"
+                                                disabled
                                                 >결제하기</button>
                                         
                                             </form>
@@ -269,7 +272,7 @@
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">상품 결제</h5>
+                                                        <h5 class="modal-title" id="exampleModalLabel">결제</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
@@ -322,8 +325,54 @@
             document.getElementById('payment-btn').submit();
         } else {
             alert('비밀번호가 맞지 않습니다.');
+            console.log('입력한 password: '+user_password);
+            console.log('DB에 저장된 password: '+'{{user.password}}');
         }
     } 
+
+    // 모달 내의 비밀번호 입력란과 함께 "결제" 버튼을 클릭하면, 비밀번호를 포함하여 모든 필요한 데이터를 서버로 전송합니다.
+    // 서버에서는 전달받은 비밀번호를 안전한 방식으로 검증하고, 일치 여부를 확인합니다.
+    // 검증 결과에 따라 적절한 응답을 생성하여 클라이언트에게 전달합니다. 일치하는 경우에는 결제가 성공적으로 이루어지도록 처리합니다.
+    // 함수 확인해야함
+
+    // function sendPaymentData() {
+    // // 비밀번호 입력란에서 비밀번호 가져오기
+    // var user_password = document.getElementById('user-password').value;
+
+    // // 필요한 데이터 가져오기
+    // var userName = document.querySelector("#userName").value;
+    // var productPrice = document.querySelector("#productPrice").value;
+
+    // // 서버로 전송할 데이터 구성
+    // var formData = new FormData();
+    // formData.append('user_password', user_password);
+    // formData.append('user_name', userName);
+    // formData.append('product_price', productPrice);
+
+    // // 서버로 POST 요청 보내기
+    // fetch('/your/payment/endpoint/', {
+    //     method: 'POST',
+    //     body: formData
+    // })
+    // .then(response => {
+    //     if (response.ok) {
+    //         // 서버 응답 처리
+    //         return response.json();
+    //     } else {
+    //         throw new Error('Network response was not ok');
+    //     }
+    // })
+    // .then(data => {
+    //     // 서버 응답에 따른 동작 수행
+    //     console.log(data);
+    //     // 예시: 성공적으로 처리되었다면 모달 닫기 등의 동작 수행
+    //     document.getElementById('pay-modal').modal('hide');
+    // })
+    // .catch(error => {
+    //     console.error('There was a problem with your fetch operation:', error);
+    // });
+    // }
+
     {
      //모달 버튼 변수화
      const payModal = document.querySelectorAll("#pay-modal");
@@ -344,6 +393,22 @@
         });
     });
     }
+    // 개인정보제공 버튼 클릭 시 #notice-btn 보이기/숨김 
+    function btn_notice_Click() {
+        const noticediv = document.getElementById('notice-btn');
+
+        if(noticediv.style.display === 'none') {
+            noticediv.style.display = 'block';
+        } 
+        else {
+            noticediv.style.display = 'none';
+        }
+    }
+    // 체크박스가 체크되면 결제하기 버튼 활성화, 체크 해제되면 비활성화
+    document.getElementById('agree-checkbox').addEventListener('change', function() {
+        var payButton = document.getElementById('pay-button');
+        payButton.disabled = !this.checked; 
+    });   
     
 </script>
 {% endblock %}
