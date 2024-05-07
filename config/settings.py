@@ -177,3 +177,6 @@ LOGOUT_REDIRECT_URL = '/'
 
 # user model
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+# login
+AUTHENTICATION_FORM = 'accounts.forms.LoginForm'

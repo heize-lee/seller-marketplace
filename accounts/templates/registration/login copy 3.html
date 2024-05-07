@@ -2,8 +2,8 @@
 <link rel="stylesheet" href="{% static 'accounts/css/login.css' %}" />
 
 <div class="login-container">
-  <!-- 로고 이미지 대체 -->
   <div class="logo-container">
+    <!-- 로고 이미지 대체 -->
     <img
       src="{% static 'images/SELLER_logo.png' %}"
       alt="Logo"
@@ -13,42 +13,37 @@
       style="display: inline-block; vertical-align: middle"
     />
   </div>
-
-  <form method="post">
+  <form action="/login/" method="post">
     {% csrf_token %}
     <div class="form-group">
-      <label for="{{ form.username.id_for_label }}">Email:</label>
+      <label for="email">Email</label>
       <input
         type="email"
-        name="username"
-        id="{{ form.username.id_for_label }}"
-        class="form-control"
-        placeholder="example@gmail.com"
+        id="email"
+        name="email"
+        placeholder="example.email@gmail.com"
+        required
       />
     </div>
     <div class="form-group">
-      <label for="id_password">Password:</label>
-      <div class="password-container">
-        <input
-          type="password"
-          id="id_password"
-          name="password"
-          placeholder="8자 이상 숫자 포함"
-          class="form-control password-input"
-        />
-        <button type="button" id="toggle-password" class="toggle-password">
-          Show
-        </button>
-      </div>
+      <label for="password">Password</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        placeholder="Enter at least 8+ characters"
+        required
+      />
     </div>
-    <div class="checkbox">
-      <label><input type="checkbox" name="remember_me" /> Remember me</label>
-      <a href="#" style="float: right">Forgot password?</a>
+    <div class="form-group">
+      <input type="checkbox" id="remember_me" name="remember_me" />
+      <label for="remember_me">Remember me</label>
     </div>
-    <button type="submit" class="btn btn-primary login-btn">Login</button>
-    <p>
-      Don't have an account? <a href="{% url 'accounts:register' %}">Sign up</a>
-    </p>
+    <button type="submit" class="btn sign-in">Sign in</button>
+    <a href="/forgot-password/" class="forgot-password">Forgot password?</a>
+    <p>Don't have an account? <a href="/signup/">Sign up</a></p>
+    <p>OR</p>
+    <!-- Social Media Login Here -->
   </form>
 </div>
 <script>

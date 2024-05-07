@@ -2,18 +2,7 @@
 <link rel="stylesheet" href="{% static 'accounts/css/login.css' %}" />
 
 <div class="login-container">
-  <!-- 로고 이미지 대체 -->
-  <div class="logo-container">
-    <img
-      src="{% static 'images/SELLER_logo.png' %}"
-      alt="Logo"
-      width="200"
-      height="auto;"
-      class="d-inline-block align-text-top"
-      style="display: inline-block; vertical-align: middle"
-    />
-  </div>
-
+  <h1>Login</h1>
   <form method="post">
     {% csrf_token %}
     <div class="form-group">
@@ -45,10 +34,8 @@
       <label><input type="checkbox" name="remember_me" /> Remember me</label>
       <a href="#" style="float: right">Forgot password?</a>
     </div>
-    <button type="submit" class="btn btn-primary login-btn">Login</button>
-    <p>
-      Don't have an account? <a href="{% url 'accounts:register' %}">Sign up</a>
-    </p>
+    <button type="submit" class="btn btn-primary">Sign in</button>
+    <p>Don't have an account? <a href="#">Sign up</a></p>
   </form>
 </div>
 <script>
