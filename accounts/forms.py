@@ -1,14 +1,32 @@
-
 # accounts/forms.py
 from django import forms
 from .models import CustomUser
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm as AuthPasswordChangeForm
 from django.core.exceptions import ValidationError
 
+# login - placeholder
+from django import forms
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+# login - placeholder
+class LoginForm(AuthenticationForm):
+    # 사용자 모델에서 email을 사용하므로, 폼의 필드도 이에 맞춰야 함
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'example@gmail.com', 'class': 'form-control'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': '8자 이상 숫자 포함', 'class': 'form-control'}))
+
+    # `AuthenticationForm`의 기본 필드인 'username'을 'email'로 사용
+    def __init__(self, *args, **kwargs):
+        super(LoginForm, self).__init__(*args, **kwargs)
+        self.fields['username'] = self.fields['email']
+        del self.fields['email']
+
+
 # delete_account
 class DeleteAccountForm(forms.Form):
     password = forms.CharField(label='비밀번호', widget=forms.PasswordInput)
-
 
 # password_change
 class PasswordChangeForm(AuthPasswordChangeForm):
@@ -22,7 +40,6 @@ class PasswordChangeForm(AuthPasswordChangeForm):
             if old_password == new_password1:  # 기존 암호와 같을 경우 폼 에러를 일으킨다.
                 raise forms.ValidationError('새로운 암호는 기존 암호와 다르게 입력해주세요')
         return new_password1
-
 
 # profile
 from django.contrib.auth.models import User
