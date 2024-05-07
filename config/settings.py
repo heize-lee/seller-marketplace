@@ -8,10 +8,15 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
+superuser 아이디 pc 비밀번호 1
 """
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
+db_key = os.getenv("DB_KEY")
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -22,7 +27,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-q^fj-+ude!xg=#isimfq2_x_&p&v^gj0#kwodccp183q$%yibo'
+
+SECRET_KEY = 'secret_key'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -40,6 +46,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
+    'seller_product',
+    'order',  
+
+    # merge-mhs ***확인
+    # 'product',
 ]
 
 MIDDLEWARE = [
@@ -75,6 +87,8 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 
+
+db_key= os.getenv('DB_KEY')
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
@@ -85,14 +99,20 @@ load_dotenv()
 db_key = os.getenv("DB_KEY")
 
 DATABASES = {
-   'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'seller_test', # db name
-        'USER': 'postgres',
-        'PASSWORD': db_key,
-        'HOST': 'hanslab.org',  # 또는 PostgreSQL 서버의 IP 주소
-        'PORT': '25432',       # PostgreSQL의 기본 포트 번호
+     'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
+    
+    # postgresql
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'seller_mkt', # db name
+    #     'USER': 'postgres',
+    #     'PASSWORD': db_key,
+    #     'HOST': 'hanslab.org',  # 또는 PostgreSQL 서버의 IP 주소
+    #     'PORT': '25432',       # PostgreSQL의 기본 포트 번호
+    # }
 }
 
 
@@ -120,7 +140,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
@@ -131,15 +151,18 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 # style.css
-STATIC_URL = '/static/' # 정적 파일이 저장될 폴더 지정 (선택적, 배포 시 중요)
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # 개발 중에는 다음과 같이 설정할 수 있습니다.
-
+STATIC_URL = '/static/'
+# 정적 파일이 저장될 폴더 지정 (선택적, 배포 시 중요)
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# 개발 중에는 다음과 같이 설정할 수 있습니다.
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 # profile_picture
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+MEDIA_URL='/media/'
+MEDIA_ROOT=os.path.join(BASE_DIR,'_media')
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 

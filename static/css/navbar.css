@@ -11,9 +11,14 @@ nav.navbar-1 {
   justify-content: space-between; /* 요소들을 좌우로 최대한 분산되게 정렬 */
 }
 
+nav.navbar-1 .container-fluid .btn {
+  margin-left: 10px; /* 버튼 사이에 간격 주기 */
+  align-items: center; /* 수직 가운데 정렬 */
+}
+
 nav.navbar-1 button.btn-link {
   font-family: Arial, sans-serif;
-  font-size: 12px;
+  font-size: 11px;
   color: #ffffff; /* 흰색 텍스트 */
   background-color: transparent; /* 투명 배경 */
   border: none; /* 테두리 없음 */
