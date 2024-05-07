@@ -1,0 +1,36 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div class="delete-account-container">
+  <h1>회원 탈퇴</h1>
+  <form id="delete-account-form" method="post" enctype="multipart/form-data">
+    {% csrf_token %} {{ form.as_p }}
+    <button id="delete-account-button" type="submit">회원 탈퇴</button>
+  </form>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("delete-account-form");
+    const button = document.getElementById("delete-account-button");
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      const password = form.elements["password"].value;
+
+      // 비밀번호 확인
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", '{% url "accounts:delete_account" %}', true);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          if (xhr.status === 200) {
+            window.location.href ='/accounts/delete_account/';";
+          } else {
+            alert("비밀번호가 일치하지 않습니다.");
+          }
+        }
+      };
+      xhr.send("password=" + encodeURIComponent(password));
+    });
+  });
+</script>
+{% endblock %}

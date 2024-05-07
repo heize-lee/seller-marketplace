@@ -32,6 +32,142 @@ from django.contrib.auth.views import (
 )
 from accounts.forms import PasswordChangeForm  # 커스텀 폼 임포트
 
+# delete_account
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from .forms import DeleteAccountForm
+from .models import UserRegistrationHistory
+
+from django.db import transaction
+
+@login_required
+def delete_account(request):
+    if request.method == 'POST':
+        form = DeleteAccountForm(request.POST)
+        if form.is_valid():
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=request.user.email, password=password)
+            if user is not None:
+                with transaction.atomic():
+                    # Save any related objects before deleting the user
+                    # For example, UserRegistrationHistory
+                    registration_history = UserRegistrationHistory.objects.create(user=user)
+
+                    # Delete the user
+                    user.delete()
+
+                    # Logout the user
+                    logout(request)
+
+                return redirect('delete_account_done')
+            else:
+                # 비밀번호가 일치하지 않는 경우 오류 메시지 표시
+                form.add_error('password', '비밀번호가 일치하지 않습니다.')
+    else:
+        form = DeleteAccountForm()
+    
+    return render(request, 'accounts/delete_account.html', {'form': form})
+
+
+# def delete_account(request):
+#     if request.method == 'POST':
+#         form = DeleteAccountForm(request.POST)
+#         if form.is_valid():
+#             password = form.cleaned_data['password']
+#             user = authenticate(request, username=request.user.email, password=password)
+#             if user is not None:
+#                 # 비밀번호 일치하는 경우 회원 탈퇴 처리
+#                 user.delete()
+                
+#                 # 사용자의 회원 가입 이력 생성
+#                 registration_history = UserRegistrationHistory.objects.create(user=user)
+
+#                 # 로그아웃 후 delete_account_done 페이지로 리다이렉트
+#                 logout(request)
+#                 return redirect('delete_account_done')
+#             else:
+#                 # 비밀번호가 일치하지 않는 경우 오류 메시지 표시
+#                 form.add_error('password', '비밀번호가 일치하지 않습니다.')
+#     else:
+#         form = DeleteAccountForm()
+    
+#     return render(request, 'accounts/delete_account.html', {'form': form})
+
+
+
+# @login_required
+# def delete_account(request):
+#     if request.method == 'POST':
+#         form = DeleteAccountForm(request.POST)
+#         if form.is_valid():
+#             password = form.cleaned_data['password']
+#             user = authenticate(request, username=request.user.email, password=password)  # 이메일을 사용자 식별자로 사용
+#             if user is not None:
+#                 # 비밀번호 일치하는 경우 회원 탈퇴 처리
+#                 registration_history = UserRegistrationHistory.objects.create(user=user)  # 사용자의 회원 가입 이력 생성
+#                 user.delete()
+#                 # 로그아웃 후 delete_account_done 페이지로 리다이렉트
+#                 logout(request)
+#                 return redirect('delete_account_done')
+#             else:
+#                 # 비밀번호가 일치하지 않는 경우 오류 메시지 표시
+#                 form.add_error('password', '비밀번호가 일치하지 않습니다.')
+#     else:
+#         form = DeleteAccountForm()
+    
+#     return render(request, 'accounts/delete_account.html', {'form': form})
+
+
+# from django.contrib.auth.decorators import login_required
+# from django.shortcuts import render, redirect
+# from django.contrib.auth import authenticate, login, logout
+# from .forms import DeleteAccountForm
+
+# @login_required
+# def delete_account(request):
+#     if request.method == 'POST':
+#         form = DeleteAccountForm(request.POST)
+#         if form.is_valid():
+#             password = form.cleaned_data['password']
+#             user = authenticate(request, email=request.user.email, password=password)  # username 대신 email 사용
+#             if user is not None:
+#                 # 비밀번호 일치하는 경우 회원 탈퇴 처리
+#                 user.delete()
+#                 # 로그아웃 후 delete_account_done 페이지로 리다이렉트
+#                 logout(request)
+#                 return redirect('delete_account_done')
+#             else:
+#                 # 비밀번호가 일치하지 않는 경우 오류 메시지 표시
+#                 form.add_error('password', '비밀번호가 일치하지 않습니다.')
+#     else:
+#         form = DeleteAccountForm()
+    
+#     return render(request, 'accounts/delete_account.html', {'form': form})
+
+# # views.py
+# from .models import UserRegistrationHistory
+
+# @login_required
+# def delete_account(request):
+#     if request.method == 'POST':
+#         # 회원 탈퇴 요청을 받았을 때
+#         user = request.user
+#         # 사용자의 회원 가입 이력 생성
+#         registration_history = UserRegistrationHistory.objects.create(user=user)
+#         # 사용자 비활성화
+#         user.is_active = False
+#         user.save()
+#         # 로그아웃 후 홈페이지로 리다이렉트
+#         logout(request)
+#         return redirect('delete_account_done')
+#     return render(request, 'accounts/delete_account.html')
+
+def delete_account_done(request):
+    return render(request, 'accounts/delete_account_done.html')
+
+
+# password_change
 class PasswordChangeView(LoginRequiredMixin, AuthPasswordChangeView):
     success_url = reverse_lazy('password_change')
     template_name = 'accounts/password_change_form.html'  # 템플릿 위치 재정의
