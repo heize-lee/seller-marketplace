@@ -7,7 +7,10 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST, require_GET
+<<<<<<< HEAD
 
+=======
+>>>>>>> e96a01e61784acaba130ac1bdd7b363bd086657b
 # Create your views here.
 @require_GET
 def order(request):    

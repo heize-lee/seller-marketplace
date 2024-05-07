@@ -30,6 +30,7 @@
           <p>가격: <strong>{{ product.price|stringformat:"d" }} 원</strong></p>
           <p>등록날짜: <strong>{{ product.created_date|date:'Y-m-d' }}</strong></p>
           <p>카테고리: <strong>{{ product.category }}</strong></p>
+          
           <!-- 수량 선택 폼 -->
           <form action="{% url 'product:modify_cart' %}" method="post">
             {% csrf_token %}
@@ -47,7 +48,9 @@
               </div>
               <div class="col">
                 <!-- submit됐을 때 form 액션이 먼저 실행 -> onclick() 실행 순서입니다 -->
-                <button type="submit" class="btn btn-dark btn-block mb-3" >바로구매</button>
+
+                <button type="submit" class="btn btn-dark btn-block mb-3"  >바로구매</button>
+
               </div>
             </div>
           </form>
@@ -89,28 +92,31 @@
         //         xhr.setRequestHeader('X-CSRFToken', getCsrfToken());
                 
         //         xhr.send(`productId=${product_id}&amountChange=${change}`);
-                // xhr.onload = function() {
-                //     if (this.status === 200) {
-                //         var response = JSON.parse(this.responseText);
-                //         document.getElementById('currentQuantity').textContent = response.newQuantity;
-                //         // document.getElementById('currentPrice').textContent = response.newQuantity * {{product.price}} +'원';
-                //         console.log('Update successful:', response.message);
-                //     } else {
-                //         console.error('Error updating:', this.statusText);
-                //     }
-                // };
+
+        //         xhr.onload = function() {
+        //             if (this.status === 200) {
+        //                 var response = JSON.parse(this.responseText);
+        //                 document.getElementById('currentQuantity').textContent = response.newQuantity;
+        //                 // document.getElementById('currentPrice').textContent = response.newQuantity * {{product.price}} +'원';
+        //                 console.log('Update successful:', response.message);
+        //             } else {
+        //                 console.error('Error updating:', this.statusText);
+        //             }
+        //         };
+
         // }
         function cnt(element){
             if (element.textContent ===  '+'){
                 a =  document.getElementById('currentQuantity').textContent
                 document.getElementById('currentQuantity').textContent = Number(a) + 1
-                // document.getElementById('currentPrice').textContent = (Number(a)+1) * {{product.price}} +'원'
                 document.getElementById('count').value = Number(a) + 1
+                // document.getElementById('currentPrice').textContent = (Number(a)+1) * {{product.price}} +'원'
             }
             if (element.textContent ===  '-' && document.getElementById('currentQuantity').textContent>1 ){
                     a =  document.getElementById('currentQuantity').textContent
                     document.getElementById('currentQuantity').textContent = Number(a) - 1
                     document.getElementById('count').value = Number(a) - 1
+
                     // document.getElementById('currentPrice').textContent = (Number(a)-1) * {{product.price}} +'원'
 
             }

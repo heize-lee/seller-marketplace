@@ -70,7 +70,9 @@ class ProductDetail(DetailView):
 
 from django.http import JsonResponse
 
+
 def modify_cart(request):
+    
     user=request.user
     Cart.objects.filter(user=user).delete()
     product_id = request.POST['product']
@@ -82,6 +84,8 @@ def modify_cart(request):
         cart.save()
     # order 뷰로 리디렉션
     return redirect('/order/')    
+
+
 
     # 변경된 최종 결과를 반환(JSON)
     # context = {
