@@ -1,3 +1,5 @@
+from typing import Any
+from django.db.models.query import QuerySet
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView
@@ -72,19 +74,19 @@ from django.http import JsonResponse
 
 
 def modify_cart(request):
-    
-    user=request.user
-    Cart.objects.filter(user=user).delete()
-    product_id = request.POST['product']
-    product = Product.objects.get(pk=product_id)
-    cart, _ = Cart.objects.get_or_create(user=user, product=product)    
-    cart.amount=int(request.POST['count'])
-    if cart.amount>0:
-        cart.total_price = cart.amount * product.price
-        cart.save()
-    # order 뷰로 리디렉션
-    return redirect('/order/')    
-
+    if request.user.is_authenticated:
+        user=request.user
+        Cart.objects.filter(user=user).delete()
+        product_id = request.POST['product']
+        product = Product.objects.get(pk=product_id)
+        cart, _ = Cart.objects.get_or_create(user=user, product=product)    
+        cart.amount=int(request.POST['count'])
+        if cart.amount>0:
+            cart.save()
+        # order 뷰로 리디렉션
+        return redirect('/order/')
+    else : 
+        return redirect('/accounts/login/')    
 
 
     # 변경된 최종 결과를 반환(JSON)
@@ -95,3 +97,17 @@ def modify_cart(request):
     # }
     # return JsonResponse(context)
 
+from django.db.models import Q
+class ProductSearch(ProductList):
+    def get_queryset(self) :
+        q = self.kwargs['q']
+        product_list = Product.objects.filter(
+            Q(product_name__contains=q) | Q(description__contains=q)
+        ).distinct()
+        return product_list
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        q = self.kwargs['q']
+        context['search_info'] = f"Search: {q}"
+
+        return context
