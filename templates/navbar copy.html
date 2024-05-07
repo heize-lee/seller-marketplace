@@ -86,46 +86,22 @@
       <img
         src="{% static 'images/SELLER_logo.png' %}"
         alt="Logo"
-        width="200"
-        height="auto;"
+        width="100"
+        height="24"
         class="d-inline-block align-text-top"
         style="display: inline-block; vertical-align: middle;"
       />
     </a>
 
-    <!-- 검색창 -->
-    <div class="container">
-      <div class="row justify-content-center">
-          <form class="search-form col-md-6 col-sm-8 col-10" role="search" style="margin-top: 20px;">
-              <div class="input-group">
-                  <input class="form-control search-input" type="search" placeholder="Search" aria-label="Search" id="searchInput" style="height: 40px; width: 100%;">
-                  <div class="input-group-append">
-                      <button class="btn btn-outline-success search-btn" type="button" id="searchButton" style="height: 40px;">&#128269;</button>
-                  </div>
-              </div>
-          </form>
-      </div>
-  </div>
-  
-  
-
-
-  <script>
-    document.getElementById('searchInput').addEventListener('keyup', function(event) {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            document.getElementById('searchButton').click();
-        }
-    });
-
-    document.getElementById('searchButton').addEventListener('click', function() {
-        // 검색 기능 구현
-        var searchValue = document.getElementById('searchInput').value;
-        // 여기에 검색 기능을 구현하세요
-        alert('검색어: ' + searchValue);
-    });
-</script>
-
+    <form class="d-flex" role="search">
+      <input
+        class="form-control me-2"
+        type="search"
+        placeholder="Search"
+        aria-label="Search"
+      />
+      <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
     
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">

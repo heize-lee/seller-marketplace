@@ -1,17 +1,11 @@
 .logo img {
-  max-width: 100px; /* 최대 너비 설정 */
+  max-width: 120px; /* 최대 너비 설정 */
   height: auto; /* 높이 자동 조정 */
 }
 
 .icon-size {
   width: 48px; /* 아이콘 너비 */
   height: 48px; /* 아이콘 높이 */
-}
-
-/* 전체 네비게이션 바 컨테이너에 적용 */
-.navbar {
-  padding-left: 100px; /* 왼쪽 패딩 */
-  padding-right: 100px; /* 오른쪽 패딩 */
 }
 
 /* 아이템들을 오른쪽으로 정렬 */

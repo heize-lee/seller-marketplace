@@ -73,6 +73,20 @@ def account_settings(request):
     return render(request, 'accounts/account_settings.html', context)
 
 # login
+# def login_view(request):
+#     if request.method == 'POST':
+#         username = request.POST.get('username')
+#         password = request.POST.get('password')
+#         user = authenticate(request, username=username, password=password)
+#         if user is not None:
+#             login(request, user)
+#             return render(request, 'home.html')  # 로그인 성공 시 리다이렉트
+#         else:
+#             return render(request, 'accounts/login.html', {'error': 'Invalid credentials'})
+#     return render(request, 'accounts/login.html')
+
+
+# login
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -80,9 +94,16 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return render(request, 'home.html')  # 로그인 성공 시 리다이렉트
+            # 로그인 이전에 요청한 URL 가져오기
+            next_url = request.GET.get('next')
+            if next_url:
+                return redirect(next_url)
+            else:
+                return redirect('home')  # 또는 return redirect('/')
         else:
             return render(request, 'accounts/login.html', {'error': 'Invalid credentials'})
+    
+    # GET 요청 시 로그인 페이지 렌더링
     return render(request, 'accounts/login.html')
 
 # register
