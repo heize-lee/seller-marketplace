@@ -14,6 +14,9 @@ from . import views
 # account_settings
 from .views import account_settings
 
+# delete_account
+from .views import delete_account
+
 app_name = 'accounts'
 
 urlpatterns = [
@@ -23,6 +26,10 @@ urlpatterns = [
     path('settings/', account_settings, name='account_settings'),  # account_settings
 
     path('password_change/', views.password_change, name='password_change'),
+
+    path('delete_account/', views.delete_account, name='delete_account'),
+    path('delete_account_done/', views.delete_account_done, name='delete_account_done'),
+
     
     path('', include('django.contrib.auth.urls')),
 ]

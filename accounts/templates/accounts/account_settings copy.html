@@ -15,3 +15,6 @@
   {% csrf_token %} {{ password_form.as_p }}
   <button type="submit" name="change_password">Change Password</button>
 </form>
+
+<!-- 회원 탈퇴 링크 -->
+<a href="{% url 'accounts:delete_account' %}">회원 탈퇴</a>

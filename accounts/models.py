@@ -11,6 +11,15 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 
+# delete_account-
+class UserRegistrationHistory(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    registration_date = models.DateTimeField(auto_now_add=True)
+    withdrawal_date = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f"User: {self.user.email}, Registration Date: {self.registration_date}, Withdrawal Date: {self.withdrawal_date}"
+
 class CustomUserManager(BaseUserManager):
     """
     사용자 계정을 생성하고 관리하는 매니저 클래스입니다.
