@@ -3,20 +3,19 @@
 
 <nav class="navbar navbar-1">
   <div class="container-fluid d-flex justify-content-end align-items-center">
-    <form id="logoutForm">
+      <!-- 로그인 상태일 때만 보이도록 설정 -->
       {% if request.user.is_authenticated %}
       <!-- 로그인 상태 -->
       <div class="dropdown">
         <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-          {{ user }} 님
+          {{ user }} ({{ request.user.role }}) 님
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
           <li><a class="dropdown-item" href="#">주문목록</a></li>
-          <li><a class="dropdown-item" href="#">회원정보 관리</a></li>
+          <li><a class="dropdown-item" onclick="window.location.href='/accounts/settings/';">회원정보 관리</a></li>
           <li><hr class="dropdown-divider"></li>
           <li><a class="dropdown-item" href="#" onclick="logout()">로그아웃</a></li>
         </ul>
-
       <button type="button" class="btn btn-link" href="#">알림</button>
       <button type="button" class="btn btn-link" href="#">메세지</button>
       <button type="button" class="btn btn-link" href="#">고객센터</button>
@@ -59,6 +58,17 @@
       console.error("오류 발생:", error);
     });
   }
+
+  document.getElementById('role-switch').addEventListener('change', function() {
+  var label = document.getElementById('role-label');
+  if (this.checked) {
+    label.textContent = 'Seller';
+    // 추가: 서버에 상태 변경을 알리는 코드나 로컬 스토리지에 저장하는 코드
+  } else {
+    label.textContent = 'Buyer';
+    // 추가: 서버에 상태 변경을 알리는 코드나 로컬 스토리지에 저장하는 코드
+  }
+});
   
   // CSRF 토큰을 쿠키에서 가져오는 함수
   function getCookie(name) {
