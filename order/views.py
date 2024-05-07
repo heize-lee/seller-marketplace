@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST, require_GET
+
 # Create your views here.
 @require_GET
 def order(request):    
@@ -18,7 +19,6 @@ def order(request):
     products = []
     for one in cart_items: 
         product_id = one.product_id
-        print(product_id)
         product = get_object_or_404(Product, product_id=product_id)
         products.append(product)
 
@@ -38,11 +38,18 @@ def order(request):
 def order_done(request):
     user = request.user
     cart_items = Cart.objects.filter(user=user)   
-    product_id = cart_items.product_id
-    product = get_object_or_404(Product, product_id=product_id)  # ID에 해당하는 Product 객체 가져오기
+    
+    # POST 요청에서 사용될 변수들을 미리 초기화합니다.
+    product = None
+
+    
 
     # 결제하기를 눌렀을 때 주문 테이블에 카트 테이블의 내용을 저장
     if request.method == 'POST':
+
+        for one in cart_items:
+            product_id = one.product_id
+            product = get_object_or_404(Product, product_id=product_id)  # ID에 해당하는 Product 객체 가져오기
 
         # 카트에 담긴 각 상품에 대한 주문을 생성
         try:
@@ -62,8 +69,11 @@ def order_done(request):
 
          # 결제가 완료되면 카트 테이블의 내용을 삭제
         cart_items.delete()
+        context = {
+        'object': order
+        }   
         # 결제 완료 페이지로 리디렉션
-        return render(request, 'order/order_done.html')
+        return render(request, 'order/order_done.html', context)
     order = Order.objects.all()
     context = {
         'object': order

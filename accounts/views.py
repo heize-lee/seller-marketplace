@@ -22,8 +22,28 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
 from .forms import ProfileUpdateForm
-# from .forms import ProfileUpdateForm, CustomPasswordResetForm  # 가정한 폼
 
+
+# password_change
+from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import (
+    PasswordChangeView as AuthPasswordChangeView
+)
+from accounts.forms import PasswordChangeForm  # 커스텀 폼 임포트
+
+class PasswordChangeView(LoginRequiredMixin, AuthPasswordChangeView):
+    success_url = reverse_lazy('password_change')
+    template_name = 'accounts/password_change_form.html'  # 템플릿 위치 재정의
+    form_class = PasswordChangeForm  # 커스텀 폼 지정
+
+    def form_valid(self, form):  # 유효성 검사 성공 이후 로직 입력
+        messages.success(self.request, '암호를 변경했습니다.')  # 성공 메시지
+        return super().form_valid(form)  # 폼 검사 결과를 리턴해야한다.
+
+password_change = PasswordChangeView.as_view()
+
+# account_settings
 @login_required
 def account_settings(request):
     if request.method == 'POST':
@@ -51,28 +71,6 @@ def account_settings(request):
         'password_form': password_form
     }
     return render(request, 'accounts/account_settings.html', context)
-
-
-
-
-
-# # password
-# from django.urls import reverse_lazy
-# from django.contrib.auth.views import PasswordChangeView
-
-# class CustomPasswordChangeView(PasswordChangeView):
-#     success_url = reverse_lazy('password_change_done')
-    
-#     def form_valid(self, form):
-#         # 이 메서드를 사용하여 유효한 폼을 제출할 때 수행할 추가 작업을 지정할 수 있습니다.
-#         # 여기에서는 기본 동작을 유지하고 성공 URL로 리디렉션합니다.
-#         return super().form_valid(form)
-
-
-# # 잠깐
-# @login_required
-# def account_settings(request):
-#     return render(request, 'accounts/account_settings.html')
 
 # login
 def login_view(request):

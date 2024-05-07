@@ -48,7 +48,9 @@
               </div>
               <div class="col">
                 <!-- submit됐을 때 form 액션이 먼저 실행 -> onclick() 실행 순서입니다 -->
+
                 <button type="submit" class="btn btn-dark btn-block mb-3"  >바로구매</button>
+
               </div>
             </div>
           </form>
@@ -90,6 +92,7 @@
         //         xhr.setRequestHeader('X-CSRFToken', getCsrfToken());
                 
         //         xhr.send(`productId=${product_id}&amountChange=${change}`);
+
         //         xhr.onload = function() {
         //             if (this.status === 200) {
         //                 var response = JSON.parse(this.responseText);
@@ -100,6 +103,7 @@
         //                 console.error('Error updating:', this.statusText);
         //             }
         //         };
+
         // }
         function cnt(element){
             if (element.textContent ===  '+'){
@@ -111,7 +115,8 @@
             if (element.textContent ===  '-' && document.getElementById('currentQuantity').textContent>1 ){
                     a =  document.getElementById('currentQuantity').textContent
                     document.getElementById('currentQuantity').textContent = Number(a) - 1
-                    document.getElementById('count').value = Number(a) + 1
+                    document.getElementById('count').value = Number(a) - 1
+
                     // document.getElementById('currentPrice').textContent = (Number(a)-1) * {{product.price}} +'원'
 
             }

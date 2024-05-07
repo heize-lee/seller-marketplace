@@ -87,6 +87,8 @@ def modify_cart(request):
         return redirect('/order/')
     else : 
         return redirect('/accounts/login/')    
+
+
     # 변경된 최종 결과를 반환(JSON)
     # context = {
     #     'newQuantity':cart.amount, 
@@ -94,6 +96,7 @@ def modify_cart(request):
     #     'success':True
     # }
     # return JsonResponse(context)
+
 from django.db.models import Q
 class ProductSearch(ProductList):
     def get_queryset(self) :
