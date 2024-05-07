@@ -52,6 +52,8 @@ INSTALLED_APPS = [
 
     # merge-mhs ***확인
     # 'product',
+]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
