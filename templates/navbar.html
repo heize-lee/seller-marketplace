@@ -141,7 +141,7 @@
 
     <div class="navbar-items d-flex align-items-center">
       <div class="주문내역 navbar-item">
-        <a href="#">
+        <a href="{% url 'order:order_list' %}">
           <i class="fas fa-receipt"></i>
           <p>주문내역</p>
         </a>
@@ -178,22 +178,20 @@
             >패션/주얼리</a
           >
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/product/category/홈리빙/">홈리빙</a>
-        </li>
+     
         <li class="nav-item">
           <a class="nav-link" href="/product/category/케이스문구/"
             >케이스/문구</a
           >
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/product/category/뷰티/">뷰티</a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link" href="/product/category/반려동물/">반려동물</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/product/category/공예/">공예</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/product/category/레슨/">레슨</a>
         </li>
       </ul>
     </div>
