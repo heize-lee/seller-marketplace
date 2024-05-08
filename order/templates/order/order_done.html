@@ -1,11 +1,22 @@
 {% extends 'base.html' %}
-
+{% load static %}
+{% block extra-style %}
+<style>
+.orddone_content{
+    margin-top: 16px;
+}
+.orddone_movepage{
+    display: flex;
+    margin-top: 16px;
+}
+</style>
+{% endblock %}
 {% block content %}
 <div class="container">
     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin: 40px 0 40px 0;">
-        <span style="font-size: 18px; 
+        <h3 style="font-size: 18px; 
         font-weight: bold; 
-        color: #333; "> 결제 완료</span>
+        color: #333; "> 결제 완료</h3>
         <div style="display:flex; color: gray; font-size: small;">
             <div style="margin-right: 8px; ">01</div><div style="margin-right: 8px;">장바구니</div>
             <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 20px; height: 20px; opacity: 1; fill: currentcolor;">
@@ -13,7 +24,7 @@
             </svg>
         
         <!-- 2 active 확인필요-->
-            <div style="display: flex; color: gray; margin-left: 8px;" class="flex DesktopOrderStepper--active">
+            <div style="display: flex; color: gray; margin-left: 8px;" >
                 <div style="margin-right: 8px;">02</div><div style="margin-right: 8px;">주문결제</div>
             </div>
             <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 20px; height: 20px; opacity: 1; fill: currentcolor;">
@@ -21,18 +32,27 @@
             </svg>
         <!-- 3 -->
             <div style="display:flex; color: black; font-size: medium; font-weight: bold;">
-                <div style="margin-right: 8px;">03</div><div style="margin-right: 8px;">주문완료</div>
+                <div style="margin-left: 8px;">03</div><div style="margin-right: 8px;">주문완료</div>
             </div>            
         </div>
     </div>
+        <!-- 아이콘 사이즈 fa-4x -->
+        <h3>✔{{user}}님의 주문이 완료되었습니다.</h3>
+        <span class="orddone_content">({{object.order_date}}) 주문하신 상품의 주문번호는 {{object.order_date|date:'ymd'}}-{{object.pk}}입니다.</span>
 
-        <h1>{{user}}님의 주문이 완료되었습니다.</h1>
-        <span>({{object.order_date}}) 주문하신 상품의 주문번호는 {{object.id}}입니다.</span>
+
+                
 
         <!-- 내 정보 - 결제정보   -->
-        <button><a href="">주문 상세보기</a></button>
-        <!-- 메인페이지 -->
-        <button><a href="{% url 'product:product' %}">계속 쇼핑하기</a></button>
+        <div class="orddone_movepage">
+            <form action="{% url 'order:order_detail' pk=object.pk %}" style="margin-right: 12px;">
+                <button type="submit" class="btn btn-sm btn-outline-primary">주문 상세보기</button>
+            </form> 
+            <!-- 메인페이지 -->
+            <form action="{% url 'product:product' %}">
+                <button type="submit" class="btn btn-sm btn-outline-primary">계속 쇼핑하기</button>
+            </form>
+        </div>
     
 </div>
 {% endblock %}
