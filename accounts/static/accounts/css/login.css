@@ -1,0 +1,101 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+}
+
+.password-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%; /* 컨테이너 너비 조정 */
+}
+
+.password-input {
+  flex-grow: 1;
+  padding-right: 60px; /* 토글 버튼을 위한 공간 확보 */
+}
+
+.toggle-password {
+  position: absolute;
+  right: 5px; /* 원하는 위치로 조정 */
+  top: 50%; /* 세로 가운데 정렬 */
+  transform: translateY(-50%); /* 세로 가운데 정렬을 위한 변형 */
+  background: none;
+  border: none;
+  color: #333;
+  cursor: pointer;
+}
+
+.form-control {
+  width: 100%; /* 입력 필드를 컨테이너의 너비에 맞춤 */
+}
+
+.login-container {
+  background: white;
+  padding: 50px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  margin: 50px auto; /* 위아래 50px의 마진을 추가하고 가로 중앙 정렬 */
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 20px; /* 위쪽에 20px의 마진 추가 */
+  margin-bottom: 20px; /* 아래쪽에 20px의 마진 추가 */
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+.forgot-password,
+.sign-up {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.or {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.social-logins button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #db4437;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.social-logins button.facebook {
+  background-color: #4267b2;
+}
+
+.social-logins button:hover {
+  opacity: 0.8;
+}
+
+.logo-container {
+  text-align: center;
+  margin-top: 45px;
+  margin-bottom: 45px;
+}

@@ -99,20 +99,14 @@ load_dotenv()
 db_key = os.getenv("DB_KEY")
 
 DATABASES = {
-     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'seller_test', # db name
+        'USER': 'postgres',
+        'PASSWORD': db_key,
+        'HOST': 'hanslab.org',  # 또는 PostgreSQL 서버의 IP 주소
+        'PORT': '25432',       # PostgreSQL의 기본 포트 번호
     }
-    
-    # postgresql
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'seller_mkt', # db name
-    #     'USER': 'postgres',
-    #     'PASSWORD': db_key,
-    #     'HOST': 'hanslab.org',  # 또는 PostgreSQL 서버의 IP 주소
-    #     'PORT': '25432',       # PostgreSQL의 기본 포트 번호
-    # }
 }
 
 
@@ -177,3 +171,6 @@ LOGOUT_REDIRECT_URL = '/'
 
 # user model
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+# login
+AUTHENTICATION_FORM = 'accounts.forms.LoginForm'

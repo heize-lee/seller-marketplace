@@ -1,9 +1,13 @@
-from django.shortcuts import render
-from django.views.generic import ListView, DetailView
-from django.views.generic.edit import FormView
+from typing import Any
+from django.db.models.query import QuerySet
+from django.shortcuts import render, redirect
+from django.views.generic import ListView, DetailView, DeleteView
+from django.views.generic.edit import FormView, UpdateView
 from .models import Product,Category, Cart
 from .forms import RegisterForm
-from django.shortcuts import redirect
+from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 # from order.forms import RegisterForm as OrderForm
 
@@ -29,14 +33,31 @@ def category_page(request,slug):
         }
     )
 
-class ProductCreate(FormView):
+class ProductCreate(LoginRequiredMixin, FormView):
     template_name = 'register_product.html'
     form_class = RegisterForm
     success_url = '/product/'
+    login_url = reverse_lazy('accounts:login')  # 로그인 페이지의 URL
 
     def form_valid(self, form):
-        form.save()
+        # 로그인된 사용자의 이메일 가져오기
+        email = self.request.user.email
+
+        # 폼에서 인스턴스 생성
+        product_instance = form.save(commit=False)
+        product_instance.seller_email = email  # 판매자 이메일 저장
+        product_instance.save()
+
         return super().form_valid(form)
+
+    def dispatch(self, request, *args, **kwargs):
+        # 사용자가 로그인되어 있는지 확인
+        if not self.request.user.is_authenticated:
+            # 로그인되어 있지 않은 경우 로그인 페이지로 리디렉션
+            return redirect(self.login_url)
+        return super().dispatch(request, *args, **kwargs)
+        
+        
  
 class ProductDetail(DetailView):
     model=Product   
@@ -72,19 +93,19 @@ from django.http import JsonResponse
 
 
 def modify_cart(request):
-    
-    user=request.user
-    Cart.objects.filter(user=user).delete()
-    product_id = request.POST['product']
-    product = Product.objects.get(pk=product_id)
-    cart, _ = Cart.objects.get_or_create(user=user, product=product)    
-    cart.amount=int(request.POST['count'])
-    if cart.amount>0:
-        cart.total_price = cart.amount * product.price
-        cart.save()
-    # order 뷰로 리디렉션
-    return redirect('/order/')    
-
+    if request.user.is_authenticated:
+        user=request.user
+        Cart.objects.filter(user=user).delete()
+        product_id = request.POST['product']
+        product = Product.objects.get(pk=product_id)
+        cart, _ = Cart.objects.get_or_create(user=user, product=product)    
+        cart.amount=int(request.POST['count'])
+        if cart.amount>0:
+            cart.save()
+        # order 뷰로 리디렉션
+        return redirect('/order/')
+    else : 
+        return redirect('/accounts/login/')    
 
 
     # 변경된 최종 결과를 반환(JSON)
@@ -94,4 +115,52 @@ def modify_cart(request):
     #     'success':True
     # }
     # return JsonResponse(context)
+
+from django.db.models import Q
+class ProductSearch(ProductList):
+    def get_queryset(self) :
+        q = self.kwargs['q']
+        product_list = Product.objects.filter(
+            Q(product_name__contains=q) | Q(description__contains=q)
+        ).distinct()
+        return product_list
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        q = self.kwargs['q']
+        context['search_info'] = f"Search: {q}"
+
+        return context
+    
+
+
+
+
+
+#작성글 리스트 
+
+class ProductListByUser(ListView):
+    model = Product
+    template_name = 'my_products.html'
+    context_object_name = 'my_products'
+
+    def get_queryset(self):
+        # 로그인한 사용자의 이메일을 기준으로 해당 사용자가 작성한 판매글만 필터링하여 반환
+        user_email = self.request.user.email
+        return Product.objects.filter(seller_email=user_email)
+    
+
+#update view
+class ProductUpdateView(UpdateView):
+    model = Product
+    fields = ['product_name', 'price', 'description', 'quantity', 'total_price', 'category', 'image']
+    template_name = 'product_update.html'
+    success_url = reverse_lazy('product:my_products')
+
+#삭제 view
+class ProductDeleteView(DeleteView):
+    model = Product
+    success_url = reverse_lazy('product:my_products')  # 삭제 후 이동할 URL
+
+    # 템플릿 파일 이름 지정
+    template_name = 'product_confirm_delete.html'
 

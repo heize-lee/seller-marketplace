@@ -5,16 +5,12 @@
 # register
 from django.shortcuts import render, redirect
 from .forms import SignUpForm
-
 # login
 from django.contrib.auth import authenticate, login
-
 # account_setting (mypage?)
 from django.contrib.auth.decorators import login_required
-
 # account_setting - profile
 from .forms import ProfileUpdateForm
-
 # views.py
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
@@ -22,16 +18,110 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
 from .forms import ProfileUpdateForm
-
-
 # password_change
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import (
-    PasswordChangeView as AuthPasswordChangeView
-)
+from django.contrib.auth.views import (PasswordChangeView as AuthPasswordChangeView)
 from accounts.forms import PasswordChangeForm  # 커스텀 폼 임포트
+# delete_account
+from django.contrib.auth import authenticate, login, logout
+from .forms import DeleteAccountForm
+from .models import UserRegistrationHistory
+from django.db import transaction
 
+# login - added remeberme
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
+from .forms import LoginForm  # 커스텀 로그인 폼 임포트
+
+def login_view(request):
+    if request.method == 'POST':
+        form = LoginForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            remember_me = form.cleaned_data.get('remember_me', False)  # 폼에서 처리
+
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+
+                if remember_me:
+                    request.session.set_expiry(1209600)  # 2주
+                else:
+                    request.session.set_expiry(0)  # 브라우저 종료 시 세션 만료
+
+                next_url = request.GET.get('next')
+                return redirect(next_url) if next_url else redirect('home')
+        else:
+            return render(request, 'accounts/login.html', {'form': form})
+    else:
+        form = LoginForm()  # GET 요청 시 폼 인스턴스 생성
+    return render(request, 'accounts/login.html', {'form': form})
+
+
+# from datetime import timedelta
+# from django.utils import timezone
+
+# def login_view(request):
+#     if request.method == 'POST':
+#         username = request.POST.get('username')
+#         password = request.POST.get('password')
+#         remember_me = request.POST.get('remember_me') == 'on'  # 체크박스의 값을 확인
+
+#         user = authenticate(request, username=username, password=password)
+#         if user is not None:
+#             login(request, user)
+
+#             # "Remember me"가 체크되면 세션 만료 시간을 길게 설정
+#             if remember_me:
+#                 request.session.set_expiry(1209600)  # 2주 (단위: 초)
+#             else:
+#                 request.session.set_expiry(0)  # 브라우저 종료 시 세션 만료
+
+#             next_url = request.GET.get('next')
+#             if next_url:
+#                 return redirect(next_url)
+#             else:
+#                 return redirect('home')  # 또는 return redirect('/')
+#         else:
+#             return render(request, 'accounts/login.html', {'error': 'Invalid credentials'})
+
+#     return render(request, 'accounts/login.html')
+
+# delete_account
+@login_required
+def delete_account(request):
+    if request.method == 'POST':
+        form = DeleteAccountForm(request.POST)
+        if form.is_valid():
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=request.user.email, password=password)
+            if user is not None:
+                with transaction.atomic():
+                    # Save any related objects before deleting the user
+                    # For example, UserRegistrationHistory
+                    registration_history = UserRegistrationHistory.objects.create(user=user)
+
+                    # Delete the user
+                    user.delete()
+
+                    # Logout the user
+                    logout(request)
+
+                return redirect('delete_account_done')
+            else:
+                # 비밀번호가 일치하지 않는 경우 오류 메시지 표시
+                form.add_error('password', '비밀번호가 일치하지 않습니다.')
+    else:
+        form = DeleteAccountForm()
+    
+    return render(request, 'accounts/delete_account.html', {'form': form})
+
+def delete_account_done(request):
+    return render(request, 'accounts/delete_account_done.html')
+
+# password_change
 class PasswordChangeView(LoginRequiredMixin, AuthPasswordChangeView):
     success_url = reverse_lazy('password_change')
     template_name = 'accounts/password_change_form.html'  # 템플릿 위치 재정의
@@ -71,19 +161,6 @@ def account_settings(request):
         'password_form': password_form
     }
     return render(request, 'accounts/account_settings.html', context)
-
-# login
-def login_view(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return render(request, 'home.html')  # 로그인 성공 시 리다이렉트
-        else:
-            return render(request, 'accounts/login.html', {'error': 'Invalid credentials'})
-    return render(request, 'accounts/login.html')
 
 # register
 def signup_view(request):
