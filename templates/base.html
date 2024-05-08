@@ -60,17 +60,13 @@
           alert("검색어(" + searchValue + ")가 너무 짧습니다.");
         }
       }
-
-      document.addEventListener("DOMContentLoaded", function () {
-        let searchInput = document.getElementById("search-input");
-        if (searchInput) {
-          searchInput.addEventListener("keyup", function (event) {
-            if (event.key === "Enter") {
-              searchItem();
-            }
-          });
-        }
-      });
+      document
+        .getElementById("search-input")
+        .addEventListener("keyup", function (event) {
+          if (event.key === "Enter") {
+            searchItem();
+          }
+        });
     </script>
 
     <script
