@@ -1,13 +1,41 @@
 {% extends 'base.html' %} 
 {% load static %} 
-{% block title %} Home Page Title{% endblock %} 
+{% block title %} 홈 페이지 타이틀 {% endblock %} 
 {% block extra_head %}
 <link rel="stylesheet" href="{% static 'css/home.css' %}" />
 {% endblock %}
  {% block content %}
-<h1>HOME</h1>
-<p>Welcome to the homepage! Feel free to browse around.</p>
+<h1>홈</h1>
+<p>환영합니다! 자유롭게 둘러보세요.</p>
 <button><a href="{% url 'product:product' %}">상품</a></button>
+    <!-- 상품 목록 -->
+    <h1 class="text-center mt-5 mb-4">추천 상품</h1>
+    <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
+        {% for product in products %}
+        <div class="col">
+            <div class="card h-100">
+                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">가격: ${{ product.price }}</p>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'product_detail' product.id %}" class="btn btn-primary">자세히 보기</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- 상품 검색 폼
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+            <form onsubmit="searchItem(); return false;" class="input-group">
+                <input type="text" id="search-input" class="form-control" placeholder="상품을 검색하세요...">
+                <button type="submit" class="btn btn-primary">검색</button>
+            </form>
+        </div>
+    </div> -->
 {% endblock %} 
 {% block extra_js %}
 
