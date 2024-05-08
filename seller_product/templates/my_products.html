@@ -1,0 +1,38 @@
+{% extends 'base.html' %} 
+
+{% block content %}
+
+<div class="container mt-4">
+    <h3>전체</h3>
+    <div class="row">
+        {% for product in my_products %}
+        <div class="col-sm-3">
+            <div class="card mb-3">
+                <a href="{% url 'product:product_update' pk=product.pk %}">
+                    <div style="height: 180px; overflow: hidden;">
+                        <img src="{{ product.image.url }}" class="card-img-top" style="object-fit: cover; width: 100%; height: 100%;" alt="{{ product.product_name }}">
+                    </div>
+                </a>
+                <div class="card-body">
+                    <span class="badge bg-light text-dark">브랜드명</span>
+                    <a href="{% url 'product:product_update' pk=product.pk %}" class="link-dark text-decoration-none">
+                        <h4 class="card-title">{{ product.product_name }}</h4>
+                    </a>
+                    {{ product.description|striptags }} 
+                </div>
+                <div class="card-footer d-flex justify-content-between">
+                    <div>{{ product.price }}원</div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col">
+            <p>No products found.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
+
+
