@@ -170,3 +170,6 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 
 # login
 AUTHENTICATION_FORM = 'accounts.forms.LoginForm'
+
+# 사진용량추가
+DATA_UPLOAD_MAX_MEMORY_SIZE = 1024 * 1024 * 10  # 10MB
