@@ -1,3 +1,4 @@
+
 from typing import Any
 from django.db.models.query import QuerySet
 from django.shortcuts import render, redirect
@@ -8,18 +9,35 @@ from .forms import RegisterForm
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-
 # from order.forms import RegisterForm as OrderForm
 
-
+@login_required
+def modify_cart(request):
+    if request.method == 'POST':
+        user = request.user
+        Cart.objects.filter(user=user).delete()
+        product_id = request.POST['product']
+        product = Product.objects.get(pk=product_id)
+        cart, _ = Cart.objects.get_or_create(user=user, product=product)    
+        cart.amount = int(request.POST['count'])
+        if cart.amount > 0:
+            cart.total_price = cart.amount * product.price
+            cart.save()
+        return redirect('/order/')
+    else:
+        return redirect('home')
 
 class ProductList(ListView):
     model = Product
     template_name = 'product.html'
     context_object_name = 'product_list'
-    #     ordering = '-pk'
 
-def category_page(request,slug):  
+class ProductDetail(DetailView):
+    model = Product
+    template_name = 'product_detail.html'  # 이 부분은 적절한 템플릿 파일명으로 수정하세요.
+    context_object_name = 'product'
+
+def category_page(request, slug):  
     category = Category.objects.get(slug=slug)
     product_list = Product.objects.filter(category=category)
 
@@ -29,7 +47,7 @@ def category_page(request,slug):
         {
             'product_list': product_list,
             'categories': Category.objects.all(),
-            'category':category
+            'category': category
         }
     )
 
