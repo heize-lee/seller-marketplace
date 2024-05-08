@@ -42,9 +42,18 @@ nav.navbar-1 button.btn-link {
   align-items: center; /* 수직 가운데 정렬합니다. */
   margin-bottom: 5px; /* 아이콘과 텍스트 사이의 여백 조정 */
   border: none; /* 테두리 없음 */
-  margin: 0 5px; /* 버튼 사이 간격 */
   padding: 0; /* 패딩 없음 */
   margin-left: 10px; /* 아이콘과 텍스트 사이의 간격 조절 */
+}
+
+.navbar-2 .navbar-item a {
+  display: flex; /* 아이콘과 텍스트를 가로로 정렬 */
+  flex-direction: column;
+  align-items: center; /* 수직 가운데 정렬 */
+}
+
+.navbar-2 .navbar-item i {
+  color: #000; /* 아이콘의 색상을 원하는 색상으로 변경 */
 }
 
 .navbar-2 .navbar-item p {
@@ -57,7 +66,6 @@ nav.navbar-1 button.btn-link {
 
 .navbar-2 .container-fluid > div > div {
   margin: 0 10px; /* 아이콘과 텍스트 사이의 간격 조절 */
-  margin-right: 10px; /* 아이콘끼리의 오른쪽 간격 조절 */
   display: flex;
   flex-direction: column; /* 수직으로 요소들을 배치 */
   align-items: center; /* 수평 가운데 정렬 */
@@ -106,6 +114,6 @@ nav.navbar-2 .container {
 @media screen and (min-width: 992px) {
   .search {
     flex: 1; /* 검색 창이 남은 공간을 모두 차지하도록 설정 */
-    justify-content: center; /* 가로 가운데 정렬 */
+    margin: auto;
   }
 }

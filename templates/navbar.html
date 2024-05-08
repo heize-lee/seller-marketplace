@@ -18,7 +18,13 @@
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
           <li><a class="dropdown-item" href="#">주문목록</a></li>
-          <li><a class="dropdown-item" href="#">회원정보 관리</a></li>
+          <li>
+            <a
+              class="dropdown-item"
+              href="{% url 'accounts:account_settings' %}"
+              >회원정보 관리</a
+            >
+          </li>
           <li><hr class="dropdown-divider" /></li>
           <li>
             <a class="dropdown-item" href="#" onclick="logout()">로그아웃</a>
@@ -135,16 +141,20 @@
 
     <div class="navbar-items d-flex align-items-center">
       <div class="주문내역 navbar-item">
-        <i class="fas fa-receipt"></i>
-        <p>주문내역</p>
+        <a href="#">
+          <i class="fas fa-receipt"></i>
+          <p>주문내역</p>
+        </a>
       </div>
       <div class="장바구니 navbar-item">
         <i class="fas fa-shopping-cart"></i>
         <p>장바구니</p>
       </div>
       <div class="내_정보 navbar-item">
-        <i class="fas fa-user"></i>
-        <p>내 정보</p>
+        <a href="{% url 'accounts:account_settings' %}">
+          <i class="fas fa-user"></i>
+          <p>내 정보</p>
+        </a>
       </div>
     </div>
   </div>
