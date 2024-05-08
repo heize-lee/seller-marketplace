@@ -3,7 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     {% load static %}
     <title>{% block title %} SELLER {% endblock %}</title>
     <link
@@ -31,12 +30,10 @@
     />
   </head>
   <body>
-
     <header>
       <!-- 네비게이션 바 포함 -->
       {% include 'navbar.html' %}
     </header>
-
     <main>{% block content %}Content goes here{% endblock %}</main>
 
     <footer style="background-color: #ab11114c; padding: 20px">
@@ -89,6 +86,5 @@
       integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
       crossorigin="anonymous"
     ></script>
-
   </body>
 </html>
