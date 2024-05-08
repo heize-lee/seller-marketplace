@@ -8,6 +8,7 @@ from .models import Product,Category, Cart
 from .forms import RegisterForm
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 
 # from order.forms import RegisterForm as OrderForm
 
