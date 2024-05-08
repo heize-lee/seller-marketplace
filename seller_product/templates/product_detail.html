@@ -75,6 +75,24 @@
       </div>
     </div>
   </div>
+  <hr>
+  <!-- 상품 설명 -->
+  
+  <h3>댓글</h3>
+  {% if product.comment_set.exists %}
+    {% for comment in product.comment_set.iterator %}
+      <div class="d-flex align-items-start mb-4">
+        <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+        <div class="">
+          <h5 class="mt-0">{{ comment.autor.email }}&nbsp;&nbsp;<small class="text-muted">{{ comment.created_at }}</small></h5> 
+          <p>{{ comment.content | linebreaks}}</p>
+        </div>
+        
+      </div>  
+         
+    {% endfor %}
+  {% endif %}
+
 </div>
 
 
