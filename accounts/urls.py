@@ -13,6 +13,7 @@ from . import views
 
 # account_settings
 from .views import account_settings
+from seller_product.views import ProductCreate, ProductUpdateView, ProductDeleteView # SELLER
 
 # delete_account
 from .views import delete_account
@@ -30,6 +31,9 @@ urlpatterns = [
     path('delete_account/', views.delete_account, name='delete_account'),
     path('delete_account_done/', views.delete_account_done, name='delete_account_done'),
 
+    path('product/create/', ProductCreate.as_view(), name='accounts_product_create'),  # product_create
+    path('<int:pk>/update/', ProductUpdateView.as_view(), name='product_update'),
+    path('<int:pk>/delete/', ProductDeleteView.as_view(), name='product_delete'),
     
     path('', include('django.contrib.auth.urls')),
 ]

@@ -1,120 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Register</title>
-    <link rel="stylesheet" hhref="{% static 'accounts/css/register.css' %}" />
-  </head>
-  <body>
-    <div class="register-container">
-      <form
-        method="post"
-        action="{% url 'accounts:register' %}"
-        enctype="multipart/form-data"
-      >
-        {% csrf_token %}
-        <div class="form-group">
-          <label for="profile-picture">Profile Picture:</label>
-          <div>
-            <img
-              id="profile-preview"
-              src="#"
-              alt="Preview"
-              style="display: none; max-width: 200px; max-height: 200px"
-            />
-            <input
-              type="file"
-              id="profile-picture"
-              name="profile_picture"
-              accept="image/*"
-              onchange="previewImage(event)"
-            />
-            <button type="button" onclick="removeProfile()">Remove</button>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            class="form-control"
-            placeholder="example@gmail.com"
-          />
-        </div>
-        <div class="form-group">
-          <label for="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            name="password1"
-            class="form-control"
-            placeholder="Enter at least 8+ characters"
-          />
-        </div>
-        <div class="form-group">
-          <label for="password-confirm">Confirm Password:</label>
-          <input
-            type="password"
-            id="password-confirm"
-            name="password2"
-            class="form-control"
-            placeholder="Confirm your password"
-          />
-        </div>
-        <div class="form-group">
-          <label for="nickname">Nickname:</label>
-          <input
-            type="text"
-            id="nickname"
-            name="nickname"
-            class="form-control"
-            placeholder="Enter your nickname"
-          />
-        </div>
-        <div class="form-group">
-          <label for="phone-number">Phone Number:</label>
-          <input
-            type="text"
-            id="phone-number"
-            name="phone_number"
-            class="form-control"
-            placeholder="Enter your phone number"
-          />
-        </div>
-        <div class="form-group">
-          <input type="checkbox" id="agree-terms" name="is_agree_terms" />
-          <label for="agree-terms">I agree to the Terms of Use</label>
-        </div>
-        <div class="form-group">
-          <input
-            type="checkbox"
-            id="agree-privacy"
-            name="is_agree_privacy_policy"
-          />
-          <label for="agree-privacy">I agree to the Privacy Policy</label>
-        </div>
-        <button type="submit" class="register-btn">Sign Up</button>
-      </form>
-      <p>
-        Already have an account? <a href="{% url 'accounts:login' %}">Log In</a>
-      </p>
-    </div>
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div class="account-settings">
+  <h1>Account Settings</h1>
 
-    <script>
-      function previewImage(event) {
-        var img = document.getElementById("profile-preview");
-        img.src = URL.createObjectURL(event.target.files[0]);
-        img.style.display = "block";
-      }
+  <!-- 프로필 업데이트 폼 -->
+  <h2>Profile</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %} {{ profile_form.as_p }}
+    <button type="submit" name="update_profile">Update Profile</button>
+  </form>
 
-      function removeProfile() {
-        var img = document.getElementById("profile-preview");
-        img.src = "#";
-        img.style.display = "none";
-        document.getElementById("profile-picture").value = "";
-      }
-    </script>
-  </body>
-</html>
+  <ul>
+    <li>
+      <button onclick="window.location.href='/accounts/password_change/';">
+        Change Password
+      </button>
+    </li>
+    <li>
+      <button onclick="window.location.href='/accounts/password_reset/';">
+        Change Reset
+      </button>
+    </li>
+    <!-- 판매자페이지 -->
+
+    <li>
+      <button onclick="window.location.href='/product/create/';">
+        Seller 등록
+      </button>
+    </li>
+    <li>
+      <button onclick="window.location.href='/product/my_products/';">
+        내 상품 리스트 보기
+      </button>
+    </li>
+    <!-- 회원 탈퇴 링크 -->
+    <li>
+      <button onclick="window.location.href='/accounts/delete_account/';">
+        회원 탈퇴
+      </button>
+    </li>
+  </ul>
+</div>
+
+{% endblock %}
