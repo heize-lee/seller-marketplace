@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends 'base.html' %} 
 {% load static %} 
 {% block title %} 홈 페이지 타이틀 {% endblock %} 
@@ -38,6 +39,16 @@
     </div> -->
 {% endblock %} 
 {% block extra_js %}
+=======
+{% extends 'base.html' %} {% load static %} {% block title %} Home Page Title
+{%endblock %} {% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}" />
+{% endblock %} {% block content %}
+<h1>HOME</h1>
+<p>Welcome to the homepage! Feel free to browse around.</p>
+<button><a href="{% url 'product:product' %}">상품</a></button>
+{% endblock %} {% block extra_js %}
+>>>>>>> 113d0feeba7d97506ab015661227177974901d6b
 
 <script src="{% static 'js/home.js' %}"></script>
 

@@ -1,0 +1,108 @@
+/* register.css */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+}
+
+.register-container {
+  background: white;
+  padding: 50px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  margin: 50px auto; /* 위아래 50px의 마진을 추가하고 가로 중앙 정렬 */
+}
+
+.signup-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.signup-header p {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.role {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.agreement {
+  margin-top: 20px;
+}
+
+.agreement p {
+  font-size: 14px;
+}
+
+.input-group {
+  margin-top: 20px;
+}
+
+.input-group input[type="text"],
+.input-group input[type="email"],
+.input-group input[type="password"],
+.input-group input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.input-group label {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.register-btn {
+  width: 100%;
+  padding: 10px;
+  margin-top: 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+
+.register-btn:hover {
+  background-color: #0056b3;
+}
+
+.checkbox {
+  margin-top: 20px;
+}
+
+.checkbox label {
+  display: block;
+  font-size: 14px;
+}
+
+.checkbox input[type="checkbox"] {
+  margin-right: 5px;
+  transform: translateY(1px);
+}
+
+.profile-photo-group {
+  position: relative;
+  margin-top: 20px;
+}
+
+.profile-photo-group label {
+  display: block;
+}
+
+.profile-photo-group input[type="file"] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
