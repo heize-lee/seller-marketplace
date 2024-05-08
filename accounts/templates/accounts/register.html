@@ -1,9 +1,98 @@
 {% extends 'base.html' %} {% load static %} {% block content %}
-<div class="signup-container">
-  <h1 class="create_an_">SELLER</h1>
+<link rel="stylesheet" href="{% static 'accounts/css/register.css' %}" />
+
+<div class="register-container">
+  <!-- 로고 이미지 대체 -->
+  <div class="logo-container">
+    <img
+      src="{% static 'images/SELLER_logo.png' %}"
+      alt="Logo"
+      width="200"
+      height="auto;"
+      class="d-inline-block align-text-top"
+      style="display: inline-block; vertical-align: middle"
+    />
+  </div>
   <form method="post" enctype="multipart/form-data">
-    {% csrf_token %} {{ form.as_p }}
-    <button type="submit">Sign Up</button>
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="{{ form.email.id_for_label }}">Email:</label>
+      <input
+        type="email"
+        name="email"
+        id="{{ form.email.id_for_label }}"
+        class="form-control"
+        placeholder="example@gmail.com"
+      />
+    </div>
+    <div class="form-group">
+      <label for="{{ form.password1.id_for_label }}">Password:</label>
+      <input
+        type="password"
+        name="password1"
+        id="{{ form.password1.id_for_label }}"
+        class="form-control"
+        placeholder="비밀번호를 입력해주세요."
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.password2.id_for_label }}">Confirm Password:</label>
+      <input
+        type="password"
+        name="password2"
+        id="{{ form.password2.id_for_label }}"
+        class="form-control"
+        placeholder="비밀번호를 다시 한번 입력해주세요."
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.nickname.id_for_label }}">Nickname:</label>
+      <input
+        type="text"
+        name="nickname"
+        id="{{ form.nickname.id_for_label }}"
+        class="form-control"
+        placeholder="닉네임을 입력해주세요."
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.phone_number.id_for_label }}">Phone Number:</label>
+      <input
+        type="tel"
+        name="phone_number"
+        id="{{ form.phone_number.id_for_label }}"
+        class="form-control"
+        placeholder="전화번호를 입력해주세요."
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.profile_picture.id_for_label }}"
+        >Profile Picture: {{ form.profile_picture }}</label
+      >
+    </div>
+    <div class="form-group">
+      <label for="{{ form.is_agree_terms.id_for_label }}"
+        >이용 약관 동의: {{ form.is_agree_terms }}</label
+      >
+    </div>
+    <div class="form-group">
+      <label for="{{ form.is_agree_privacy_policy.id_for_label }}"
+        >개인정보 처리방침 동의: {{ form.is_agree_privacy_policy }}</label
+      >
+    </div>
+    <div class="form-group">
+      <label for="{{ form.role.id_for_label }}">Role: {{ form.role }}</label>
+    </div>
+    <button type="submit" class="login-btn btn-primary login-btn">
+      Register
+    </button>
+    <p>
+      Already have an account? <a href="{% url 'accounts:login' %}">Login</a>
+    </p>
   </form>
 </div>
 {% endblock %}

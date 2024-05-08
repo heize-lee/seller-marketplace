@@ -1,0 +1,22 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<link rel="stylesheet" href="{% static 'accounts/css/register.css' %}" />
+
+<div class="register-container">
+  <!-- 로고 이미지 대체 -->
+  <div class="logo-container">
+    <img
+      src="{% static 'images/SELLER_logo.png' %}"
+      alt="Logo"
+      width="200"
+      height="auto;"
+      class="d-inline-block align-text-top"
+      style="display: inline-block; vertical-align: middle"
+    />
+  </div>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %} {{ form.as_p }}
+    <button type="submit" class="register-btn btn-primary">Sign up</button>
+  </form>
+</div>
+{% endblock %}
