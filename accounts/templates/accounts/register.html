@@ -1,44 +1,9 @@
 {% extends 'base.html' %} {% load static %} {% block content %}
-<div class="account-settings">
-  <h1>Account Settings</h1>
-
-  <!-- 프로필 업데이트 폼 -->
-  <h2>Profile</h2>
+<div class="signup-container">
+  <h1 class="create_an_">SELLER</h1>
   <form method="post" enctype="multipart/form-data">
-    {% csrf_token %} {{ profile_form.as_p }}
-    <button type="submit" name="update_profile">Update Profile</button>
+    {% csrf_token %} {{ form.as_p }}
+    <button type="submit">Sign Up</button>
   </form>
-
-  <ul>
-    <li>
-      <button onclick="window.location.href='/accounts/password_change/';">
-        Change Password
-      </button>
-    </li>
-    <li>
-      <button onclick="window.location.href='/accounts/password_reset/';">
-        Change Reset
-      </button>
-    </li>
-    <!-- 판매자페이지 -->
-
-    <li>
-      <button onclick="window.location.href='/product/create/';">
-        Seller 등록
-      </button>
-    </li>
-    <li>
-      <button onclick="window.location.href='/product/my_products/';">
-        내 상품 리스트 보기
-      </button>
-    </li>
-    <!-- 회원 탈퇴 링크 -->
-    <li>
-      <button onclick="window.location.href='/accounts/delete_account/';">
-        회원 탈퇴
-      </button>
-    </li>
-  </ul>
 </div>
-
 {% endblock %}
