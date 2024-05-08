@@ -13,10 +13,7 @@ superuser 아이디 pc 비밀번호 1
 
 from pathlib import Path
 import os
-from dotenv import load_dotenv
 
-load_dotenv()
-db_key = os.getenv("DB_KEY")
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -88,7 +85,6 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 
-db_key= os.getenv('DB_KEY')
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
