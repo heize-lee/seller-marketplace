@@ -116,8 +116,21 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="search">
-      <input type="text" placeholder="Search..." />
+    <div class="search" role="search">
+      <input
+        class="form-control me-2"
+        type="search"
+        placeholder="Search..."
+        aria-label="Search"
+        id="search-input"
+      />
+      <button
+        class="btn btn-outline-success"
+        type="submit"
+        onclick="searchItem()"
+      >
+        Search
+      </button>
     </div>
 
     <div class="navbar-items d-flex align-items-center">
