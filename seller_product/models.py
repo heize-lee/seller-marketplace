@@ -32,6 +32,7 @@ class Product(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products', default=get_default_category_id)
     image = models.ImageField(upload_to='product_images/', null=True, blank=True)   #질문 거리 image 필드 이미지 안넣으면 현재는 상품 생성 안됨.
+    seller_email = models.EmailField(null=True)
 
     def __str__(self):
         return self.product_name
@@ -51,5 +52,6 @@ class Cart(models.Model):
     total_price = models.SmallIntegerField(default=0)
     amount = models.IntegerField(default=0)
     payment_total_price=models.IntegerField(default=0)
+
 
 
