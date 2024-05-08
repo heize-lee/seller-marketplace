@@ -54,4 +54,3 @@ class Cart(models.Model):
     payment_total_price=models.IntegerField(default=0)
 
 
-

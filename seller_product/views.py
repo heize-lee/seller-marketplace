@@ -173,7 +173,7 @@ class ProductListByUser(ListView):
 #update view
 class ProductUpdateView(UpdateView):
     model = Product
-    fields = ['product_name', 'price', 'description', 'quantity', 'total_price', 'category', 'image']
+    fields = ['product_name', 'price', 'description', 'quantity', 'category', 'image']
     template_name = 'product_update.html'
     success_url = reverse_lazy('product:my_products')
 
