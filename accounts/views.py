@@ -28,7 +28,6 @@ from django.contrib.auth import authenticate, login, logout
 from .forms import DeleteAccountForm
 from .models import UserRegistrationHistory
 from django.db import transaction
-
 # login - added remeberme
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
@@ -59,35 +58,12 @@ def login_view(request):
         form = LoginForm()  # GET 요청 시 폼 인스턴스 생성
     return render(request, 'accounts/login.html', {'form': form})
 
+# accounts/views.py
 
-# from datetime import timedelta
-# from django.utils import timezone
-
-# def login_view(request):
-#     if request.method == 'POST':
-#         username = request.POST.get('username')
-#         password = request.POST.get('password')
-#         remember_me = request.POST.get('remember_me') == 'on'  # 체크박스의 값을 확인
-
-#         user = authenticate(request, username=username, password=password)
-#         if user is not None:
-#             login(request, user)
-
-#             # "Remember me"가 체크되면 세션 만료 시간을 길게 설정
-#             if remember_me:
-#                 request.session.set_expiry(1209600)  # 2주 (단위: 초)
-#             else:
-#                 request.session.set_expiry(0)  # 브라우저 종료 시 세션 만료
-
-#             next_url = request.GET.get('next')
-#             if next_url:
-#                 return redirect(next_url)
-#             else:
-#                 return redirect('home')  # 또는 return redirect('/')
-#         else:
-#             return render(request, 'accounts/login.html', {'error': 'Invalid credentials'})
-
-#     return render(request, 'accounts/login.html')
+from django.contrib.auth import authenticate, logout
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from .forms import DeleteAccountForm
 
 # delete_account
 @login_required
@@ -98,16 +74,11 @@ def delete_account(request):
             password = form.cleaned_data['password']
             user = authenticate(request, username=request.user.email, password=password)
             if user is not None:
-                with transaction.atomic():
-                    # Save any related objects before deleting the user
-                    # For example, UserRegistrationHistory
-                    registration_history = UserRegistrationHistory.objects.create(user=user)
+                # Delete the user
+                user.delete()
 
-                    # Delete the user
-                    user.delete()
-
-                    # Logout the user
-                    logout(request)
+                # Logout the user
+                logout(request)
 
                 return redirect('delete_account_done')
             else:
@@ -119,7 +90,40 @@ def delete_account(request):
     return render(request, 'accounts/delete_account.html', {'form': form})
 
 def delete_account_done(request):
-    return render(request, 'accounts/delete_account_done.html')
+    return redirect('delete_account_done')
+
+# delete_account - 3차, 회원탈퇴 후 로그
+# @login_required
+# def delete_account(request):
+#     if request.method == 'POST':
+#         form = DeleteAccountForm(request.POST)
+#         if form.is_valid():
+#             password = form.cleaned_data['password']
+#             user = authenticate(request, username=request.user.email, password=password)
+#             if user is not None:
+#                 with transaction.atomic():
+#                     # Save any related objects before deleting the user
+#                     # For example, UserRegistrationHistory
+#                     # registration_history = UserRegistrationHistory.objects.create(user=user)
+
+#                     # Delete the user
+#                     user.delete()
+
+#                     # Logout the user
+#                     logout(request)
+
+#                 return redirect('delete_account_done')
+#             else:
+#                 # 비밀번호가 일치하지 않는 경우 오류 메시지 표시
+#                 form.add_error('password', '비밀번호가 일치하지 않습니다.')
+#     else:
+#         form = DeleteAccountForm()
+    
+#     return render(request, 'accounts/delete_account.html', {'form': form})
+
+# def delete_account_done(request):
+#     # return render(request, 'accounts/delete_account_done.html')
+#     return redirect('delete_account_done')
 
 # password_change
 class PasswordChangeView(LoginRequiredMixin, AuthPasswordChangeView):

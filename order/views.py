@@ -100,6 +100,8 @@ def order_done(request):
     # 결제 완료 페이지로 리디렉션
     return render(request, 'order/order_done.html', context)
    
+#    최근구매목록 순서로
+# 시간남으면 필터 연도별 / 최근 3개월 / 페이징 손봐야됨
 def order_list(request):
     user = request.user
     order = Order.objects.filter(user=user)  

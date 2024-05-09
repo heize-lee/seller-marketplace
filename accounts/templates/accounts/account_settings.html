@@ -1,33 +1,53 @@
+<!-- profile_update.html -->
 {% extends 'base.html' %} {% load static %} {% block content %}
-<div class="account-settings">
-  <h1>Account Settings</h1>
+<link
+  rel="stylesheet"
+  href="{% static 'accounts/css/account_settings.css' %}"
+/>
 
-  <!-- 프로필 업데이트 폼 -->
-  <h2>Profile</h2>
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %} {{ profile_form.as_p }}
-    <button type="submit" name="update_profile">Update Profile</button>
-  </form>
+<div class="container">
+  <div class="my-page-nav">
+    <h3>마이페이지</h3>
+    <ul>
+      <li>
+        <a href="{% url 'accounts:password_change' %}">Change Password</a>
+      </li>
+      <li>
+        <a href="{% url 'accounts:delete_account' %}">Delete Account</a>
+      </li>
+    </ul>
 
-  <ul>
-    <li>
-      <button onclick="window.location.href='/accounts/password_change/';">
-        Change Password
-      </button>
-    </li>
-    <li>
-      <button onclick="window.location.href='/accounts/password_reset/';">
-        Change Reset
-      </button>
-    </li>
-    <!-- 다른 필요한 링크들을 여기에 추가 -->
-    <!-- 회원 탈퇴 링크 -->
-    <li>
-      <button onclick="window.location.href='/accounts/delete_account/';">
-        회원 탈퇴
-      </button>
-    </li>
-  </ul>
+    <h3>판매자페이지</h3>
+    <ul>
+      <li>
+        <a href="{% url 'product:product_create' %}">상품 등록</a>
+      </li>
+      <li>
+        <a href="{% url 'product:my_products' %}">내 상품 리스트 보기</a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="content">
+    <div class="account-settings">
+      <!-- 프로필 업데이트 폼 -->
+      <h2 id="profile">Profile Settings</h2>
+      <div>
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %} {{ profile_form.as_p }}
+
+          <!-- 기존 정보 표시 -->
+          <p>기존 Profile Picture: {% if user.profile_picture %}</p>
+          <p>
+            Profile Picture:
+            <img src="{{ user.profile_picture.url }}" alt="Profile Picture" />
+          </p>
+          {% endif %}
+
+          <button type="submit" name="update_profile">Update Profile</button>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
-
 {% endblock %}

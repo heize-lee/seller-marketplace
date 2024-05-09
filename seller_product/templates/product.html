@@ -1,30 +1,42 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    <div class="container  my-4">
-        {% if search_info %} <span class="row m-0 " style="font-size: 31px;font-family: Lexend;font-weight: 700;line-height: 48px;">{{ search_info }}</span>{% endif %}
-        <span class="row m-0 " style="font-size: 31px;font-family: Lexend;font-weight: 700;line-height: 48px;">{{ category }}</span>
-        <div class="mt-4">
-            <h3>전체</h3>
-            <div class="row col-sm-12 ms-auto">
-                {% for product in product_list %}
-                <div class="col-sm-3">
-                    <div class=" mb-3">
-                        <div class="embed-responsive embed-responsive-4by3">
-                        <a href="/product/{{ product.product_id }}"><img class="card-img-top embed-responsive-item" src="{{product.image.url}}" width="150" height="180" alt="random_image" /></a>  
-                        </div> 
-                            <span class="badge text-bg-light ">브랜드명</span>
-                            <a href="/product/{{ product.product_id }}" class="link-dark text-decoration-none"><h4 class="card-title h5">{{product.product_name}}</h4></a>
-                            {{ product.description|striptags }} 
-
-                            <div class="d-flex justify-content-end">{{product.price}}원</div>          
+<div class="container my-4">
+    {% if search_info %}
+    <span class="row m-0" style="font-size: 31px; font-family: Lexend; font-weight: 700; line-height: 48px;">{{ search_info }}</span>
+    {% endif %}
+    <span class="row m-0" style="font-size: 31px; font-family: Lexend; font-weight: 700; line-height: 48px;">{{ category }}</span>
+    <div class="mt-4">
+        <h3>전체</h3>
+        <div class="row">
+            {% for product in product_list %}
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card flex-grow-1">
+                    <div class="embed-responsive embed-responsive-4by3">
+                        <a href="/product/{{ product.product_id }}">
+                            <img class="card-img-top embed-responsive-item img-fluid" src="{{ product.image.url }}" alt="Product Image">
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <span class="badge bg-light text-dark">브랜드명</span>
+                        <a href="/product/{{ product.product_id }}" class="link-dark text-decoration-none">
+                            <h4 class="card-title">{{ product.product_name }}</h4>
+                        </a>
+                        <p class="card-text">{{ product.description|striptags|truncatewords:15 }}</p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <div>{{ product.price }}원</div>
                     </div>
                 </div>
-                {% endfor %}
             </div>
+            {% endfor %}
         </div>
-        {% endblock %}
     </div>
+</div>
 
-
-   
+<style>
+    .card {
+        height: 600px;
+    }
+</style>
+{% endblock %}

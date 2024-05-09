@@ -23,7 +23,7 @@
       xhr.onreadystatechange = function () {
         if (xhr.readyState === XMLHttpRequest.DONE) {
           if (xhr.status === 200) {
-            window.location.href ='/accounts/delete_account/';"
+            window.location.href = '{% url "accounts:delete_account_done" %}';
           } else {
             alert("비밀번호가 일치하지 않습니다.");
           }

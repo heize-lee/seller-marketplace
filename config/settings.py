@@ -13,10 +13,7 @@ superuser 아이디 pc 비밀번호 1
 
 from pathlib import Path
 import os
-from dotenv import load_dotenv
 
-load_dotenv()
-db_key = os.getenv("DB_KEY")
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -88,7 +85,6 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 
-db_key= os.getenv('DB_KEY')
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
@@ -99,6 +95,7 @@ load_dotenv()
 db_key = os.getenv("DB_KEY")
 
 DATABASES = {
+
      'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
@@ -177,3 +174,6 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 
 # login
 AUTHENTICATION_FORM = 'accounts.forms.LoginForm'
+
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024 * 1024  # 10GB
+

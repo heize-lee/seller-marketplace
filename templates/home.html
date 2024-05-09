@@ -1,11 +1,68 @@
-{% extends 'base.html' %} {% load static %} {% block title %} Home Page Title
-{%endblock %} {% block extra_head %}
+{% extends 'base.html' %} 
+{% load static %} 
+{% block title %} 홈 페이지 타이틀 {% endblock %} 
+{% block extra_head %}
 <link rel="stylesheet" href="{% static 'css/home.css' %}" />
-{% endblock %} {% block content %}
-<h1>HOME</h1>
-<p>Welcome to the homepage! Feel free to browse around.</p>
+{% endblock %}
+ {% block content %}
+<h1>홈</h1>
+<p>환영합니다! 자유롭게 둘러보세요.</p>
 <button><a href="{% url 'product:product' %}">상품</a></button>
-{% endblock %} {% block extra_js %}
+     <!-- 상품리스트 -->
+     <h1>Products</h1>
+     <div class="row">
+         {% for product in products %}
+         <div class="col-md-4">
+             <div class="product-card">
+                 <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                 <h3>{{ product.name }}</h3>
+                 <p>Price: ${{ product.price }}</p>
+                 <p><a href="{% url 'product_detail' product.id %}">View Details</a></p>
+             </div>
+         </div>
+         {% endfor %}
+     </div>
+ 
+     <!-- Product List -->
+ <div class="container mt-5">
+   <h2 class="text-center mb-4">오늘의 <img src="/Users/user/Downloads/SELLER.png" alt="SELLER 이미지"> </h2>
+ 
+ 
+   <div class="row row-cols-1 row-cols-md-3 g-4">
+       {% for product in products %}
+       <div class="col">
+           <div class="card h-100 shadow">
+               <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+               <div class="card-body">
+                   <h5 class="card-title">{{ product.name }}</h5>
+                   <p class="card-text">Price: ${{ product.price }}</p>
+               </div>
+               <div class="card-footer">
+                   <a href="{% url 'product_detail' product.id %}" class="btn btn-primary">View Details</a>
+               </div>
+           </div>
+       </div>
+       {% endfor %}
+   </div>
+ </div>
+ 
+ <!-- 아래 메인상단 -->
+ <div class="container mt-5 text-center">
+   <h2>저희 셀러의 트렌디한 상품을 소개해 드려요</h2>
+   <p>최신제품을 확인해 보세요!</p>
+   <a href="{% url 'product_create' %}" class="btn btn-lg btn-success">상품등록</a>
+ </div>
+ 
+ <!-- 인기 품목 -->
+ <div class="container mt-5">
+   <h2 class="text-center mb-4"> 인기상품 </h2>
+   <div class="row row-cols-1 row-cols-md-3 g-4">
+       <!-- 인기상품코드 넣을란 -->
+   </div>
+ </div>
+ 
+{% endblock %} 
+{% block extra_js %}
 
 <script src="{% static 'js/home.js' %}"></script>
 
