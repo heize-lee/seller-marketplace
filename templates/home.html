@@ -4,63 +4,84 @@
 {% block extra_head %}
 <link rel="stylesheet" href="{% static 'css/home.css' %}" />
 {% endblock %}
- {% block content %}
-<h1>홈</h1>
-<p>환영합니다! 자유롭게 둘러보세요.</p>
-<button><a href="{% url 'product:product' %}">상품</a></button>
+{% block extra-style %}
+<style>
+    .home-image{
+    background-image: url("{% static 'images/1.jpg' %}");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;   
+    height: 500px; 
+    
+    padding: 20px 0 0 20px;    
+    margin-bottom: 24px;
+  }
+
+</style>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active" data-bs-interval="10000">
+            <img src="{% static 'images/1.jpg' %}" class="d-block w-100" alt="...">
+          </div>
+          <div class="carousel-item" data-bs-interval="2000">
+            <img src="{% static 'images/2.jpg' %}" class="d-block w-100" alt="...">
+          </div>
+          <div class="carousel-item">
+            <img src="{% static 'images/3.jpg' %}" class="d-block w-100" alt="...">
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+   
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">오늘의 SELLER </h2>
+        <form class="text-center"action="{% url 'product:product' %}">
+            <button class="btn btn-sm btn-outline-primary">전체상품 보러가기</button>
+        </form>
+       
+      </div>
      <!-- 상품리스트 -->
-     <h1>Products</h1>
-     <div class="row">
-         {% for product in products %}
+     
+     <div class="row">        
+         {% for product in object_list %}
+         {{ product }}
          <div class="col-md-4">
              <div class="product-card">
-                 <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                 <img src="/product/{{ product.image.url }}" alt="">
                  <h3>{{ product.name }}</h3>
-                 <p>Price: ${{ product.price }}</p>
-                 <p><a href="{% url 'product_detail' product.id %}">View Details</a></p>
+                 <p>Price: {{ product.price }}원</p>
+                 <p><a href="{% url 'product:product_detail' product.id %}">View Details</a></p>
              </div>
          </div>
          {% endfor %}
      </div>
  
-     <!-- Product List -->
- <div class="container mt-5">
-   <h2 class="text-center mb-4">오늘의 <img src="/Users/user/Downloads/SELLER.png" alt="SELLER 이미지"> </h2>
  
- 
-   <div class="row row-cols-1 row-cols-md-3 g-4">
-       {% for product in products %}
-       <div class="col">
-           <div class="card h-100 shadow">
-               <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
-               <div class="card-body">
-                   <h5 class="card-title">{{ product.name }}</h5>
-                   <p class="card-text">Price: ${{ product.price }}</p>
-               </div>
-               <div class="card-footer">
-                   <a href="{% url 'product_detail' product.id %}" class="btn btn-primary">View Details</a>
-               </div>
-           </div>
-       </div>
-       {% endfor %}
-   </div>
- </div>
  
  <!-- 아래 메인상단 -->
  <div class="container mt-5 text-center">
    <h2>저희 셀러의 트렌디한 상품을 소개해 드려요</h2>
    <p>최신제품을 확인해 보세요!</p>
-   <a href="{% url 'product_create' %}" class="btn btn-lg btn-success">상품등록</a>
  </div>
  
  <!-- 인기 품목 -->
- <div class="container mt-5">
+ <!-- <div class="container mt-5">
    <h2 class="text-center mb-4"> 인기상품 </h2>
-   <div class="row row-cols-1 row-cols-md-3 g-4">
+   <div class="row row-cols-1 row-cols-md-3 g-4"> -->
        <!-- 인기상품코드 넣을란 -->
-   </div>
- </div>
- 
+   <!-- </div>
+ </div> -->
+</div>
 {% endblock %} 
 {% block extra_js %}
 
