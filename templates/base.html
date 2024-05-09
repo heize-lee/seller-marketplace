@@ -35,13 +35,9 @@
       <!-- 네비게이션 바 포함 -->
       {% include 'navbar.html' %}
     </header>
-    <main>
-      {% block content %}Content goes here{% endblock %}
-      
+    <main>{% block content %}Content goes here{% endblock %}</main>
 
-    </main>
-
-    <footer style="background-color: #ab11114c; padding: 20px">
+    <footer style="background-color: #f2f2f2; padding: 20px">
       <div style="border-top: 1px solid #ccc; margin-top: 20px"></div>
       <p style="margin-top: 20px">&copy; 2024 My Website</p>
     </footer>
@@ -49,12 +45,10 @@
     <!-- 외부 스크립트 -->
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
-      
       crossorigin="anonymous"
     ></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-      
       crossorigin="anonymous"
     ></script>
 
@@ -93,4 +87,3 @@
     ></script>
   </body>
 </html>
-
