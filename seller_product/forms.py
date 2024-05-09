@@ -10,7 +10,7 @@ class RegisterForm(forms.ModelForm):
 
     class Meta:
         model = Product
-        fields = ['product_name', 'price', 'description', 'quantity', 'total_price', 'category', 'image']\
+        fields = ['product_name', 'price', 'description', 'quantity', 'category', 'image']\
         
 
     def clean_image(self):

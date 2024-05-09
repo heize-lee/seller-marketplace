@@ -170,3 +170,5 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 
 # login
 AUTHENTICATION_FORM = 'accounts.forms.LoginForm'
+
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024 * 1024  # 10GB
