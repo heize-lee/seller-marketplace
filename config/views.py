@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from django.shortcuts import render,redirect
 from django.http import JsonResponse
 from django.contrib.auth import authenticate
@@ -15,3 +16,17 @@ def home_view(request):
         'object_list' : products
     }
     return render(request,'home.html',context)
+=======
+from typing import Any
+from django.db.models.query import QuerySet
+from django.shortcuts import render, redirect
+from django.views.generic import ListView, DetailView, DeleteView
+from django.views.generic.edit import FormView, UpdateView
+from seller_product.models import Product,Category, Cart
+from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+
+
+
+>>>>>>> ee2883aaeb9b88c14f9b865b323a3adc6827b341
