@@ -77,13 +77,18 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+import os
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'seller_2',
+        'USER': 'postgres',  # PostgreSQL 사용자명
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': 'hanslab.org',  # 데이터베이스 호스트
+        'PORT': '25432',  # PostgreSQL 포트
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
