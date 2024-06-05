@@ -35,3 +35,4 @@ class ProductCreate(LoginRequiredMixin, FormView):
             # 로그인되어 있지 않은 경우 로그인 페이지로 리디렉션
             return redirect(self.login_url)
         return super().dispatch(request, *args, **kwargs)
+    
