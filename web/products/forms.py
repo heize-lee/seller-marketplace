@@ -6,15 +6,14 @@ from .models import Product, Category
 class RegisterForm(forms.ModelForm):
 
     category = forms.ModelChoiceField(queryset=Category.objects.all(), empty_label=None)
-    image = forms.ImageField(required=False)
-
+    
     class Meta:
         model = Product
         fields = ['product_name', 'product_price', 'description', 'stock_quantity', 'category', 'product_img']
         
 
     def clean_image(self):
-        image = self.cleaned_data.get('image')
+        image = self.cleaned_data.get('product_img')
         if image:
             # 이미지 사이즈 조정
             max_size = (500, 500)
