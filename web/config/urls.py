@@ -24,4 +24,5 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('reviews/', include('reviews.urls'))
     # path('', include('home.urls')),  # home 앱의 URL을 포함
+    path('product/', include('products.urls', namespace='product')),
 ]

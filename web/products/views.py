@@ -6,13 +6,13 @@ from django.views.generic.edit import FormView, UpdateView
 from .models import Product, Category
 from .forms import RegisterForm 
 from django.urls import reverse_lazy
-from django.contrib.auth.mixins import LoginRequiredMixin
+#from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 
 
 
 
-class ProductCreate(LoginRequiredMixin, FormView):
+class ProductCreate(FormView):                           #class ProductCreate(LoginRequiredMixin, FormView):
     template_name = 'register_product.html'
     form_class = RegisterForm
     success_url = '/product/'
@@ -31,8 +31,8 @@ class ProductCreate(LoginRequiredMixin, FormView):
 
     def dispatch(self, request, *args, **kwargs):
         # 사용자가 로그인되어 있는지 확인
-        if not self.request.user.is_authenticated:
+        #if not self.request.user.is_authenticated:
             # 로그인되어 있지 않은 경우 로그인 페이지로 리디렉션
-            return redirect(self.login_url)
+            #return redirect(self.login_url)
         return super().dispatch(request, *args, **kwargs)
     
