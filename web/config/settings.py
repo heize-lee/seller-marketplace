@@ -153,7 +153,7 @@ DATABASES = {
 
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'seller_2',
+        'NAME': 'seller_ljh',
         'USER': 'postgres',
         'PASSWORD': db_password,
         'HOST': 'hanslab.org',  # 또는 PostgreSQL 서버의 IP 주소

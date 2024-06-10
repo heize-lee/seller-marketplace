@@ -8,6 +8,7 @@ from .forms import RegisterForm
 from django.urls import reverse_lazy
 #from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
 
 
 
@@ -43,6 +44,15 @@ class ProductList(ListView):
     template_name = 'product.html'
     context_object_name = 'product_list'
 
+    def get_queryset(self):
+        # 원하는 필드만 선택하여 queryset을 반환
+        return Product.objects.values('product_id', 'product_name', 'product_img', 'product_price')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['MEDIA_URL'] = settings.MEDIA_URL
+        return context
+
 
 
 
@@ -63,3 +73,31 @@ class ProductDetail(DetailView):
         
     #     # 주문 페이지로 리디렉션합니다.
     #     return redirect('order')
+
+
+#각 판매자 판매물품 
+class ProductListByUser(ListView):
+    model = Product
+    template_name = 'my_products.html'
+    context_object_name = 'my_products'
+
+    def get_queryset(self):
+        # 로그인한 사용자의 이메일을 기준으로 해당 사용자가 작성한 판매글만 필터링하여 반환
+        user_email = self.request.user.email
+        return Product.objects.filter(seller_email=user_email)
+    
+
+#업데이트 view
+class ProductUpdateView(UpdateView):
+    model = Product
+    fields = ['product_name', 'product_price', 'description', 'stock_quantity', 'category', 'product_img']
+    template_name = 'product_update.html'
+    success_url = reverse_lazy('product:my_products')
+
+#삭제 view
+class ProductDeleteView(DeleteView):
+    model = Product
+    success_url = reverse_lazy('product:my_products')  # 삭제 후 이동할 URL
+
+    # 템플릿 파일 이름 지정
+    template_name = 'product_confirm_delete.html'
