@@ -1,5 +1,6 @@
 from django import forms
 from allauth.account.forms import SignupForm
+from .models import CustomUser   #재웅 추가
 
 class CustomSignupForm(SignupForm):
     nickname = forms.CharField(max_length=150, label='닉네임', required=True)
@@ -15,3 +16,10 @@ class CustomSignupForm(SignupForm):
         user.is_agree_privacy_policy = self.cleaned_data['is_agree_privacy_policy']
         user.save()
         return user
+
+
+#재웅추가
+class EditProfileForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['nickname', 'phone_number', 'profile_picture']

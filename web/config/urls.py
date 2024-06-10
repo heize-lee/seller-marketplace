@@ -19,9 +19,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from . import views
+from accounts.views import edit_profile  # edit_profile 뷰를 import  #재웅
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),  # Django Allauth URLs
     path('', views.home, name='home'), 
+    path('accounts/edit-profile/', edit_profile, name='edit_profile'),  # 프로필 수정 URL 패턴 추가  #재웅
 ]
