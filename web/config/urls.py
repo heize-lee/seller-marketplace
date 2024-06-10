@@ -23,5 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('orders/', include('orders.urls')),
+    path('cart/', include('cart.urls')),
     # path('', include('home.urls')),  # home 앱의 URL을 포함
 ]

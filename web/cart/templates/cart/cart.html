@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart Summary</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .container {
+            width: 80%; /* 원하는 너비를 설정하세요. 예: 80% 또는 특정 픽셀 값 */
+            height: 100vh;
+            background: white;
+            box-shadow: 0px 3px 6px rgba(18, 15, 40, 0.12);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            margin: 0 auto; /* 가운데 정렬 */
+        }
+        .cart-header {
+            font-size: 40px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            color: #171A1F;
+            margin-bottom: 20px;
+        }
+        .content {
+            display: flex;
+            justify-content: space-between;
+            flex: 1;
+        }
+        .cart-items {
+            flex: 3;
+            border: 1px solid #F3F4F6;
+            padding: 20px;
+            margin-right: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #F3F4F6;
+            padding: 10px 0;
+        }
+        .cart-item img {
+            width: 100px;
+            height: 60px;
+            margin-right: 20px;
+        }
+        .cart-item-details {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+        }
+        .cart-summary {
+            flex: 1;
+            width: 340px;
+            padding: 20px;
+            background: #F8F9FA;
+            align-self: flex-start;
+        }
+        .cart-summary h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #171A1F;
+            margin-bottom: 20px;
+        }
+        .cart-summary div {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .order-button {
+            width: 100%;
+            padding: 10px;
+            background: #565E6D;
+            color: white;
+            text-align: center;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+    <body>
+        <div class="container">
+            <div class="cart-header">Cart</div>
+            <div class="content">
+                <div class="cart-items">
+                    <div class="cart-item">
+                        <img src="https://via.placeholder.com/100x60" alt="Product Image">
+                        <div class="cart-item-details">
+                            <div>
+                                <div>Product name</div>
+                                <div>Option</div>
+                            </div>
+                            <div>$52</div>
+                            <div>1</div>
+                            <div>$52</div>
+                        </div>
+                    </div>
+                    <div class="cart-item">
+                        <img src="https://via.placeholder.com/100x60" alt="Product Image">
+                        <div class="cart-item-details">
+                            <div>
+                                <div>Product name</div>
+                                <div>Option</div>
+                            </div>
+                            <div>$52</div>
+                            <div>2</div>
+                            <div>$104</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cart-summary">
+                    <h2>Summary</h2>
+                    <div>
+                        <span>Subtotal</span>
+                        <span>$156</span>
+                    </div>
+                    <div>
+                        <span>Delivery Fee</span>
+                        <span>$22</span>
+                    </div>
+                    <div>
+                        <strong>Total</strong>
+                        <strong>$178</strong>
+                    </div>
+                    <div class="order-button">Place Order</div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>
