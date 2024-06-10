@@ -144,6 +144,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 load_dotenv()
 db_password = os.getenv("DB_PASSWORD")
 
+import os
+from dotenv import load_dotenv
+load_dotenv()
+db_password = os.getenv("DB_PASSWORD")
+
 DATABASES = {
 
     'default': {

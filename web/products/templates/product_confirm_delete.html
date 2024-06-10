@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="row mt-5 justify-content-center">
+        <div class="col-md-6 text-center">
+            <h1>상품 삭제 확인</h1>
+        </div>
+    </div>
+    <div class="row mt-5 justify-content-center">
+        <div class="col-md-6">
+            <p class="text-center">정말로 이 상품을 삭제하시겠습니까?</p>
+            <form method="post">
+                {% csrf_token %}
+                <div class="d-grid gap-2">
+                    <input type="submit" class="btn btn-danger btn-lg" value="삭제">
+                    <a href="{% url 'product:my_products' %}" class="btn btn-secondary btn-lg">취소</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

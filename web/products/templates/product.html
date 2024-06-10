@@ -1,0 +1,52 @@
+
+{% block content %}
+
+<div class="container my-4">
+    {% if search_info %}
+    <span class="row m-0" style="font-size: 31px; font-family: Lexend; font-weight: 700; line-height: 48px;">{{ search_info }}</span>
+    {% endif %}
+    <span class="row m-0" style="font-size: 31px; font-family: Lexend; font-weight: 700; line-height: 48px;">{{ category }}</span>
+    <div class="mt-4">
+        <h3>전체</h3>
+        <div class="row">
+            {% for product in product_list %}
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card flex-grow-1">
+                    <div class="embed-responsive embed-responsive-4by3">
+                        <a href="/product/{{ product.product_id }}">
+                            <img class="card-img-top embed-responsive-item img-fluid" src="{{ MEDIA_URL }}{{ product.product_img }}" alt="Product Image">
+                            <!-- 수정 필요함 src -->
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <span class="badge bg-light text-dark">브랜드명</span>
+                        <a href="/product/{{ product.product_id }}" class="link-dark text-decoration-none">
+                            <h4 class="card-title">{{ product.product_name }}</h4>
+                        </a>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <div>{{ product.product_price }}원</div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+
+<!-- base.html에 bootstrap 코드 없어서 일단 html에 추가해놓음 -->
+
+<!-- Bootstrap CSS CDN 링크 -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap JavaScript CDN 링크 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<style>
+    .card {
+        height: 400px;
+    }
+</style>
+{% endblock %}
