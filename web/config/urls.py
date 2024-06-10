@@ -18,10 +18,12 @@ Including another URLconf
 # web/config/urls.py
 from django.contrib import admin
 from django.urls import path, include
+from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/', include('accounts.urls')),
-    # path('', include('home.urls')),  # home 앱의 URL을 포함
+    path('accounts/', include('allauth.urls')),  # Django Allauth URLs
+    path('', views.home, name='home'), 
     path('product/', include('products.urls', namespace='product')),
+
 ]

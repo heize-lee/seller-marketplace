@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+           
+         
+
+
+  
+<a href="/product/">목록보기</a>
+
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-lg-6">
+      <!-- 대표 이미지 칸 -->
+      <div class="card mb-3 border-0">
+        {% if product.image %}
+          <img src="{{ product.image.url }}" class="card-img-top" alt="상품 이미지">
+        {% else %}
+          <img src="{% static 'path/to/placeholder_image.jpg' %}" class="card-img-top" alt="상품 이미지 없음">
+        {% endif %}
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <!-- 상품 정보 -->
+      <div class="card border-0">
+        <div class="card-body">
+          <h2>{{ product.product_name }}</h2>
+          <br><br><br>
+          <p>가격: <strong>{{ product.product_price|stringformat:"d" }} 원</strong></p>
+          <p>등록날짜: <strong>{{ product.created_date|date:'Y-m-d' }}</strong></p>
+          <p>카테고리: <strong>{{ product.category }}</strong></p>
+          
+          <!-- 수량 선택 폼 -->
+          
+          <!-- 목록 보기 링크 -->
+          <a href="/product/" class="btn btn-secondary">목록보기</a>
+          <button id="copyUrlBtn" class="btn btn-primary">URL 복사</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- 상품 설명 -->
+  <div class="row mt-4">
+    <div class="col">
+      <div class="card border-0">
+        <div class="card-body">
+          <h3>Product Info</h3>
+          <p>{{ product.description|safe }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <script>
+        
+          document.getElementById('copyUrlBtn').addEventListener('click', function() {
+          var urlField = document.createElement('input');
+          urlField.setAttribute('type', 'text');
+          urlField.setAttribute('value', window.location.href);
+          document.body.appendChild(urlField);
+          urlField.select();
+          document.execCommand('copy');
+          document.body.removeChild(urlField);
+          alert('현재 페이지 URL이 복사되었습니다.');
+        });
+            
+    </script>
+{% endblock %}
