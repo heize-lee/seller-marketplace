@@ -27,4 +27,5 @@ urlpatterns = [
     # path('', include('home.urls')),  # home 앱의 URL을 포함
     path('accounts/', include('allauth.urls')),  # Django Allauth URLs
     path('', views.home, name='home'), 
+    path('product/', include('products.urls', namespace='product')),
 ]

@@ -1,13 +1,20 @@
 from django.shortcuts import render
 from .models import Cart
-# from products.models import Product
+from products.models import Product
+
 # Create your views here.
 def cart(request):
+    user = request.user
+    cart = Cart.objects.get(user=user)
+    context = {
+        'cart': cart
+    }
+
     # if request.user.is_authenticated:
     #     user=request.user
     #     Cart.objects.filter(user=user).delete()
     #     product_id = request.POST['product']
-    #     # product = Product.objects.get(pk=product_id)
+        # product = Product.objects.get(pk=product_id)
     #     # cart, _ = Cart.objects.get_or_create(user=user, product=product)    
     #     cart.amount=int(request.POST['count'])
     #     # cart.total_price = cart.amount * product.price
@@ -18,4 +25,4 @@ def cart(request):
     #     return redirect('/order/')
     # else : 
     #     return redirect('/accounts/login/')    
-    return render(request, 'cart/cart.html')
+    return render(request, 'cart/cart.html', context)

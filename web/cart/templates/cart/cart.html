@@ -93,30 +93,21 @@
             <div class="cart-header">Cart</div>
             <div class="content">
                 <div class="cart-items">
+                    {#% for item in cart %#}
                     <div class="cart-item">
-                        <img src="https://via.placeholder.com/100x60" alt="Product Image">
+                        <img src="{{ item.product.product_img }}" alt="Product Image">
                         <div class="cart-item-details">
                             <div>
-                                <div>Product name</div>
+                                <div>{{ item.product.product_name }}</div>
                                 <div>Option</div>
                             </div>
-                            <div>$52</div>
-                            <div>1</div>
-                            <div>$52</div>
+                            <div>{{ item.product.product_price }}</div>
+                            <div>{{ item.amount }}</div>
+                            <div>{{ item.total_price }}</div>
                         </div>
                     </div>
-                    <div class="cart-item">
-                        <img src="https://via.placeholder.com/100x60" alt="Product Image">
-                        <div class="cart-item-details">
-                            <div>
-                                <div>Product name</div>
-                                <div>Option</div>
-                            </div>
-                            <div>$52</div>
-                            <div>2</div>
-                            <div>$104</div>
-                        </div>
-                    </div>
+                    {#% endfor %#}
+              
                 </div>
                 <div class="cart-summary">
                     <h2>Summary</h2>

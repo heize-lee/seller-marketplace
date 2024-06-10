@@ -1,13 +1,14 @@
 from django.db import models
-# from products.models import Product
+from products.models import Product
+from cart.models import Cart
 from django.conf import settings
 # 카트 모델 고민
 
 # Create your models here.
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    # product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
-    # cart = models.ForeignKey(Cart, on_delete=models.DO_NOTHING)
+    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
+    cart = models.ForeignKey(Cart, on_delete=models.DO_NOTHING)
     
     # 카트에 있는 데이터가 지워지면 참조가 안됨
     # 카트 컬럼과 같은 이름으로 데이터 저장
