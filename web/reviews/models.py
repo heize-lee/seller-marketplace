@@ -2,6 +2,8 @@ from django.db import models
 from django.conf import settings
 from products.models import Product
 from django.core.validators import MinValueValidator, MaxValueValidator
+
+
 # Create your models here.
 
 class Review(models.Model):
@@ -10,7 +12,7 @@ class Review(models.Model):
     # order = models.ForeignKey(Order,on_delete=models.CASCADE)
     rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     comment = models.TextField()
-    image = models.ImageField(upload_to='review/images/%Y/%m/%d/', blank=True)
+    image = models.ImageField(upload_to='review_images/%Y/%m/%d/', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -21,3 +23,4 @@ class ReviewComment(models.Model):
     review = models.ForeignKey(Review,on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     comment = models.TextField()
+

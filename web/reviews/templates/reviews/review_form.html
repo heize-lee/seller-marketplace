@@ -32,14 +32,24 @@
 </head>
 <body>
     <div class="container">
+        
         <h2 class="mb-3">리뷰 작성</h2>
-        <form action="" method="post">
+        <form action="{% url 'reviews:create' %}" method="POST" enctype="multipart/form-data">
             {% csrf_token%}
             <!-- 상품정보 -->
-            <!-- <input type="hidden" name="product" value="{{ product.pk }}"> -->
+            <input type="hidden" name="product" value="{{ product.pk }}">
         
-            <div class="mb-5" style='border: 1px solid; height: 100px;'>
-                상품정보
+            <div class="mb-5 row" style='border: 1px solid; height: 100px;'>
+                <div class="col-lg-3">
+                <img src="{{ product.image.url }}" class="card-img-top" alt="상품 이미지">
+                </div>
+                <div class="col-lg-9">
+                    <div class="card-body">
+                        {{ product.product_name }}
+                        <br><br><br>
+                        <p>가격: <strong>{{ product.product_price|stringformat:"d" }} 원</strong></p>
+                    </div>
+                </div>
             </div>
             
             <h6 class="mt-5">평점을 남겨주세요</h6>
@@ -47,12 +57,16 @@
             <div class="my-rating mb-5"></div>
             <input type="hidden" name="rating" id="rating" value="0">  
            
-            {{ form | crispy }}
+            <div class="form-group mb-3">
+                <label for="{{ form.comment.id_for_label }}">상세 리뷰를 작성해주세요.</label>
+                <textarea class="form-control" id="{{ form.comment.id_for_label }}" name="{{ form.comment.name }}" rows="10"></textarea>
+            </div>
+    
             <div class="form-group mb-3">
                 <label>사진을 등록해주세요</label>
                 <div class="media-container">
-                    <input type="file" class="custom-file-input" id="product_img" name="product_img" accept="image/*">
-                    <label for="product_img" class="custom-file-label media-box">+</label>
+                    <input type="file" class="custom-file-input" id="image" name="image" accept="image/*">
+                    <label for="img" class="custom-file-label media-box">+</label>
                     <!-- + 박스 더 필요하면 여기에 추가 -->
                     <!-- <div class="media-box">+</div> -->
                 </div>
@@ -62,6 +76,11 @@
             </div>
             
         </form>
+        {% if error_message %}
+        <script>
+            alert('{{ error_message}}')
+        </script>
+        {% endif %}
     </div>
     <script>
         // 파일 선택 버튼을 숨기는 함수

@@ -8,8 +8,9 @@ from .forms import RegisterForm
 from django.urls import reverse_lazy
 #from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-
-
+#리뷰모델
+from reviews.models import Review
+from django.db.models import Avg
 
 
 class ProductCreate(FormView):                           #class ProductCreate(LoginRequiredMixin, FormView):
@@ -36,3 +37,40 @@ class ProductCreate(FormView):                           #class ProductCreate(Lo
             #return redirect(self.login_url)
         return super().dispatch(request, *args, **kwargs)
     
+
+
+class ProductList(ListView):
+    model = Product
+    template_name = 'product.html'
+    context_object_name = 'product_list'
+
+    
+
+
+
+
+class ProductDetail(DetailView):
+    model=Product   
+    template_name = 'product_detail.html'
+    queryset = Product.objects.all()
+    context_object_name = 'product'
+    #리뷰 데이터 할당
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        product = self.get_object()
+        reviews = Review.objects.filter(product_id=product.product_id)
+        average_rating = reviews.aggregate(Avg('rating'))['rating__avg']
+        context['reviews'] = reviews
+        context['average_rating'] = average_rating
+        return context
+    
+#카트 구매 코드 주석 처리 해놓음
+    # def post(self, request, *args, **kwargs):
+    #     # 상품 디테일 페이지에서 바로구매를 누르면 해당 상품이 카트 테이블에 추가
+    #     product = self.get_object()
+    #     user = request.user
+    #     cart_item = Cart.objects.get_or_create(user=user, product=product)
+    #     cart_item.save()
+        
+    #     # 주문 페이지로 리디렉션합니다.
+    #     return redirect('order')
