@@ -1,17 +1,179 @@
-<h1>주문 결제</h1>
-<hr>
-주문고객
-<hr>
-배송정보
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .container {
+            width: 80%; /* 원하는 너비를 설정하세요. 예: 80% 또는 특정 픽셀 값 */
+            height: 100vh;
+            background: white;
+            box-shadow: 0px 3px 6px rgba(18, 15, 40, 0.12);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            margin: 0 auto; /* 가운데 정렬 */
+        }
+        .order-header {
+            font-size: 40px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            color: #171A1F;
+            margin-bottom: 20px;
+        }
+        .content {
+            display: flex;
+            justify-content: space-between;
+            flex: 1;
+        }
+        .order-items {
+            flex: 3;
+            border: 1px solid #F3F4F6;
+            padding: 20px;
+            margin-right: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .order-item {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #F3F4F6;
+            padding: 10px 0;
+        }
+        .order-item img {
+            width: 100px;
+            height: 60px;
+            margin-right: 20px;
+        }
+        .order-item-details {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+        }
+        .order-summary {
+            flex: 1;
+            width: 340px;
+            padding: 20px;
+            background: #F8F9FA;
+            align-self: flex-start;
+        }
+        .order-summary h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #171A1F;
+            margin-bottom: 20px;
+        }
+        .order-summary div {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .order-button {
+            width: 100%;
+            padding: 10px;
+            background: #565E6D;
+            color: white;
+            text-align: center;
+            font-size: 16px;
+            cursor: pointer;
+        }
 
-<hr>
-주문정보
-<hr>
-결제수단
-카카오페이 api
-무통장
-<hr>
-결제정보
-<form action="" method="post">
-    <button>결제하기</button>
-</form>
+    </style>
+</head>
+    <body>
+        <div class="container">
+            <div class="order-header">Order</div>
+            <div class="content">
+                <div class="order-items">
+                    <div class="order-item">
+                        <div>
+                        🚀배송정보
+                        <div style="padding-left: 12px; padding-right: 12px; padding-top: 4px; padding-bottom: 4px; background: #565E6D; border-radius: 14px; overflow: hidden; justify-content: center; align-items: center; display: inline-flex">
+                            <div style="color: white; font-size: 12px; font-weight: 400; line-height: 20px; word-wrap: break-word">기본배송지</div>
+                        </div>
+                        </div>
+                    
+                        <div >
+                            구매자정보
+                            이름 {{ user.nickname }}
+                            이메일 {{ user.email }}
+                            휴대폰번호 {{ user.phone_number}}
+                        </div>
+                        <div>
+                            <button>배송지추가하기</button>
+                        배송지
+                            이름
+                        주소
+                        연락처
+                        배송요청사항
+                        </div>
+                    </div>
+                    <div>
+                    🚚주문정보({{ cart|length }})
+                    </div>
+                    {% for item in cart %}
+                    <div class="order-item">
+                        
+                        <img src="{{ item.product.product_img }}" alt="Product Image">
+                        <div class="order-item-details">
+                            <div>
+                                <div>{{ item.product.product_name }}</div>
+                                <div>Option</div>
+                            </div>
+                            <div>{{ item.product.product_price }}</div>
+                            <div>{{ item.amount }}</div>
+                            <div>{{ item.total_price }}</div>
+                            <button> ✖</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <div>
+                    🌍결제정보
+                    </div>
+                    <div class="order-item">
+                        
+                        <form action="" method="post">
+                            {% csrf_token %}
+                                <input type="radio" name="choice" id="choice_card" value="card">
+                                <label for="choice_card">카드결제</label>
+                                <br>
+                                <input type="radio" name="choice" id="choice_bank" value="bank">
+                                <label for="choice_bank">무통장입금</label>
+                                <br>
+                                <input type="radio" name="choice" id="choice_kakao" value="kakao_pay">
+                                <label for="choice_kakao">카카오페이</label>
+                                <br>
+                            <!-- <input type="submit" value="Vote"> -->
+                            </form>
+                    </div>
+                    
+              
+                </div>
+                <div class="order-summary">
+                    <h2>Summary</h2>
+                    <div>
+                        <span>Subtotal</span>
+                        <span>$156</span>
+                    </div>
+                    <div>
+                        <span>Delivery Fee</span>
+                        <span>$22</span>
+                    </div>
+                    <div>
+                        <strong>Total</strong>
+                        <strong>$178</strong>
+                    </div>
+                    <div class="order-button">결제하기</div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

@@ -1,14 +1,21 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Cart
 from products.models import Product
 
 # Create your views here.
 def cart(request):
-    user = request.user
-    cart = Cart.objects.get(user=user)
-    context = {
-        'cart': cart
-    }
+    # 카트페이지 처음 들어왔을 때 
+    if request.method == 'GET':
+        # user = request.user
+        cart = Cart.objects.all()
+        context = {
+            'cart': cart
+        }
+        return render(request, 'cart/cart.html', context) 
+    # cart = Cart.objects.get(user=user)
+    # context = {
+    #     'cart': cart
+    # }
 
     # if request.user.is_authenticated:
     #     user=request.user
@@ -25,4 +32,13 @@ def cart(request):
     #     return redirect('/order/')
     # else : 
     #     return redirect('/accounts/login/')    
-    return render(request, 'cart/cart.html', context)
+    
+    # 결제하기 버튼 눌렀을 때     
+    # 수량 및 옵션 변경  
+    if request.method == 'POST':
+        return redirect('orders')
+        
+
+# 카트목록 삭제 버튼 클릭 시 
+def cart_delete(request):
+    pass

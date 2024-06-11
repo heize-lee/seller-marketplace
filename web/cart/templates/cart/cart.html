@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -93,7 +93,7 @@
             <div class="cart-header">Cart</div>
             <div class="content">
                 <div class="cart-items">
-                    {#% for item in cart %#}
+                    {% for item in cart %}
                     <div class="cart-item">
                         <img src="{{ item.product.product_img }}" alt="Product Image">
                         <div class="cart-item-details">
@@ -104,9 +104,11 @@
                             <div>{{ item.product.product_price }}</div>
                             <div>{{ item.amount }}</div>
                             <div>{{ item.total_price }}</div>
+                            <button> ✖</button>
                         </div>
+                        
                     </div>
-                    {#% endfor %#}
+                    {% endfor %}
               
                 </div>
                 <div class="cart-summary">
@@ -123,7 +125,10 @@
                         <strong>Total</strong>
                         <strong>$178</strong>
                     </div>
-                    <div class="order-button">Place Order</div>
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <button class="order-button" type="submit">주문하기</button>
+                    </form>
                 </div>
             </div>
         </div>
