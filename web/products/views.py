@@ -38,6 +38,10 @@ class ProductCreate(FormView):                           #class ProductCreate(Lo
     
 
 
+from django.views.generic import ListView
+from django.conf import settings
+from .models import Product
+
 class ProductList(ListView):
     model = Product
     template_name = 'product.html'
@@ -45,12 +49,24 @@ class ProductList(ListView):
     paginate_by = 32
 
     def get_queryset(self):
-        # 원하는 필드만 선택하여 queryset을 반환
-        return Product.objects.values('product_id', 'product_name', 'product_img', 'product_price')
+        sort_option = self.request.GET.get('sort', 'created_date')
+        order = self.request.GET.get('order', 'desc')
+
+        if order == 'asc':
+            sort_option = sort_option
+        else:
+            sort_option = '-' + sort_option
+
+        queryset = Product.objects.order_by(sort_option).values(
+            'product_id', 'product_name', 'product_img', 'product_price', 'created_date', 'category'
+        )
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['MEDIA_URL'] = settings.MEDIA_URL
+        context['sort'] = self.request.GET.get('sort', 'created_date')
+        context['order'] = self.request.GET.get('order', 'desc')
         return context
 
 
@@ -92,7 +108,7 @@ class ProductListByUser(ListView):
         context['MEDIA_URL'] = settings.MEDIA_URL
         return context
 
-#기존view
+#기존view 
 #class ProductListByUser(ListView):
     #model = Product
     #template_name = 'my_products.html'
