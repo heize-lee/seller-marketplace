@@ -1,4 +1,6 @@
 
+
+
 {% block content %}
 
 <div class="container my-4">
@@ -9,13 +11,14 @@
     <div class="mt-4">
         <h3>전체</h3>
         <div class="row">
-            {% for product in product_list %}
+            {% for product in page_obj %}
             <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
                 <div class="card flex-grow-1">
                     <div class="embed-responsive embed-responsive-4by3">
                         <a href="/product/{{ product.product_id }}">
-                            <img class="card-img-top embed-responsive-item img-fluid" src="{{ MEDIA_URL }}{{ product.product_img }}" alt="Product Image">
-                            <!-- 수정 필요함 src -->
+                            <div style="height: 180px; overflow: hidden;">
+                                <img class="card-img-top embed-responsive-item img-fluid" style="object-fit: cover; width: 100%; height: 100%;" src="{{ MEDIA_URL }}{{ product.product_img }}" alt="Product Image">
+                            </div>
                         </a>
                     </div>
                     <div class="card-body">
@@ -31,8 +34,38 @@
             </div>
             {% endfor %}
         </div>
+        <!-- 페이지네이션 -->
+        {% if is_paginated %}
+        <div class="d-flex justify-content-center mt-4">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1">&laquo;</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">이전</a>
+                </li>
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">다음</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">&raquo;</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+        {% endif %}
+        <!-- 페이지네이션 끝 -->
     </div>
 </div>
+
 
 
 

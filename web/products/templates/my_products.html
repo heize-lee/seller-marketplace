@@ -19,7 +19,7 @@
             <div class="card mb-3">
                 <a href="{% url 'product:product_update' pk=product.pk %}">
                     <div style="height: 180px; overflow: hidden;">
-                        <img src="{{ product.product_img.url }}" class="card-img-top" style="object-fit: cover; width: 100%; height: 100%;" alt="{{ product.product_name }}">
+                        <img src="{{ MEDIA_URL }}{{ product.product_img }}" class="card-img-top" style="object-fit: cover; width: 100%; height: 100%;" alt="Product Image">
                     </div>
                 </a>
                 <div class="card-body">
@@ -27,7 +27,7 @@
                     <a href="{% url 'product:product_update' pk=product.pk %}" class="link-dark text-decoration-none">
                         <h4 class="card-title">{{ product.product_name }}</h4>
                     </a>
-                    {{ product.description|striptags }} 
+                    
                 </div>
                 <div class="card-footer d-flex justify-content-between">
                     <div>{{ product.product_price }}원</div>

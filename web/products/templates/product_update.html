@@ -15,49 +15,74 @@
         });
     });
 </script>
+
 {% endblock %}
 
 {% block content %}
-<div class="row mt-5">
-    <div class="col-md-6 col-md-offset-3 text-center">
-        <h1>상품 수정하기</h1>
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-md-12 text-center">
+            <h1>상품 수정하기</h1>
+        </div>
     </div>
-</div>
-<div class="row mt-5">
-    <div class="col-md-6 col-md-offset-3">
-        {{ error }}
+    <div class="row mt-5">
+        <div class="col-md-12">
+            {{ error }}
+        </div>
     </div>
-</div>
-<div class="row mt-5">
-    <div class="col-md-6 col-md-offset-3">
-        <form method="POST" action="" enctype="multipart/form-data">
-            {% csrf_token %}
-            {% for field in form %}
-            <div class="form-group">
-                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                {% if field.name == 'description' %}
-                <textarea class="form-control" name="{{ field.name }}" id="{{ field.id_for_label }}">{{ field.value }}</textarea>
-                {% elif field.name == 'category' %}
-                <select class="form-control" id="{{ field.id_for_label }}" name="{{ field.name }}">
-                    {% for category in form.category.field.queryset %}
-                    <option value="{{ category.pk }}" {% if category.pk == field.value %}selected{% endif %}>{{ category.category_name }}</option>
-                    {% endfor %}
-                </select>
-                {% elif field.name == 'product_img' %}
-                <input type="file" class="form-control-file" id="{{ field.id_for_label }}" name="{{ field.name }}">
-                {% else %}
-                <input type="{{ field.field.widget.input_type }}" class="form-control" id="{{ field.id_for_label }}"
-                    placeholder="{{ field.label }}" name="{{ field.name }}" value="{{ field.value }}" />
-                {% endif %}
-            </div>
-            {% if field.errors %}
-            <span style="color: red">{{ field.errors }}</span>
-            {% endif %}
-            {% endfor %}
-            <button type="submit" class="btn btn-primary">수정</button>
-            <!-- 삭제 버튼 추가 -->
-            <a href="{% url 'product:product_delete' pk=object.pk %}" class="btn btn-danger">삭제</a>
-        </form>
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <form method="POST" action="" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <!-- Basic information section -->
+                <h2>Basic information</h2>
+
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <label for="{{ form.product_name.id_for_label }}">Product title</label>
+                        <input type="text" class="form-control" id="{{ form.product_name.id_for_label }}" name="{{ form.product_name.name }}" value="{{ form.product_name.value }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="{{ form.category.id_for_label }}">Product category</label>
+                        <select class="form-control" id="{{ form.category.id_for_label }}" name="{{ form.category.name }}">
+                            {% for category in form.category.field.queryset %}
+                            <option value="{{ category.pk }}" {% if category.pk == form.category.value %}selected{% endif %}>{{ category.category_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <label for="{{ form.product_price.id_for_label }}">Price</label>
+                        <input type="text" class="form-control" id="{{ form.product_price.id_for_label }}" name="{{ form.product_price.name }}" value="{{ form.product_price.value }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="{{ form.stock_quantity.id_for_label }}">Stock</label>
+                        <input type="number" class="form-control" id="{{ form.stock_quantity.id_for_label }}" name="{{ form.stock_quantity.name }}" value="{{ form.stock_quantity.value }}">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.description.id_for_label }}">Description</label>
+                    <textarea class="form-control" name="{{ form.description.name }}" id="{{ form.description.id_for_label }}">{{ form.description.value }}</textarea>
+                </div>
+
+                <!-- Media section -->
+                <h2>Media (Images)</h2>
+                
+                <div class="form-group">
+                    <label for="{{ form.product_img.id_for_label }}">Product Images</label>
+                    <input type="file" class="form-control-file" id="{{ form.product_img.id_for_label }}" name="{{ form.product_img.name }}" multiple>
+                </div>
+
+                <!-- Submit and delete buttons -->
+                <button type="submit" class="btn btn-primary">수정</button>
+                <a href="{% url 'product:product_delete' pk=object.pk %}" class="btn btn-danger">삭제</a>
+                
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}

@@ -12,7 +12,6 @@ from django.conf import settings
 
 
 
-
 class ProductCreate(FormView):                           #class ProductCreate(LoginRequiredMixin, FormView):
     template_name = 'register_product.html'
     form_class = RegisterForm
@@ -43,6 +42,7 @@ class ProductList(ListView):
     model = Product
     template_name = 'product.html'
     context_object_name = 'product_list'
+    paginate_by = 32
 
     def get_queryset(self):
         # 원하는 필드만 선택하여 queryset을 반환
@@ -84,7 +84,23 @@ class ProductListByUser(ListView):
     def get_queryset(self):
         # 로그인한 사용자의 이메일을 기준으로 해당 사용자가 작성한 판매글만 필터링하여 반환
         user_email = self.request.user.email
-        return Product.objects.filter(seller_email=user_email)
+        queryset = Product.objects.filter(seller_email=user_email).values('pk', 'product_id', 'product_name', 'product_img', 'product_price')
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['MEDIA_URL'] = settings.MEDIA_URL
+        return context
+
+#기존view
+#class ProductListByUser(ListView):
+    #model = Product
+    #template_name = 'my_products.html'
+    #context_object_name = 'my_products'
+
+    #def get_queryset(self):
+        #user_email = self.request.user.email
+        #return Product.objects.filter(seller_email=user_email)
     
 
 #업데이트 view
