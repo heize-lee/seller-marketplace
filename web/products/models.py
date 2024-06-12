@@ -2,12 +2,11 @@
 
 from django.db import models
 from django.contrib.auth.models import User
-
-
-
-
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
+
+
 class Category(models.Model):
     category_name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=200, unique=True, allow_unicode=True)
@@ -48,3 +47,8 @@ class Product(models.Model):
     class Meta:
         verbose_name = '상품'
         verbose_name_plural = '상품'
+
+    def save(self, *args, **kwargs):
+        if self.pk:  # 인스턴스가 이미 존재하는 경우에만 updated_date 업데이트
+            self.updated_date = timezone.now()
+        super().save(*args, **kwargs)
