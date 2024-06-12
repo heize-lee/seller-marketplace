@@ -15,7 +15,24 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-# web/config/urls.py
+# # web/config/urls.py
+# from django.contrib import admin
+# from django.urls import path, include
+# from . import views
+# from django.conf import settings
+# from django.conf.urls.static import static
+
+# urlpatterns = [
+#     path('admin/', admin.site.urls),
+#     path('accounts/', include('allauth.urls')),  # Django Allauth URLs
+#     path('', views.home, name='home'), 
+#     path('product/', include('products.urls', namespace='product')),
+
+# ]
+
+# if settings.DEBUG:
+#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 from django.contrib import admin
 from django.urls import path, include
 from . import views
@@ -24,10 +41,9 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/', include('allauth.urls')),  # Django Allauth URLs
+    path('accounts/', include('accounts.urls')),  # accounts 앱의 URL 패턴 포함
     path('', views.home, name='home'), 
     path('product/', include('products.urls', namespace='product')),
-
 ]
 
 if settings.DEBUG:

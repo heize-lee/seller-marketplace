@@ -79,24 +79,23 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 ACCOUNT_FORMS = {
     'signup': 'accounts.forms.CustomSignupForm',
 }
+ACCOUNT_SIGNUP_REDIRECT_URL = 'home'
 
 # Additional allauth settings to disable username
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_USERNAME_REQUIRED = False
 
+KAKAO_CLIENT_ID = os.getenv('KAKAO_CLIENT_ID')
+KAKAO_CLIENT_SECRET = os.getenv('KAKAO_CLIENT_SECRET')
+
 SOCIALACCOUNT_PROVIDERS = {
-    
     'kakao': {
-        'SCOPE': ['profile', 'account_email'],
-    },
-    # 'google': {
-    #     'SCOPE': ['profile', 'email'],
-    #     'AUTH_PARAMS': {'access_type': 'online'},
-    # },
-    # 'naver': {
-    #     'SCOPE': ['profile', 'account_email'],
-    # },
-}
+        'APP': {
+            'client_id': KAKAO_CLIENT_ID,
+            'secret': 'KAKAO_CLIENT_SECRET',
+            'key': ''
+        }    
+}}
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',

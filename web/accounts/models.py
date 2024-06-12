@@ -36,7 +36,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_('이메일 주소'), unique=True)
     nickname = models.CharField(_('닉네임'), max_length=150, blank=True)
     phone_number = models.CharField(_('전화번호'), max_length=15, blank=True)
-    profile_picture = models.ImageField(_('프로필 사진'), upload_to='profile_pics/', null=True, blank=True)
+    profile_picture = models.ImageField(
+        _('프로필 사진'), 
+        upload_to='profile_images/%Y/%m/%d/', 
+        null=True, 
+        blank=True
+    )
     is_agree_terms = models.BooleanField(_('이용 약관 동의'), default=False)
     is_agree_privacy_policy = models.BooleanField(_('개인정보 처리방침 동의'), default=False)
     is_active = models.BooleanField(_('활성 상태'), default=True)

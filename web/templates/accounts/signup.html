@@ -1,0 +1,12 @@
+{% extends "base.html" %} {% load i18n %} {% block content %}
+<h2>Custom Signup Page</h2>
+<p>This is a custom signup template.</p>
+<form
+  method="post"
+  action="{% url 'account_signup' %}"
+  enctype="multipart/form-data"
+>
+  {% csrf_token %} {{ form.as_p }}
+  <button type="submit">{% trans "Sign Up" %}</button>
+</form>
+{% endblock %}
