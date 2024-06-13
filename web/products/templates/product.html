@@ -1,13 +1,13 @@
 {% block content %}
 <div class="container my-4">
-    <!-- 배너 섹션 시작 -->
+    <!-- 배너 섹션 -->
     <div class="banner" style="position: relative; text-align: center; color: white;">
-        <img src="{{ MEDIA_URL }}uploads/banner_image.jpg" alt="배너 이미지" style="width: 100%; height: auto;">
+        <img src="{{ MEDIA_URL }}banner_image/banner_image.jpg" alt="배너 이미지" style="width: 100%; height: auto;">
         <div class="banner-text" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 2em; font-weight: bold;">
             <!-- 여기에 원하는 글자를 입력 -->
         </div>
     </div>
-    <!-- 배너 섹션 끝 -->
+    <!-- 배너 섹션 -->
     <br>
 
     {% if search_info %}
@@ -15,88 +15,170 @@
     {% endif %}
     <span class="row m-0" style="font-size: 31px; font-family: Lexend; font-weight: 700; line-height: 48px;">{{ category }}</span>
     
-    <!-- 정렬 옵션 드롭다운 -->
-    <div class="dropdown mb-4">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-            정렬 옵션
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="sortDropdown">
-            <li><a class="dropdown-item" href="?sort=created_date&order=desc">최신순</a></li>
-            <li><a class="dropdown-item" href="?sort=product_price&order=asc">낮은 가격순</a></li>
-            <li><a class="dropdown-item" href="?sort=product_price&order=desc">높은 가격순</a></li>
-        </ul>
-    </div>
-    
-    <div class="mt-4">
-        <h3>전체</h3>
-        <div class="row">
-            {% for product in page_obj %}
-            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                <div class="card flex-grow-1">
-                    <div class="embed-responsive embed-responsive-4by3">
-                        <a href="/product/{{ product.product_id }}">
-                            <div style="height: 180px; overflow: hidden;">
-                                <img class="card-img-top embed-responsive-item img-fluid" style="object-fit: cover; width: 100%; height: 100%;" src="{{ MEDIA_URL }}{{ product.product_img }}" alt="Product Image">
-                            </div>
-                        </a>
+    <!-- 메인 컨텐츠 -->
+    <div class="row mt-4">
+        <!-- 왼쪽 필터 섹션 -->
+        <div class="col-lg-3">
+            <div class="filter-section">
+                <!-- 필터 공간 (추후에 요소 추가 가능) -->
+                <h4>Filters <a href="?" class="btn btn-secondary btn-sm">Clear All</a></h4>
+                <form method="GET" id="filterForm">
+                    <!-- 상품명 검색 창 -->
+                    <div class="form-group">
+                        <label for="productName">상품명 검색</label>
+                        <input type="text" class="form-control" id="productName" name="search_keyword" placeholder="상품명을 입력하세요" value="{{ request.GET.search_keyword }}">
                     </div>
-                    <div class="card-body">
-                        <span class="badge bg-light text-dark">브랜드명</span>
-                        <a href="/product/{{ product.product_id }}" class="link-dark text-decoration-none">
-                            <h4 class="card-title">{{ product.product_name }}</h4>
-                        </a>
+                    <br> <br>
+                    <!-- 가격 범위 필터 -->
+                    <div class="filter-group">
+                        <label for="priceRange">가격 범위</label>
+                        <div id="priceSlider"></div>
+                        <input type="hidden" name="min_price" id="minPriceInput" value="{{ request.GET.min_price|default:min_price }}">
+                        <input type="hidden" name="max_price" id="maxPriceInput" value="{{ request.GET.max_price|default:max_price }}">
+                        <div id="priceRangeText">{{ request.GET.min_price|default:min_price }} 원 - {{ request.GET.max_price|default:max_price }} 원</div>
                     </div>
-                    <div class="card-footer d-flex justify-content-between">
-                        <div>{{ product.product_price }}원</div>
-                    </div>
+                    <!-- 정렬 옵션 포함 -->
+                    <input type="hidden" name="sort" value="{{ sort }}">
+                    <input type="hidden" name="order" value="{{ order }}">
+                    <button type="submit" class="btn btn-primary">필터 적용</button>
+                </form>
+            </div>
+        </div>
+        
+
+        <!-- 오른쪽 상품 목록 섹션 -->
+        <div class="col-lg-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3>전체</h3>
+                <!-- 정렬 옵션 드롭다운 -->
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        정렬 옵션
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="sortDropdown">
+                        <li><a class="dropdown-item" href="?{% if request.GET.search_keyword %}search_keyword={{ request.GET.search_keyword }}&{% endif %}{% if request.GET.min_price %}min_price={{ request.GET.min_price }}&{% endif %}{% if request.GET.max_price %}max_price={{ request.GET.max_price }}&{% endif %}sort=created_date&order=desc">최신순</a></li>
+                        <li><a class="dropdown-item" href="?{% if request.GET.search_keyword %}search_keyword={{ request.GET.search_keyword }}&{% endif %}{% if request.GET.min_price %}min_price={{ request.GET.min_price }}&{% endif %}{% if request.GET.max_price %}max_price={{ request.GET.max_price }}&{% endif %}sort=product_price&order=asc">낮은 가격순</a></li>
+                        <li><a class="dropdown-item" href="?{% if request.GET.search_keyword %}search_keyword={{ request.GET.search_keyword }}&{% endif %}{% if request.GET.min_price %}min_price={{ request.GET.min_price }}&{% endif %}{% if request.GET.max_price %}max_price={{ request.GET.max_price }}&{% endif %}sort=product_price&order=desc">높은 가격순</a></li>
+                    </ul>
+                    
                 </div>
             </div>
-            {% endfor %}
-        </div>
-        <!-- 페이지네이션 -->
-        {% if is_paginated %}
-        <div class="d-flex justify-content-center mt-4">
-            <ul class="pagination">
-                {% if page_obj.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page=1">&laquo;</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">이전</a>
-                </li>
-                {% endif %}
-                {% for num in page_obj.paginator.page_range %}
-                <li class="page-item {% if num == page_obj.number %}active{% endif %}">
-                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-                </li>
+
+            <div class="row">
+                {% for product in page_obj %}
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                    <div class="card flex-grow-1">
+                        <div class="embed-responsive embed-responsive-4by3">
+                            <a href="/product/{{ product.product_id }}">
+                                <div style="height: 180px; overflow: hidden;">
+                                    <img class="card-img-top embed-responsive-item img-fluid" style="object-fit: cover; width: 100%; height: 100%;" src="{{ MEDIA_URL }}{{ product.product_img }}" alt="Product Image">
+                                </div>
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            <span class="badge bg-light text-dark">브랜드명</span>
+                            <a href="/product/{{ product.product_id }}" class="link-dark text-decoration-none">
+                                <h4 class="card-title">{{ product.product_name }}</h4>
+                            </a>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between">
+                            <div>{{ product.product_price }}원</div>
+                        </div>
+                    </div>
+                </div>
                 {% endfor %}
-                {% if page_obj.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">다음</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">&raquo;</a>
-                </li>
-                {% endif %}
-            </ul>
+            </div>
+            <!-- 페이지네이션 -->
+            {% if is_paginated %}
+            <div class="d-flex justify-content-center mt-4">
+                <!-- 필터와 정렬 옵션을 유지하여 페이지네이션 링크를 생성 -->
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if request.GET.search_keyword %}search_keyword={{ request.GET.search_keyword }}&{% endif %}{% if request.GET.min_price %}min_price={{ request.GET.min_price }}&{% endif %}{% if request.GET.max_price %}max_price={{ request.GET.max_price }}&{% endif %}{% if sort %}sort={{ sort }}&{% endif %}{% if order %}order={{ order }}&{% endif %}page=1">&laquo;</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if request.GET.search_keyword %}search_keyword={{ request.GET.search_keyword }}&{% endif %}{% if request.GET.min_price %}min_price={{ request.GET.min_price }}&{% endif %}{% if request.GET.max_price %}max_price={{ request.GET.max_price }}&{% endif %}{% if sort %}sort={{ sort }}&{% endif %}{% if order %}order={{ order }}&{% endif %}page={{ page_obj.previous_page_number }}">이전</a>
+                    </li>
+                    {% endif %}
+                    {% for num in page_obj.paginator.page_range %}
+                    <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+                        <a class="page-link" href="?{% if request.GET.search_keyword %}search_keyword={{ request.GET.search_keyword }}&{% endif %}{% if request.GET.min_price %}min_price={{ request.GET.min_price }}&{% endif %}{% if request.GET.max_price %}max_price={{ request.GET.max_price }}&{% endif %}{% if sort %}sort={{ sort }}&{% endif %}{% if order %}order={{ order }}&{% endif %}page={{ num }}">{{ num }}</a>
+                    </li>
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if request.GET.search_keyword %}search_keyword={{ request.GET.search_keyword }}&{% endif %}{% if request.GET.min_price %}min_price={{ request.GET.min_price }}&{% endif %}{% if request.GET.max_price %}max_price={{ request.GET.max_price }}&{% endif %}{% if sort %}sort={{ sort }}&{% endif %}{% if order %}order={{ order }}&{% endif %}page={{ page_obj.next_page_number }}">다음</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if request.GET.search_keyword %}search_keyword={{ request.GET.search_keyword }}&{% endif %}{% if request.GET.min_price %}min_price={{ request.GET.min_price }}&{% endif %}{% if request.GET.max_price %}max_price={{ request.GET.max_price }}&{% endif %}{% if sort %}sort={{ sort }}&{% endif %}{% if order %}order={{ order }}&{% endif %}page={{ page_obj.paginator.num_pages }}">&raquo;</a>
+                    </li>
+                    {% endif %}
+                </ul>
+
+            </div>
+            {% endif %}
+            <!-- 페이지네이션 끝 -->
         </div>
-        {% endif %}
-        <!-- 페이지네이션 끝 -->
     </div>
 </div>
 
 <!-- base.html에 bootstrap 코드 없어서 일단 html에 추가해놓음 -->
 <!-- Bootstrap CSS CDN 링크 -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<!-- Bootstrap JavaScript CDN 링크 -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.4.0/nouislider.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.4.0/nouislider.min.js"></script>
 
 <style>
     .card {
         height: 400px;
     }
+    .filter-section {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+    }
+    .filter-group {
+        margin-bottom: 15px;
+    }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var priceSlider = document.getElementById('priceSlider');
+        var minPriceInput = document.getElementById('minPriceInput');
+        var maxPriceInput = document.getElementById('maxPriceInput');
+        var priceRangeText = document.getElementById('priceRangeText');
+    
+        // Django 템플릿 변수를 문자열로 변환하여 할당
+        var minPrice = parseInt("{{ min_price }}");
+        var maxPrice = parseInt("{{ max_price }}");
+    
+        noUiSlider.create(priceSlider, {
+            start: [parseInt(minPriceInput.value), parseInt(maxPriceInput.value)],
+            connect: true,
+            range: {
+                'min': minPrice,
+                'max': maxPrice
+            },
+            format: {
+                to: function (value) {
+                    return Math.round(value);
+                },
+                from: function (value) {
+                    return value;
+                }
+            }
+        });
+    
+        priceSlider.noUiSlider.on('update', function(values, handle) {
+            minPriceInput.value = values[0];
+            maxPriceInput.value = values[1];
+            priceRangeText.innerHTML = values[0] + ' 원 - ' + values[1] + ' 원';
+        });
+    });
+    </script>
+    
+    
 {% endblock %}
-
-

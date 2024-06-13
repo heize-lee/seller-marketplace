@@ -38,17 +38,21 @@ class ProductCreate(FormView):                           #class ProductCreate(Lo
     
 
 
-from django.views.generic import ListView
-from django.conf import settings
-from .models import Product
+
+from django.db.models import Min, Max
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from .filters import ProductFilter
 
 class ProductList(ListView):
     model = Product
     template_name = 'product.html'
     context_object_name = 'product_list'
-    paginate_by = 32
+    paginate_by = 4
 
     def get_queryset(self):
+        queryset = Product.objects.all()
+        self.filterset = ProductFilter(self.request.GET, queryset=queryset)
+
         sort_option = self.request.GET.get('sort', 'created_date')
         order = self.request.GET.get('order', 'desc')
 
@@ -57,9 +61,7 @@ class ProductList(ListView):
         else:
             sort_option = '-' + sort_option
 
-        queryset = Product.objects.order_by(sort_option).values(
-            'product_id', 'product_name', 'product_img', 'product_price', 'created_date', 'category'
-        )
+        queryset = self.filterset.qs.order_by(sort_option)
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -67,9 +69,27 @@ class ProductList(ListView):
         context['MEDIA_URL'] = settings.MEDIA_URL
         context['sort'] = self.request.GET.get('sort', 'created_date')
         context['order'] = self.request.GET.get('order', 'desc')
+        context['filterset'] = self.filterset
+        
+        min_price = self.request.GET.get('min_price', 0)
+        max_price = self.request.GET.get('max_price', 1000000)
+        context['min_price'] = min_price
+        context['max_price'] = max_price
+
+        queryset = self.get_queryset()
+
+        paginator = Paginator(queryset, self.paginate_by)
+        page_number = self.request.GET.get('page')
+
+        try:
+            page_obj = paginator.page(page_number)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
+
+        context['page_obj'] = page_obj
         return context
-
-
 
 
 class ProductDetail(DetailView):
