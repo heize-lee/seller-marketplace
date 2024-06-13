@@ -53,7 +53,7 @@ class ProductList(ListView):
     model = Product
     template_name = 'product.html'
     context_object_name = 'product_list'
-    paginate_by = 3
+    paginate_by = 32
 
     def get_queryset(self):
         queryset = Product.objects.only('product_id', 'product_name', 'product_price', 'stock_quantity', 'created_date', 'updated_date', 'category_id', 'product_img', 'seller_email').all()
