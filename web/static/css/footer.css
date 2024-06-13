@@ -1,120 +1,84 @@
-/* static/css/footer.css */
-.footer-container {
-  width: 100%;
-  height: 100%;
-  background: white;
-  box-shadow: 0px 3px 6px rgba(18, 15, 40, 0.12);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+footer {
+  background-color: #F8F9FA;
+  padding: 40px 20px;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  color: #333;
 }
 
-.footer-content {
-  width: 1440px;
-  height: 434px;
-  background: #f8f9fa;
+footer .container {
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: flex-start;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.footer-item {
-  color: #171a1f;
-  word-wrap: break-word;
+footer .section {
+  flex: 1;
+  margin: 0 20px;
 }
 
-.terms,
-.privacy,
-.contact {
-  font-size: 20px;
-  font-family: Poppins, sans-serif;
-  font-weight: 400;
-  line-height: 22px;
+footer .section.left {
+  text-align: left;
 }
 
-.follow-us {
-  font-size: 20px;
-  font-family: Montserrat, sans-serif;
-  font-weight: 700;
-  line-height: 36px;
+footer .section.right {
+  text-align: right;
 }
 
-.seller {
-  font-size: 77px;
-  font-family: Montserrat, sans-serif;
-  font-weight: 700;
-  line-height: 30px;
+footer .section h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
 }
 
-.notice {
-  font-size: 11px;
-  font-family: Poppins, sans-serif;
-  font-weight: 400;
-  line-height: 22px;
-}
-
-.number,
-.email {
+footer .section p {
   font-size: 14px;
-  font-family: Poppins, sans-serif;
-  font-weight: 400;
-  line-height: 22px;
+  line-height: 1.6;
 }
 
-.number-bold,
-.email-bold {
+footer .section a {
+  color: #333;
+  text-decoration: none;
+  font-weight: bold;
   font-size: 14px;
-  font-family: Poppins, sans-serif;
+}
+
+footer .section a:hover {
+  text-decoration: underline;
+}
+
+footer .section ul {
+  list-style: none;
+  padding: 0;
+}
+
+footer .section ul li {
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+footer .social-icons {
+  margin-top: 10px;
+}
+
+footer .social-icons a {
+  margin: 0 10px;
+  display: inline-block;
+}
+
+footer .rights {
+  margin-top: 20px;
+  font-size: 12px;
+  color: #777;
+  text-align: center;
+}
+
+footer .follow-us {
+  color: #171A1F;
+  font-family: Montserrat, sans-serif;
+  font-size: 20px;
+  font-style: normal;
   font-weight: 700;
-  line-height: 22px;
-}
-
-.copyright {
-  font-size: 18px;
-  font-family: Poppins, sans-serif;
-  font-weight: 400;
-  line-height: 22px;
-}
-
-.footer-icon {
-  width: 37px;
-  height: 37px;
-  position: relative;
-}
-
-.icon-1 {
-  width: 29.69px;
-  height: 24.05px;
-  position: absolute;
-  left: 3.61px;
-  top: 6.47px;
-  background: #171a1f;
-}
-
-.icon-2 {
-  width: 29.6px;
-  height: 29.42px;
-  position: absolute;
-  left: 3.7px;
-  top: 3.7px;
-  background: #171a1f;
-}
-
-.icon-3 {
-  width: 27.75px;
-  height: 27.75px;
-  position: absolute;
-  left: 4.62px;
-  top: 4.62px;
-  background: #171a1f;
-}
-
-.icon-4 {
-  width: 29.6px;
-  height: 20.91px;
-  position: absolute;
-  left: 3.7px;
-  top: 8.05px;
-  background: #171a1f;
+  line-height: 36px; /* 180% */
 }
