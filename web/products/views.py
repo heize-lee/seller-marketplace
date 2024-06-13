@@ -43,6 +43,12 @@ from django.db.models import Min, Max
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .filters import ProductFilter
 
+from django.views.generic import ListView
+from django.db.models import Min, Max
+from .models import Product
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.conf import settings
+
 class ProductList(ListView):
     model = Product
     template_name = 'product.html'
@@ -50,7 +56,7 @@ class ProductList(ListView):
     paginate_by = 3
 
     def get_queryset(self):
-        queryset = Product.objects.all()
+        queryset = Product.objects.only('product_id', 'product_name', 'product_price', 'stock_quantity', 'created_date', 'updated_date', 'category_id', 'product_img', 'seller_email').all()
         self.filterset = ProductFilter(self.request.GET, queryset=queryset)
 
         sort_option = self.request.GET.get('sort', 'created_date')
@@ -92,6 +98,7 @@ class ProductList(ListView):
 
         context['page_obj'] = page_obj
         return context
+
 
 
 class ProductDetail(DetailView):
