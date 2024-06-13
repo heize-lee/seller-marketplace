@@ -8,11 +8,12 @@ from .forms import RegisterForm
 from django.urls import reverse_lazy
 #from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-#리뷰모델
+#리뷰모델(회성)
 from reviews.models import Review
 from django.db.models import Avg
-
-
+from django.db.models import Q
+from django.core.paginator import Paginator
+from django.http import JsonResponse
 class ProductCreate(FormView):                           #class ProductCreate(LoginRequiredMixin, FormView):
     template_name = 'register_product.html'
     form_class = RegisterForm
@@ -54,16 +55,42 @@ class ProductDetail(DetailView):
     template_name = 'product_detail.html'
     queryset = Product.objects.all()
     context_object_name = 'product'
-    #리뷰 데이터 할당
+    #리뷰 데이터 할당(회성)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         product = self.get_object()
-        reviews = Review.objects.filter(product_id=product.product_id)
-        average_rating = reviews.aggregate(Avg('rating'))['rating__avg']
-        context['reviews'] = reviews
-        context['average_rating'] = average_rating
-        return context
+        reviews = Review.objects.filter(product_id=product.product_id).order_by('-created_at')
+        cnt = reviews.count()
+        # 별점 백분율 계산
+        rating = {
+            '1' : reviews.filter(Q(rating=1) | Q(rating=0.5)).count()/cnt * 100,
+            '2' : reviews.filter(Q(rating=2) | Q(rating=1.5)).count()/cnt * 100,
+            '3' : reviews.filter(Q(rating=3) | Q(rating=2.5)).count()/cnt * 100,
+            '4' : reviews.filter(Q(rating=4) | Q(rating=3.5)).count()/cnt * 100,
+            '5' : reviews.filter(Q(rating=5) | Q(rating=4.5)).count()/cnt * 100
+        }
+
+        # Paginator 설정
+        paginator = Paginator(reviews, 5)  # 페이지당 5개의 리뷰
+        page_number = int(self.request.GET.get('page',1))  # GET 파라미터에서 페이지 번호를 가져옴
+        page_obj = paginator.get_page(page_number)
     
+        average_rating = reviews.aggregate(Avg('rating'))['rating__avg']
+        context['reviews'] = page_obj
+        context['average_rating'] = average_rating
+        context['count'] = cnt
+        context['rating'] = rating
+        context['paginator']=paginator
+        context['page_number']=page_number
+        return context
+    def get(self, request, *args, **kwargs):
+        if request.GET.get('ajax'):
+            product = self.get_object()
+            reviews = Review.objects.filter(product_id=product.product_id).order_by('-created_at')
+            review_list = reviews.values('user', 'created_at', 'comment', 'rating', 'code')
+            return JsonResponse(list(review_list), safe=False)
+        
+        return super().get(request, *args, **kwargs)
 #카트 구매 코드 주석 처리 해놓음
     # def post(self, request, *args, **kwargs):
     #     # 상품 디테일 페이지에서 바로구매를 누르면 해당 상품이 카트 테이블에 추가
@@ -74,3 +101,10 @@ class ProductDetail(DetailView):
         
     #     # 주문 페이지로 리디렉션합니다.
     #     return redirect('order')
+
+
+#리뷰 리스트(회성)
+# def review_list(request):
+#     # 리뷰 리스트를 반환하는 로직
+
+#     return render(request, 'reviews/review_list.html')

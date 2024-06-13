@@ -71,13 +71,15 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css
   
   <hr>
   Average Rating: {{ average_rating }}
-  
+  count: {{ count }}
+  rating: {{ rating }}
+
   <!-- 상품 리뷰 -->
   <div class="row mt-4">
     <div class="col">
       <div class="card border-0">
         <div class="card-body d-flex justify-content-between">
-          <h3>후기</h3>
+          <h3>후기({{ count }})</h3>
           <form action="{% url 'reviews:create' %}" method="post">
             {% csrf_token %}
             <input type="hidden" name="product" value="{{ product.pk }}">
@@ -93,42 +95,43 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css
     <div class="col-lg-3 ">
       <!-- 프로그레스바 -->
       <div class="d-flex align-items-center mb-3">
-        <i class="fas fa-star" style="font-size: 24px;"></i></i>
-        <div class="progress " style=" flex-grow: 1;">
-          <div class="progress-bar " role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
-        </div>
+        5<i class="fas fa-star mx-1" style="font-size: 24px;"></i>
+        <div class="progress flex-shrink-0" style=" width:200px;">
+          <div class="progress-bar " role="progressbar" style="width: {{rating.5}}%;" aria-valuenow="{{rating.5}}" aria-valuemin="0" aria-valuemax="100"></div>
+        </div> <span class="mx-2">{{rating.5|floatformat:0 }}%</span>
       </div>
       <div class="d-flex align-items-center mb-3">
-        <i class="fas fa-star fa-2x" style="font-size: 24px;"></i>
-        <div class="progress " style=" flex-grow: 1;">
-          <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
-        </div>
+        4<i class="fas fa-star fa-2x mx-1" style="font-size: 24px;"></i>
+        <div class="progress flex-shrink-0" style=" width:200px;">
+          <div class="progress-bar" role="progressbar" style="width: {{rating.4}}%;" aria-valuenow="{{rating.4}}" aria-valuemin="0" aria-valuemax="100"></div>
+        </div><span class="mx-2">{{rating.4|floatformat:0 }}%</span>
       </div>
       <div class="d-flex align-items-center mb-3">
-        <i class="fas fa-star fa-2x" style="font-size: 24px;"></i>
-        <div class="progress " style=" flex-grow: 1;">
-          <div class="progress-bar " role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
-        </div>
+        3<i class="fas fa-star fa-2x mx-1" style="font-size: 24px;"></i>
+        <div class="progress flex-shrink-0" style=" width:200px;">
+          <div class="progress-bar " role="progressbar" style="width: {{rating.3}};" aria-valuenow="{{rating.3}}" aria-valuemin="0" aria-valuemax="100"></div>
+        </div><span class="mx-2">{{rating.3|floatformat:0 }}%</span>
       </div>
       <div class="d-flex align-items-center mb-3">
-        <i class="fas fa-star fa-2x" style="font-size: 24px;"></i>
-        <div class="progress " style=" flex-grow: 1;">
-          <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
-        </div>
+        2<i class="fas fa-star fa-2x mx-1" style="font-size: 24px;"></i>
+        <div class="progress flex-shrink-0" style=" width:200px;">
+          <div class="progress-bar" role="progressbar" style="width: {{rating.2}}%;" aria-valuenow="{{rating.2}}" aria-valuemin="0" aria-valuemax="100"></div>
+        </div><span class="mx-2">{{rating.2|floatformat:0 }}%</span>
       </div>
       <div class="d-flex align-items-center mb-3">
-        <i class="fas fa-star fa-2x" style="font-size: 24px;"></i>
-        <div class="progress " style=" flex-grow: 1;">
-          <div class="progress-bar" role="progressbar" style="width: 50%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
-        </div>
+        1<i class="fas fa-star fa-2x mx-1" style="font-size: 24px;"></i>
+        <div class="progress flex-shrink-0" style=" width:200px;">
+          <div class="progress-bar" role="progressbar" style="width: {{rating.1}}%;" aria-valuenow="25" aria-valuemin="{{rating.1}}" aria-valuemax="100"></div>
+        </div><span class="mx-2">{{rating.1|floatformat:0 }}%</span>
       </div>
     </div>
-    <div class="col-9">
+    <!-- 리뷰내용 -->
+    <div id="contents" class="col-9">
       {% for review in reviews %}
         <div class="d-flex align-items-start mb-4">
           <img class="d-flex mx-4 rounded-circle" src="http://placehold.it/50x50" alt="">
           <div class="flex-grow-1">
-            <h5 class="mt-0">{{ review.user.email }}&nbsp;&nbsp;<small class="text-muted">{{ review.created_at }}</small></h5> 
+            <h5 class="mt-0"><span>{{ review.user.nickname }}</span>&nbsp;&nbsp;<small class="text-muted">{{ review.created_at|date:"Y-m-d H:i"}}</small></h5> 
             <p>{{ review.comment | linebreaks}}</p>
           </div>
           <div class="flex-shrink-0 mx-4">
@@ -140,6 +143,54 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css
           </div>
         </div>  
       {% endfor %}
+      <!-- 페이지네이션 바 스타일 -->
+      <style>
+        .page-link {
+          color: #000; 
+          background-color: #fff;
+          border: 1px solid #ccc; 
+        }
+        
+        .page-item.active .page-link{
+         z-index: 1 ; 
+         color: #555;
+         font-weight:bold;
+         background-color: #f1f1f1;
+         border-color: #ccc;
+         
+        }
+        
+        .page-link:focus, .page-link:hover {
+          color: #000;
+          background-color: #fafafa; 
+          border-color: #ccc;
+        }
+        </style>
+      <!-- 리뷰 페이지네이션 바 -->
+      
+      <div class="d-flex justify-content-center">
+      <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          
+          <li class="page-item">
+            <a class="page-link" href="#" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          {% for page in paginator.page_range %}
+          
+          <li class="page-item {% if page == page_number %}active{% endif %}"><a class="page-link"  href="?page={{page}}" >{{page}}</a></li>
+    
+    
+          {% endfor %}
+          <li class="page-item">
+            <a class="page-link" href="#" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      </div>
     </div>
   </div> 
 </div>
@@ -159,4 +210,97 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css
         });
             
     </script>
+    <!-- 페이지네이션 ajax -->
+    <script>
+      function getContents(code){
+        fetch('{% url "product:product_detail" %}?ajax=true')
+        .then((response) => {
+          if (!response.ok){
+            throw new Error('Network response was not ok');
+          }
+          return response.json()
+        })
+        .then((data)=>{
+          const review = data.find(review => review.code === code);
+          document.querySelectorAll('#contents nav ul li')
+          .forEach(li => {li.classList.remove('selected')})
+
+          document.querySelector(`#contents nav ul li.${code}`)
+          .classList.add('selected');
+
+          document.querySelector('#contents h5 span')
+          .textContent = review.user;
+
+          document.querySelector('#contents small')
+          .textContent = review.created_at;
+
+          document.querySelector('#contents p')
+          .textContent = review.comment;
+        })
+        .catch(error => {
+          console.error('Error ocurred:', error);
+        });
+      }
+      document.querySelectorAll('#contents ul li')
+      .forEach(li => {
+        li.addEventListener('click', function(e) {
+          const code = Array.from(e.target.classList)
+          .find(c => { return c != 'selected' })
+          getContents(code);
+        });
+      });
+
+      getContents('');
+
+    </script>
+    <!-- <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          document.addEventListener('click', function(e) {
+              if (e.target && e.target.classList.contains('page-link')) {
+                  e.preventDefault();
+                  var page = e.target.getAttribute('href').split('page=')[1];
+                  loadReviews(page);
+              }
+          });
+  
+          function loadReviews(page) {
+              var xhr = new XMLHttpRequest();
+              xhr.open('GET', '{% url "review_list" %}?page=' + page, true);
+              xhr.onreadystatechange = function() {
+                  if (xhr.readyState === 4 && xhr.status === 200) {
+                      document.getElementById('review-list').innerHTML = xhr.responseText;
+                  }
+              };
+              xhr.send();
+          }
+      });
+  </script> -->
+    <!-- <script>
+      function getCsrfToken(){
+            return document.getElementById('csrfToken').value;
+        }
+        // 값을 저장해서 다음페이지로 보내든가 modify를 없애고 submit에서 값을 받아서 할지 선택 
+        // submit 액션이 먼저 실행되고 modify()가 나중에 실행되어서 저장된 값이 전달이 안됨
+        // 역할을 생각하면서 
+        function loadReviews(){
+            var xhr = new XMLHttpRequest();
+                xhr.open('POST', '{% url "product:modify_cart" %}', true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.setRequestHeader('X-CSRFToken', getCsrfToken());
+                
+                xhr.send(`productId=${product_id}&amountChange=${change}`);
+
+                xhr.onload = function() {
+                    if (this.status === 200) {
+                        var response = JSON.parse(this.responseText);
+                        document.getElementById('currentQuantity').textContent = response.newQuantity;
+                        // document.getElementById('currentPrice').textContent = response.newQuantity * {{product.price}} +'원';
+                        console.log('Update successful:', response.message);
+                    } else {
+                        console.error('Error updating:', this.statusText);
+                    }
+                };
+
+        }
+    </script> -->
 {% endblock %}
