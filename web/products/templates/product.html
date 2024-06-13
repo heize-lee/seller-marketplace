@@ -31,7 +31,7 @@
                     <br> <br>
                     <!-- 가격 범위 필터 -->
                     <div class="filter-group">
-                        <label for="priceRange">가격 범위</label>
+                        <label for="priceRange">가격</label>
                         <div id="priceSlider"></div>
                         <input type="hidden" name="min_price" id="minPriceInput" value="{{ request.GET.min_price|default:min_price }}">
                         <input type="hidden" name="max_price" id="maxPriceInput" value="{{ request.GET.max_price|default:max_price }}">
@@ -178,7 +178,6 @@
             priceRangeText.innerHTML = values[0] + ' 원 - ' + values[1] + ' 원';
         });
     });
-    </script>
-    
-    
+</script>
+
 {% endblock %}

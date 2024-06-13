@@ -47,7 +47,7 @@ class ProductList(ListView):
     model = Product
     template_name = 'product.html'
     context_object_name = 'product_list'
-    paginate_by = 4
+    paginate_by = 3
 
     def get_queryset(self):
         queryset = Product.objects.all()
@@ -70,14 +70,16 @@ class ProductList(ListView):
         context['sort'] = self.request.GET.get('sort', 'created_date')
         context['order'] = self.request.GET.get('order', 'desc')
         context['filterset'] = self.filterset
-        
-        min_price = self.request.GET.get('min_price', 0)
-        max_price = self.request.GET.get('max_price', 1000000)
+
+        # 모든 상품의 최소 가격과 최대 가격을 쿼리
+        min_price = Product.objects.aggregate(Min('product_price'))['product_price__min']
+        max_price = Product.objects.aggregate(Max('product_price'))['product_price__max']
+
         context['min_price'] = min_price
         context['max_price'] = max_price
 
+        # 필터된 결과에 대한 페이지네이션 설정
         queryset = self.get_queryset()
-
         paginator = Paginator(queryset, self.paginate_by)
         page_number = self.request.GET.get('page')
 
