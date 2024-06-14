@@ -83,14 +83,25 @@ class ProductDetail(DetailView):
         context['paginator']=paginator
         context['page_number']=page_number
         return context
-    def get(self, request, *args, **kwargs):
-        if request.GET.get('ajax'):
-            product = self.get_object()
-            reviews = Review.objects.filter(product_id=product.product_id).order_by('-created_at')
-            review_list = reviews.values('user', 'created_at', 'comment', 'rating', 'code')
-            return JsonResponse(list(review_list), safe=False)
+from django.shortcuts import get_object_or_404
+def review(request):
+    if request.method == 'GET':
+        product_id = request.GET.get('product_id')
+        product = get_object_or_404(Product, pk=product_id)
         
-        return super().get(request, *args, **kwargs)
+        reviews = Review.objects.filter(product=product).values('user','comment', 'rating', 'created_at','image').order_by('-created_at')
+         # Paginator 설정
+        paginator = Paginator(reviews, 5)  # 페이지당 5개의 리뷰
+        page_number = int(request.GET.get('page',1))  # GET 파라미터에서 페이지 번호를 가져옴
+        page_obj = paginator.get_page(page_number)
+        # reviews_list = list(reviews)
+        reviews_list =list(page_obj.object_list)
+       
+    
+        return JsonResponse(reviews_list, safe=False)
+    else:
+        # 다른 HTTP 메소드 또는 ajax 요청이 아닌 경우 처리
+        return JsonResponse({'error': 'Invalid request'}, status=400)
 #카트 구매 코드 주석 처리 해놓음
     # def post(self, request, *args, **kwargs):
     #     # 상품 디테일 페이지에서 바로구매를 누르면 해당 상품이 카트 테이블에 추가

@@ -12,5 +12,5 @@ urlpatterns = [
     
 
     #리뷰url(회성)
-    path('review_list/',views.ProductDetail.as_view(), name='review_list')
+    path('review/',views.review, name='review')
 ]
