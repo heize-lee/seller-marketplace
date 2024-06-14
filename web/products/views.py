@@ -53,7 +53,7 @@ class ProductList(ListView):
     model = Product
     template_name = 'product.html'
     context_object_name = 'product_list'
-    paginate_by = 32
+    paginate_by = 15
 
     def get_queryset(self):
         queryset = Product.objects.only('product_id', 'product_name', 'product_price', 'stock_quantity', 'created_date', 'updated_date', 'category_id', 'product_img', 'seller_email').all()
@@ -102,10 +102,17 @@ class ProductList(ListView):
 
 
 class ProductDetail(DetailView):
-    model=Product   
+    model = Product   
     template_name = 'product_detail.html'
-    queryset = Product.objects.all()
     context_object_name = 'product'
+
+    #추천상품 선정
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        product = self.get_object()
+        recommended_products = Product.objects.filter(category=product.category).exclude(pk=product.pk).order_by('?')[:3]
+        context['recommended_products'] = recommended_products
+        return context
 
     
 #카트 구매 코드 주석 처리 해놓음
