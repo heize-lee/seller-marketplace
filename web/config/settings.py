@@ -194,9 +194,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-# STATIC_URL = 'static/'
+# 정적 파일 URL 경로
 STATIC_URL = '/static/'
+
+# 개발 환경에서 사용할 정적 파일 디렉토리
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+# 운영 환경에서 정적 파일을 모을 디렉토리
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # Media files
 MEDIA_URL = '/media/'

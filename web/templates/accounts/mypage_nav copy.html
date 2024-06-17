@@ -1,0 +1,21 @@
+<!-- templates/accounts/mypage_nav.html -->
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}My Page{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="nav">
+        <ul>
+            <li><a href="{% url 'mypage_section' section='profile' %}">Profile</a></li>
+            <li><a href="{% url 'mypage_section' section='orders' %}">Orders</a></li>
+            <li><a href="{% url 'mypage_section' section='settings' %}">Settings</a></li>
+        </ul>
+    </div>
+    <div class="content">
+        <h2>Welcome to My Page</h2>
+        <p>Select a section from the navigation menu.</p>
+    </div>
+</div>
+{% endblock %}
