@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    <div class="login-container">
+        <div class="login-header">
+            <p>SELLER</p>
+        </div>
+        <form method="post" action="{% url 'account_login' %}">
+            {% csrf_token %}
+            
+            <div class="login-form-group">
+                <label for="id_login">Email or Username</label>
+                {{ form.login }}
+                {% if form.login.errors %}
+                <ul class="errorlist">
+                    {% for error in form.login.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+
+            <div class="login-form-group">
+                <label for="id_password">Password</label>
+                {{ form.password }}
+                {% if form.password.errors %}
+                <ul class="errorlist">
+                    {% for error in form.password.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+
+            <div class="login-checkbox">
+                {{ form.remember }}
+                <label for="id_remember">Remember Me</label>
+            </div>
+            
+            <button type="submit" class="login-btn">{% trans "Login" %}</button>
+        </form>
+
+        <div class="login-link">
+            <p>Don't have an account? <a href="{% url 'account_signup' %}">Sign up</a></p>
+        </div>
+
+        {% if form.errors %}
+            <div class="form-errors">
+                <ul>
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
