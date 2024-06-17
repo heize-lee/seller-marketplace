@@ -43,8 +43,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         _('프로필 사진'), 
         upload_to='profile_images/%Y/%m/%d/', 
         null=True, 
-        blank=True,
-        default='profile_images/default/profile_picture.png'
+        blank=True
     )
     is_agree_terms = models.BooleanField(_('이용 약관 동의'), default=False)
     is_agree_privacy_policy = models.BooleanField(_('개인정보 처리방침 동의'), default=False)
@@ -73,11 +72,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['role']
-
-    def save(self, *args, **kwargs):
-        if not self.profile_picture:
-            self.profile_picture = 'profile_images/default/profile_picture.png'
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.email

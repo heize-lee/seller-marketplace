@@ -43,6 +43,19 @@ def mypage_section(request, section):
         return edit_profile(request)
     else:
         return render(request, 'accounts/mypage_section.html', {'section': section})
+# @login_required
+# def edit_profile(request):
+#     if request.method == 'POST':
+#         form = EditProfileForm(request.POST, request.FILES, instance=request.user)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request, '프로필이 성공적으로 업데이트되었습니다.')
+#             return redirect('mypage_section', section='edit_profile')
+#     else:
+#         form = EditProfileForm(instance=request.user)
+
+#     return render(request, 'accounts/edit_profile.html', {'form': form})
+
 @login_required
 def edit_profile(request):
     if request.method == 'POST':
@@ -54,4 +67,9 @@ def edit_profile(request):
     else:
         form = EditProfileForm(instance=request.user)
 
-    return render(request, 'accounts/edit_profile.html', {'form': form})
+    # 프로필 사진이 있는지 확인
+    profile_picture_url = None
+    if request.user.profile_picture:
+        profile_picture_url = request.user.profile_picture.url
+
+    return render(request, 'accounts/edit_profile.html', {'form': form, 'profile_picture_url': profile_picture_url})
