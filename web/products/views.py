@@ -5,18 +5,20 @@ from django.views.generic import ListView, DetailView, DeleteView
 from django.views.generic.edit import FormView, UpdateView
 from .models import Product, Category
 from .forms import RegisterForm 
-from django.urls import reverse_lazy
-#from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy, reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
+from django.http import HttpResponseRedirect
+from django.contrib import messages
 
 
 
-class ProductCreate(FormView):                           #class ProductCreate(LoginRequiredMixin, FormView):
+class ProductCreate(LoginRequiredMixin, FormView):
     template_name = 'register_product.html'
     form_class = RegisterForm
     success_url = '/product/'
-    login_url = reverse_lazy('accounts:login')  # 로그인 페이지의 URL
+    login_url = reverse_lazy('account_login')  # 로그인 페이지의 URL
 
     def form_valid(self, form):
         # 로그인된 사용자의 이메일 가져오기
@@ -31,9 +33,9 @@ class ProductCreate(FormView):                           #class ProductCreate(Lo
 
     def dispatch(self, request, *args, **kwargs):
         # 사용자가 로그인되어 있는지 확인
-        #if not self.request.user.is_authenticated:
+        if not self.request.user.is_authenticated:
             # 로그인되어 있지 않은 경우 로그인 페이지로 리디렉션
-            #return redirect(self.login_url)
+            return redirect(self.login_url)
         return super().dispatch(request, *args, **kwargs)
     
 
@@ -45,7 +47,6 @@ from .filters import ProductFilter
 
 from django.views.generic import ListView
 from django.db.models import Min, Max
-from .models import Product
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
 
@@ -56,7 +57,15 @@ class ProductList(ListView):
     paginate_by = 15
 
     def get_queryset(self):
-        queryset = Product.objects.only('product_id', 'product_name', 'product_price', 'stock_quantity', 'created_date', 'updated_date', 'category_id', 'product_img', 'seller_email').all()
+        queryset = Product.objects.only(
+            'product_id', 'product_name', 'product_price', 'stock_quantity', 'created_date', 'updated_date', 'category_id', 'product_img', 'seller_email'
+        ).all()
+
+        # 카테고리 필터링 추가
+        category_id = self.request.GET.get('category')
+        if category_id:
+            queryset = queryset.filter(category_id=category_id)
+
         self.filterset = ProductFilter(self.request.GET, queryset=queryset)
 
         sort_option = self.request.GET.get('sort', 'created_date')
@@ -84,6 +93,17 @@ class ProductList(ListView):
         context['min_price'] = min_price
         context['max_price'] = max_price
 
+        # 모든 카테고리 가져오기
+        categories = Category.objects.all()
+        context['categories'] = categories
+
+        # 현재 선택된 카테고리 이름 추가
+        category_id = self.request.GET.get('category')
+        if category_id:
+            context['category_name'] = Category.objects.get(id=category_id).category_name
+        else:
+            context['category_name'] = '전체'
+
         # 필터된 결과에 대한 페이지네이션 설정
         queryset = self.get_queryset()
         paginator = Paginator(queryset, self.paginate_by)
@@ -97,8 +117,11 @@ class ProductList(ListView):
             page_obj = paginator.page(paginator.num_pages)
 
         context['page_obj'] = page_obj
+
         return context
 
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
 
 class ProductDetail(DetailView):
@@ -115,7 +138,7 @@ class ProductDetail(DetailView):
         return context
 
     
-#카트 구매 코드 주석 처리 해놓음
+#기존 카트 구매 코드 주석 처리 해놓음
     # def post(self, request, *args, **kwargs):
     #     # 상품 디테일 페이지에서 바로구매를 누르면 해당 상품이 카트 테이블에 추가
     #     product = self.get_object()
@@ -128,10 +151,11 @@ class ProductDetail(DetailView):
 
 
 #각 판매자 판매물품 
-class ProductListByUser(ListView):
+class ProductListByUser(LoginRequiredMixin, ListView):
     model = Product
     template_name = 'my_products.html'
     context_object_name = 'my_products'
+    login_url = reverse_lazy('account_login')  # 로그인 페이지의 URL
 
     def get_queryset(self):
         # 로그인한 사용자의 이메일을 기준으로 해당 사용자가 작성한 판매글만 필터링하여 반환
@@ -143,6 +167,13 @@ class ProductListByUser(ListView):
         context = super().get_context_data(**kwargs)
         context['MEDIA_URL'] = settings.MEDIA_URL
         return context
+
+    def dispatch(self, request, *args, **kwargs):
+        # 로그인된 사용자만 접근 가능하도록 처리
+        if not self.request.user.is_authenticated:
+            # 로그인되어 있지 않은 경우 로그인 페이지로 리디렉션
+            return redirect(self.login_url)
+        return super().dispatch(request, *args, **kwargs)
 
 #기존view 
 #class ProductListByUser(ListView):

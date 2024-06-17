@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.kakao',
     # 'allauth.socialaccount.providers.google',
     # 'allauth.socialaccount.providers.naver',
+    'django.contrib.humanize',
     'products',
     'orders',
     'reviews',
@@ -207,4 +208,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 

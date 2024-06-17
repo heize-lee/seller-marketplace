@@ -1,5 +1,29 @@
+{% load humanize %} <!-- intcomma필터 -->
+{% load static %}
 {% block content %}
 <div class="container my-4">
+    <!-- 카테고리 선택 바 -->
+    <div class="category-bar mb-4">
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a class="nav-link {% if not request.GET.category %}active{% endif %}" href="?{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}{% if request.GET.search_keyword %}&search_keyword={{ request.GET.search_keyword }}{% endif %}{% if request.GET.min_price %}&min_price={{ request.GET.min_price }}{% endif %}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}">
+                    <img src="{% static 'category_all_image/5110770.png' %}" alt="전체">
+                    <span>전체</span>
+                </a>
+            </li>
+            
+            <!-- 각 카테고리 버튼들 -->
+            {% for category in categories %}
+            <li class="nav-item">
+                <a class="nav-link {% if request.GET.category == category.id|stringformat:"s" %}active{% endif %}" href="?category={{ category.id }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}{% if request.GET.search_keyword %}&search_keyword={{ request.GET.search_keyword }}{% endif %}{% if request.GET.min_price %}&min_price={{ request.GET.min_price }}{% endif %}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}">
+                    <img src="{{ category.category_image.url }}" alt="{{ category.category_name }}">
+                    <span>{{ category.category_name }}</span>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
     <!-- 배너 섹션 -->
     <div class="banner" style="position: relative; text-align: center; color: white;">
         <img src="{{ MEDIA_URL }}banner_image/banner_image.jpg" alt="배너 이미지" style="width: 100%; height: auto;">
@@ -7,7 +31,6 @@
             <!-- 여기에 원하는 글자를 입력 -->
         </div>
     </div>
-    <!-- 배너 섹션 -->
     <br>
 
     {% if search_info %}
@@ -20,7 +43,6 @@
         <!-- 왼쪽 필터 섹션 -->
         <div class="col-lg-3">
             <div class="filter-section">
-                <!-- 필터 공간 (추후에 요소 추가 가능) -->
                 <h4>Filters <a href="?" class="btn btn-secondary btn-sm">Clear All</a></h4>
                 <form method="GET" id="filterForm">
                     <!-- 상품명 검색 창 -->
@@ -40,6 +62,10 @@
                     <!-- 정렬 옵션 포함 -->
                     <input type="hidden" name="sort" value="{{ sort }}">
                     <input type="hidden" name="order" value="{{ order }}">
+                    <!-- 카테고리 포함 -->
+                    {% if request.GET.category %}
+                    <input type="hidden" name="category" value="{{ request.GET.category }}">
+                    {% endif %}
                     <button type="submit" class="btn btn-primary">필터 적용</button>
                 </form>
             </div>
@@ -56,11 +82,10 @@
                         정렬 옵션
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="sortDropdown">
-                        <li><a class="dropdown-item" href="?{% if request.GET.search_keyword %}search_keyword={{ request.GET.search_keyword }}&{% endif %}{% if request.GET.min_price %}min_price={{ request.GET.min_price }}&{% endif %}{% if request.GET.max_price %}max_price={{ request.GET.max_price }}&{% endif %}sort=created_date&order=desc">최신순</a></li>
-                        <li><a class="dropdown-item" href="?{% if request.GET.search_keyword %}search_keyword={{ request.GET.search_keyword }}&{% endif %}{% if request.GET.min_price %}min_price={{ request.GET.min_price }}&{% endif %}{% if request.GET.max_price %}max_price={{ request.GET.max_price }}&{% endif %}sort=product_price&order=asc">낮은 가격순</a></li>
-                        <li><a class="dropdown-item" href="?{% if request.GET.search_keyword %}search_keyword={{ request.GET.search_keyword }}&{% endif %}{% if request.GET.min_price %}min_price={{ request.GET.min_price }}&{% endif %}{% if request.GET.max_price %}max_price={{ request.GET.max_price }}&{% endif %}sort=product_price&order=desc">높은 가격순</a></li>
+                        <li><a class="dropdown-item" href="?{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}{% if request.GET.search_keyword %}&search_keyword={{ request.GET.search_keyword }}{% endif %}{% if request.GET.min_price %}&min_price={{ request.GET.min_price }}{% endif %}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}&sort=created_date&order=desc">최신순</a></li>
+                        <li><a class="dropdown-item" href="?{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}{% if request.GET.search_keyword %}&search_keyword={{ request.GET.search_keyword }}{% endif %}{% if request.GET.min_price %}&min_price={{ request.GET.min_price }}{% endif %}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}&sort=product_price&order=asc">낮은 가격순</a></li>
+                        <li><a class="dropdown-item" href="?{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}{% if request.GET.search_keyword %}&search_keyword={{ request.GET.search_keyword }}{% endif %}{% if request.GET.min_price %}&min_price={{ request.GET.min_price }}{% endif %}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}&sort=product_price&order=desc">높은 가격순</a></li>
                     </ul>
-                    
                 </div>
             </div>
 
@@ -81,8 +106,8 @@
                                 <h4 class="card-title">{{ product.product_name }}</h4>
                             </a>
                         </div>
-                        <div class="card-footer d-flex justify-content-between">
-                            <div>{{ product.product_price }}원</div>
+                        <div class="card-footer d-flex justify-content-between bg-white">
+                            <div>₩{{ product.product_price|intcomma }}</div>
                         </div>
                     </div>
                 </div>
@@ -91,31 +116,29 @@
             <!-- 페이지네이션 -->
             {% if is_paginated %}
             <div class="d-flex justify-content-center mt-4">
-                <!-- 필터와 정렬 옵션을 유지하여 페이지네이션 링크를 생성 -->
                 <ul class="pagination">
                     {% if page_obj.has_previous %}
                     <li class="page-item">
-                        <a class="page-link" href="?{% if request.GET.search_keyword %}search_keyword={{ request.GET.search_keyword }}&{% endif %}{% if request.GET.min_price %}min_price={{ request.GET.min_price }}&{% endif %}{% if request.GET.max_price %}max_price={{ request.GET.max_price }}&{% endif %}{% if sort %}sort={{ sort }}&{% endif %}{% if order %}order={{ order }}&{% endif %}page=1">&laquo;</a>
+                        <a class="page-link" href="?{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}{% if request.GET.search_keyword %}&search_keyword={{ request.GET.search_keyword }}{% endif %}{% if request.GET.min_price %}&min_price={{ request.GET.min_price }}{% endif %}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}{% if order %}&order={{ order }}{% endif %}&page=1">&laquo;</a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="?{% if request.GET.search_keyword %}search_keyword={{ request.GET.search_keyword }}&{% endif %}{% if request.GET.min_price %}min_price={{ request.GET.min_price }}&{% endif %}{% if request.GET.max_price %}max_price={{ request.GET.max_price }}&{% endif %}{% if sort %}sort={{ sort }}&{% endif %}{% if order %}order={{ order }}&{% endif %}page={{ page_obj.previous_page_number }}">이전</a>
+                        <a class="page-link" href="?{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}{% if request.GET.search_keyword %}&search_keyword={{ request.GET.search_keyword }}{% endif %}{% if request.GET.min_price %}&min_price={{ request.GET.min_price }}{% endif %}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}{% if order %}&order={{ order }}{% endif %}&page={{ page_obj.previous_page_number }}">이전</a>
                     </li>
                     {% endif %}
                     {% for num in page_obj.paginator.page_range %}
                     <li class="page-item {% if num == page_obj.number %}active{% endif %}">
-                        <a class="page-link" href="?{% if request.GET.search_keyword %}search_keyword={{ request.GET.search_keyword }}&{% endif %}{% if request.GET.min_price %}min_price={{ request.GET.min_price }}&{% endif %}{% if request.GET.max_price %}max_price={{ request.GET.max_price }}&{% endif %}{% if sort %}sort={{ sort }}&{% endif %}{% if order %}order={{ order }}&{% endif %}page={{ num }}">{{ num }}</a>
+                        <a class="page-link" href="?{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}{% if request.GET.search_keyword %}&search_keyword={{ request.GET.search_keyword }}{% endif %}{% if request.GET.min_price %}&min_price={{ request.GET.min_price }}{% endif %}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}{% if order %}&order={{ order }}{% endif %}&page={{ num }}">{{ num }}</a>
                     </li>
                     {% endfor %}
                     {% if page_obj.has_next %}
                     <li class="page-item">
-                        <a class="page-link" href="?{% if request.GET.search_keyword %}search_keyword={{ request.GET.search_keyword }}&{% endif %}{% if request.GET.min_price %}min_price={{ request.GET.min_price }}&{% endif %}{% if request.GET.max_price %}max_price={{ request.GET.max_price }}&{% endif %}{% if sort %}sort={{ sort }}&{% endif %}{% if order %}order={{ order }}&{% endif %}page={{ page_obj.next_page_number }}">다음</a>
+                        <a class="page-link" href="?{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}{% if request.GET.search_keyword %}&search_keyword={{ request.GET.search_keyword }}{% endif %}{% if request.GET.min_price %}&min_price={{ request.GET.min_price }}{% endif %}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}{% if order %}&order={{ order }}{% endif %}&page={{ page_obj.next_page_number }}">다음</a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="?{% if request.GET.search_keyword %}search_keyword={{ request.GET.search_keyword }}&{% endif %}{% if request.GET.min_price %}min_price={{ request.GET.min_price }}&{% endif %}{% if request.GET.max_price %}max_price={{ request.GET.max_price }}&{% endif %}{% if sort %}sort={{ sort }}&{% endif %}{% if order %}order={{ order }}&{% endif %}page={{ page_obj.paginator.num_pages }}">&raquo;</a>
+                        <a class="page-link" href="?{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}{% if request.GET.search_keyword %}&search_keyword={{ request.GET.search_keyword }}{% endif %}{% if request.GET.min_price %}&min_price={{ request.GET.min_price }}{% endif %}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}{% if order %}&order={{ order }}{% endif %}&page={{ page_obj.paginator.num_pages }}">&raquo;</a>
                     </li>
                     {% endif %}
                 </ul>
-
             </div>
             {% endif %}
             <!-- 페이지네이션 끝 -->
@@ -157,7 +180,6 @@
         margin-bottom: 15px;
     }
 
-    
     @keyframes fade-in {
         from {
             opacity: 0;
@@ -167,10 +189,38 @@
         }
     }
 
-    
     .card.fade-in {
         opacity: 1;
         animation: fade-in 3s ease-out forwards;
+    }
+
+    .card-footer {
+        background-color: white; 
+        border-top: none; 
+    }
+
+    .category-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px; 
+        justify-content: center; 
+    }
+
+    .nav-link {
+        color: black; 
+        text-decoration: none; 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 150px; 
+    }
+
+    .nav-link img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        margin-bottom: 5px; 
     }
 </style>
 
@@ -215,5 +265,4 @@
         });
     });
 </script>
-
 {% endblock %}

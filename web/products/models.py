@@ -10,6 +10,7 @@ from django.utils import timezone
 class Category(models.Model):
     category_name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=200, unique=True, allow_unicode=True)
+    category_image = models.ImageField(upload_to='category_images/', null=True, blank=True)  # 이미지 필드 추가
 
     def __str__(self):
         return self.category_name
