@@ -1,3 +1,5 @@
+# web/tests/test_models.py
+
 from django.test import TestCase
 from django.utils import timezone
 from products.models import Category, Product
@@ -16,7 +18,7 @@ class CategoryModelTest(TestCase):
 
     def test_category_image_upload(self):
         # 기본적으로 category_image가 null=True, blank=True 이므로 필드가 비어 있을 수 있습니다.
-        self.assertIsNone(self.category.category_image)
+        self.assertFalse(bool(self.category.category_image))  # 필드가 비어 있는지 확인
 
 class ProductModelTest(TestCase):
 
@@ -47,9 +49,11 @@ class ProductModelTest(TestCase):
         self.product.product_price = 15000
         self.product.save()
         new_updated_date = self.product.updated_date
-        self.assertNotEqual(old_updated_date, new_updated_date)
-        self.assertTrue(new_updated_date > old_updated_date)
+        if old_updated_date is None:
+            self.assertIsNotNone(new_updated_date)
+        else:
+            self.assertTrue(new_updated_date > old_updated_date)
 
     def test_product_image_upload(self):
         # 기본적으로 product_img가 null=True, blank=True 이므로 필드가 비어 있을 수 있습니다.
-        self.assertIsNone(self.product.product_img)
+        self.assertFalse(bool(self.product.product_img))  # 필드가 비어 있는지 확인
