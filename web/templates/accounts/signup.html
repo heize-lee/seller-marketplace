@@ -1,12 +1,105 @@
-{% extends "base.html" %} {% load i18n %} {% block content %}
-<h2>Custom Signup Page</h2>
-<p>This is a custom signup template.</p>
-<form
-  method="post"
-  action="{% url 'account_signup' %}"
-  enctype="multipart/form-data"
->
-  {% csrf_token %} {{ form.as_p }}
-  <button type="submit">{% trans "Sign Up" %}</button>
-</form>
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <!-- intl-tel-input CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
+</head>
+<body>
+    <div class="signup-container">
+        <div class="signup-header">
+            <p>SELLER</p>
+        </div>
+        <form method="post" action="{% url 'account_signup' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="id_profile_picture">Profile photo</label>
+                {{ form.profile_picture }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_email">Email</label>
+                {{ form.email }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_password1">Password</label>
+                {{ form.password1 }}
+                {% if form.password1.errors %}
+                <ul class="errorlist">
+                    {% for error in form.password1.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="id_password2">Confirm Password</label>
+                {{ form.password2 }}
+                {% if form.password2.errors %}
+                <ul class="errorlist">
+                    {% for error in form.password2.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="id_nickname">Nickname</label>
+                {{ form.nickname }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_phone_number">Phone number</label>
+                <input type="tel" name="phone_number" required="" id="id_phone_number">
+                {% if form.phone_number.errors %}
+                <ul class="errorlist">
+                    {% for error in form.phone_number.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+
+            <div class="checkbox">
+                {{ form.is_agree_terms }} <label for="id_is_agree_terms">By signing up, I agree with the Terms of Use</label>
+            </div>
+            
+            <div class="checkbox">
+                {{ form.is_agree_privacy_policy }} <label for="id_is_agree_privacy_policy">By signing up, I agree with the Privacy Policy</label>
+            </div>
+
+            <button type="submit" class="signup-btn">{% trans "Sign up" %}</button>
+        </form>
+        {% if form.errors %}
+            <div class="form-errors">
+                <ul>
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- intl-tel-input JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    <script>
+        var input = document.querySelector("#id_phone_number");
+        var iti = window.intlTelInput(input, {
+            initialCountry: "kr",
+            separateDialCode: true,
+        });
+    </script>
+</body>
+</html>
 {% endblock %}

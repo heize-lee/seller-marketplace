@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
+from phonenumber_field.modelfields import PhoneNumberField #전화번호 필드
 
 class UserRegistrationHistory(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -35,7 +36,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField(_('이메일 주소'), unique=True)
     nickname = models.CharField(_('닉네임'), max_length=150, blank=True)
-    phone_number = models.CharField(_('전화번호'), max_length=15, blank=True)
+    # phone_number = models.CharField(_('전화번호'), max_length=15, blank=True)
+    # 기존 CharField 정의를 PhoneNumberField로 변경 
+    phone_number = PhoneNumberField(unique=True, blank=False) 
     profile_picture = models.ImageField(
         _('프로필 사진'), 
         upload_to='profile_images/%Y/%m/%d/', 
