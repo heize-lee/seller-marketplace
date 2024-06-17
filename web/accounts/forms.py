@@ -4,6 +4,7 @@ from .models import CustomUser
 import re
 from phonenumber_field.formfields import PhoneNumberField
 
+# 지현 (회원가입)
 class CustomSignupForm(SignupForm):
     nickname = forms.CharField(max_length=150, label='닉네임', required=True)
     # phone_number = forms.CharField(max_length=15, label='전화번호', required=True)
@@ -48,3 +49,10 @@ class CustomSignupForm(SignupForm):
         user.save()
         return user
 
+
+# 재웅 (프로필 사진 수정)
+class EditProfileForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['nickname', 'phone_number', 'profile_picture']
+>>>>>>> origin/feat/user-profile2
