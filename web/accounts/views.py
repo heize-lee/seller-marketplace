@@ -16,9 +16,17 @@ from .forms import EditProfileForm
 def mypage_nav(request):
     return render(request, 'accounts/mypage_nav.html')
 
+# @login_required
+# def mypage_section(request, section):
+#     return render(request, 'accounts/mypage_section.html', {'section': section})
+
 @login_required
 def mypage_section(request, section):
-    return render(request, 'accounts/mypage_section.html', {'section': section})
+    if section == 'info':
+        return render(request, 'accounts/edit_profile.html')
+    else:
+        return render(request, 'accounts/mypage_section.html', {'section': section})
+
 
 # 지현 (로그인)
 class CustomLoginView(LoginView):

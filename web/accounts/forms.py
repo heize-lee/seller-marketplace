@@ -55,4 +55,3 @@ class EditProfileForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ['nickname', 'phone_number', 'profile_picture']
->>>>>>> origin/feat/user-profile2
