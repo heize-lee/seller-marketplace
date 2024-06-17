@@ -1,3 +1,4 @@
+<!-- templates/accounts/mypage_section.html -->
 {% extends "base.html" %}
 {% load i18n %}
 
@@ -8,11 +9,7 @@
     {% include 'accounts/navigation.html' %}
     <div class="content">
         <h2>{{ section|title }}</h2>
-        {% if section == "settings" %}
-            <a href="{% url 'edit_profile' %}">Edit Profile</a>
-        {% else %}
-            <p>Content for {{ section }} section.</p>
-        {% endif %}
+        <p>Content for {{ section }} section.</p>
     </div>
 </div>
 {% endblock %}

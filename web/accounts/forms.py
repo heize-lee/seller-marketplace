@@ -13,11 +13,6 @@ class CustomSignupForm(SignupForm):
     is_agree_privacy_policy = forms.BooleanField(label='개인정보 처리방침 동의', required=True)
     profile_picture = forms.ImageField(label='프로필 사진', required=False)
 
-    # def clean_phone_number(self):
-    #     phone_number = self.cleaned_data['phone_number']
-    #     if not re.match(r'^\d{10,15}$', phone_number):
-    #         raise forms.ValidationError('전화번호는 10자에서 15자 사이의 숫자로만 이루어져야 합니다.')
-    #     return phone_number
     def clean_phone_number(self):
         phone_number = self.cleaned_data['phone_number']
         # PhoneNumber 객체를 문자열로 변환
@@ -51,7 +46,16 @@ class CustomSignupForm(SignupForm):
 
 
 # 재웅 (프로필 사진 수정)
+# class EditProfileForm(forms.ModelForm):
+#     class Meta:
+#         model = CustomUser
+#         fields = ['nickname', 'phone_number', 'profile_picture']
+
+
+from django import forms
+from .models import CustomUser
+
 class EditProfileForm(forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ['nickname', 'phone_number', 'profile_picture']
+        fields = ['profile_picture', 'nickname', 'email', 'phone_number', 'is_agree_terms', 'is_agree_privacy_policy']
