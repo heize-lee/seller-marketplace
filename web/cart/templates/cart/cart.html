@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/a47086679e.js" crossorigin="anonymous"></script>
     <title>Cart Summary</title>
     <style>
         body {
@@ -12,7 +13,7 @@
             box-sizing: border-box;
         }
         .container {
-            width: 80%; /* 원하는 너비를 설정하세요. 예: 80% 또는 특정 픽셀 값 */
+            width: 80%; 
             height: 100vh;
             background: white;
             box-shadow: 0px 3px 6px rgba(18, 15, 40, 0.12);
@@ -79,12 +80,27 @@
         .order-button {
             width: 100%;
             padding: 10px;
-            background: #565E6D;
-            color: white;
+            background: white;
+            color: #565E6D;
             text-align: center;
             font-size: 16px;
             cursor: pointer;
         }
+        .order-button:hover {
+            background: #565E6D;
+            color: white;
+        }
+        .trash {
+            border: 0;
+            background-color: transparent;
+            cursor: pointer; /* 커서를 포인터로 변경*/
+            transition: transform 0.3s ease;
+        }
+        .trash:hover {
+            transform: scale(1.2);
+            color: #565E6D;
+        }
+
 
     </style>
 </head>
@@ -101,10 +117,13 @@
                                 <div>{{ item.product.product_name }}</div>
                                 <div>Option</div>
                             </div>
-                            <div>{{ item.product.product_price }}</div>
+                            <div>p_price{{ item.product.product_price }}</div>
                             <div>{{ item.amount }}</div>
-                            <div>{{ item.total_price }}</div>
-                            <button> ✖</button>
+                            <div>t_price{{ item.total_price }}</div>
+                            <form action="{% url 'cart:cart_delete' pk=item.pk %}" method="post">
+                                {% csrf_token %}
+                            <button class="trash" type="submit"><i class="fa-solid fa-trash-can"></i></button>
+                            </form>
                         </div>
                         
                     </div>
@@ -114,15 +133,15 @@
                 <div class="cart-summary">
                     <h2>Summary</h2>
                     <div>
-                        <span>Subtotal</span>
+                        <span>Payment_toal_price</span>
                         <span>$156</span>
                     </div>
                     <div>
                         <span>Delivery Fee</span>
-                        <span>$22</span>
+                        <span>$00</span>
                     </div>
                     <div>
-                        <strong>Total</strong>
+                        <strong>Pay+Delv_Total</strong>
                         <strong>$178</strong>
                     </div>
                     <form action="" method="post">

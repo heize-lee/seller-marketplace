@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Cart
 from products.models import Product
 
@@ -6,8 +6,8 @@ from products.models import Product
 def cart(request):
     # 카트페이지 처음 들어왔을 때 
     if request.method == 'GET':
-        # user = request.user
-        cart = Cart.objects.all()
+        user = request.user
+        cart = Cart.objects.filter(user=user)
         context = {
             'cart': cart
         }
@@ -36,9 +36,13 @@ def cart(request):
     # 결제하기 버튼 눌렀을 때     
     # 수량 및 옵션 변경  
     if request.method == 'POST':
-        return redirect('orders')
+        return redirect('orders:orders')
         
 
 # 카트목록 삭제 버튼 클릭 시 
-def cart_delete(request):
-    pass
+def cart_delete(request, pk):
+    object = Cart.objects.get(pk=pk)
+    object.delete()  
+    return redirect('cart:cart')
+
+   

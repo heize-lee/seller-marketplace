@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'reviews',
     'cart',
     'payment',
+    'rest_framework',
 ]
 
 # social login

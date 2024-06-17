@@ -30,6 +30,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),  # Django Allauth URLs
     path('', views.home, name='home'), 
     path('product/', include('products.urls', namespace='product')),
+    path('payment/', include('payment.urls')),
 ]
 
 if settings.DEBUG:
