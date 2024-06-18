@@ -1,32 +1,25 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.conf import settings
-from phonenumber_field.modelfields import PhoneNumberField #전화번호 필드
-
-class UserRegistrationHistory(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    registration_date = models.DateTimeField(auto_now_add=True)
-    withdrawal_date = models.DateTimeField(null=True, blank=True)
-
-    def __str__(self):
-        return f"User: {self.user.email}, Registration Date: {self.registration_date}, Withdrawal Date: {self.withdrawal_date}"
+from phonenumber_field.modelfields import PhoneNumberField
 
 class CustomUserManager(BaseUserManager):
-    def create_user(self, email, password, role, **extra_fields):
+    def create_user(self, email, phone_number, password=None, **extra_fields):
         if not email:
             raise ValueError('이메일은 필수 항목입니다.')
+        if not phone_number:
+            raise ValueError('휴대폰 번호는 필수 항목입니다.')
         email = self.normalize_email(email)
-        user = self.model(email=email, role=role, **extra_fields)
+        user = self.model(email=email, phone_number=phone_number, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
-
-    def create_superuser(self, email, password, **extra_fields):
+    
+    def create_superuser(self, email, phone_number, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('role', 'admin')
-        return self.create_user(email, password, **extra_fields)
+        return self.create_user(email=email, password=password, phone_number=phone_number, **extra_fields)
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     class UserType(models.TextChoices):
@@ -36,9 +29,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField(_('이메일 주소'), unique=True)
     nickname = models.CharField(_('닉네임'), max_length=150, blank=True)
-    # phone_number = models.CharField(_('전화번호'), max_length=15, blank=True)
-    # 기존 CharField 정의를 PhoneNumberField로 변경 
-    phone_number = PhoneNumberField(unique=True, blank=False) 
+    phone_number = PhoneNumberField(unique=True, blank=False)
     profile_picture = models.ImageField(
         _('프로필 사진'), 
         upload_to='profile_images/%Y/%m/%d/', 
@@ -72,7 +63,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['role']
+    REQUIRED_FIELDS = ['phone_number', 'role']
 
     def save(self, *args, **kwargs):
         if not self.profile_picture:
