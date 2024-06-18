@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
+from phonenumber_field.modelfields import PhoneNumberField #전화번호 필드
 
 class UserRegistrationHistory(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -35,8 +36,16 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField(_('이메일 주소'), unique=True)
     nickname = models.CharField(_('닉네임'), max_length=150, blank=True)
-    phone_number = models.CharField(_('전화번호'), max_length=15, blank=True)
-    profile_picture = models.ImageField(_('프로필 사진'), upload_to='profile_pics/', null=True, blank=True)
+    # phone_number = models.CharField(_('전화번호'), max_length=15, blank=True)
+    # 기존 CharField 정의를 PhoneNumberField로 변경 
+    phone_number = PhoneNumberField(unique=True, blank=False) 
+    profile_picture = models.ImageField(
+        _('프로필 사진'), 
+        upload_to='profile_images/%Y/%m/%d/', 
+        null=True, 
+        blank=True,
+        default='profile_images/default/profile_picture.png'
+    )
     is_agree_terms = models.BooleanField(_('이용 약관 동의'), default=False)
     is_agree_privacy_policy = models.BooleanField(_('개인정보 처리방침 동의'), default=False)
     is_active = models.BooleanField(_('활성 상태'), default=True)
@@ -64,6 +73,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['role']
+
+    def save(self, *args, **kwargs):
+        if not self.profile_picture:
+            self.profile_picture = 'profile_images/default/profile_picture.png'
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.email
