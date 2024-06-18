@@ -14,6 +14,8 @@ from django.db.models import Avg
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.db.models import F
 class ProductCreate(FormView):                           #class ProductCreate(LoginRequiredMixin, FormView):
     template_name = 'register_product.html'
     form_class = RegisterForm
@@ -49,7 +51,6 @@ class ProductList(ListView):
 
 
 
-
 class ProductDetail(DetailView):
     model=Product   
     template_name = 'product_detail.html'
@@ -62,13 +63,22 @@ class ProductDetail(DetailView):
         reviews = Review.objects.filter(product_id=product.product_id).order_by('-created_at')
         cnt = reviews.count()
         # 별점 백분율 계산
-        rating = {
-            '1' : reviews.filter(Q(rating=1) | Q(rating=0.5)).count()/cnt * 100,
-            '2' : reviews.filter(Q(rating=2) | Q(rating=1.5)).count()/cnt * 100,
-            '3' : reviews.filter(Q(rating=3) | Q(rating=2.5)).count()/cnt * 100,
-            '4' : reviews.filter(Q(rating=4) | Q(rating=3.5)).count()/cnt * 100,
-            '5' : reviews.filter(Q(rating=5) | Q(rating=4.5)).count()/cnt * 100
+        if cnt == 0:
+            rating = {
+            '1' : 0,
+            '2' : 0,
+            '3' : 0,
+            '4' : 0,
+            '5' : 0
         }
+        else:
+            rating = {
+                '1' : reviews.filter(Q(rating=1) | Q(rating=0.5)).count()/cnt * 100,
+                '2' : reviews.filter(Q(rating=2) | Q(rating=1.5)).count()/cnt * 100,
+                '3' : reviews.filter(Q(rating=3) | Q(rating=2.5)).count()/cnt * 100,
+                '4' : reviews.filter(Q(rating=4) | Q(rating=3.5)).count()/cnt * 100,
+                '5' : reviews.filter(Q(rating=5) | Q(rating=4.5)).count()/cnt * 100
+            }
 
         # Paginator 설정
         paginator = Paginator(reviews, 5)  # 페이지당 5개의 리뷰
@@ -83,20 +93,20 @@ class ProductDetail(DetailView):
         context['paginator']=paginator
         context['page_number']=page_number
         return context
-from django.shortcuts import get_object_or_404
+    
+#리뷰 비동기 요청(회성)
 def review(request):
     if request.method == 'GET':
         product_id = request.GET.get('product_id')
         product = get_object_or_404(Product, pk=product_id)
         
-        reviews = Review.objects.filter(product=product).values('user','comment', 'rating', 'created_at','image').order_by('-created_at')
+        reviews = Review.objects.filter(product=product).annotate(nickname=F('user__nickname')).values('id','nickname','comment', 'rating', 'created_at','image').order_by('-created_at')
          # Paginator 설정
         paginator = Paginator(reviews, 5)  # 페이지당 5개의 리뷰
         page_number = int(request.GET.get('page',1))  # GET 파라미터에서 페이지 번호를 가져옴
         page_obj = paginator.get_page(page_number)
         # reviews_list = list(reviews)
         reviews_list =list(page_obj.object_list)
-       
     
         return JsonResponse(reviews_list, safe=False)
     else:

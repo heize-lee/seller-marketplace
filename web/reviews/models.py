@@ -10,7 +10,7 @@ class Review(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     # order = models.ForeignKey(Order,on_delete=models.CASCADE)
-    rating = models.FloatField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    rating = models.FloatField(validators=[MinValueValidator(0), MaxValueValidator(5)])
     comment = models.TextField()
     image = models.ImageField(upload_to='review_images/%Y/%m/%d/', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

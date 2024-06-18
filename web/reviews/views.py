@@ -1,8 +1,12 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden,JsonResponse
 from django.shortcuts import redirect, render
 from django.views.generic import CreateView
 from .models import Review,Product
 from .forms import ReviewCreateForm
+from django.core.exceptions import PermissionDenied
+from django.contrib import messages
+from django.views.decorators.http import require_http_methods
+from django.shortcuts import get_object_or_404
 # Create your views here.
 
 # class ReviewCreate(CreateView):
@@ -11,26 +15,43 @@ from .forms import ReviewCreateForm
 
 
 def ReviewCreate(request):
-    product_id = request.POST['product']
-    product = Product.objects.get(pk=product_id)
+    
+    if request.method =='GET':
+        product_id = request.GET['product']
+        product = Product.objects.get(pk=product_id)
+        form = ReviewCreateForm()
+        if request.user.is_authenticated and request:
+            if Review.objects.filter(user=request.user, product=product).exists():
+                messages.error(request, "이미 작성된 리뷰가 있습니다.")
+                return redirect('/product/'+ product_id,)  # 제품 상세 페이지로 리디렉션
+            
     if request.method == 'POST':
         form = ReviewCreateForm(request.POST,request.FILES)
+         # 사용자가 이미 해당 제품에 대한 리뷰를 작성했는지 확인
+        product_id = request.POST['product']
+        product = Product.objects.get(pk=product_id)
+        
+            
+        if request.POST['rating']=='0':
+            form.add_error('rating', ' 평점을 선택해주세요.')
+            if request.POST['comment']=='':
+                form.add_error('comment', ' 후기를 작성해주세요.')
+            return render(request, 'reviews/review_form.html', {'form': form, 'product': product})
+        if request.POST['comment']=='':
+            form.add_error('comment', ' 후기를 작성해주세요.')
+            return render(request, 'reviews/review_form.html', {'form': form, 'product': product})
         
         if form.is_valid():
             review = form.save(commit=False)
             review.user = request.user  # 현재 로그인된 사용자
             review.product = product
-            if 'rating' not in request.POST:
-                return render(request, '리뷰 작성 템플릿 경로', {'form': form, 'product': product, 'error_message': 'Rating 값을 선택해주세요.'})
             review.rating = float(request.POST['rating'])
             # if 'image' in request.FILES:
             #     review.image = request.FILES['image']
             review.save()
-            
             return HttpResponse('처리완료')
-    else:
-        form = ReviewCreateForm()
-
+        
+       
     return render(
         request,
         'reviews/review_form.html',
@@ -38,7 +59,29 @@ def ReviewCreate(request):
          'product':product,
         }
     )
+@require_http_methods(["DELETE"])
+def delete_review(request, review_id):
+    review = get_object_or_404(Review, pk=review_id)
 
+    if request.user == review.user:  # 리뷰 작성자만 삭제할 수 있도록 합니다.
+        review.delete()
+        return JsonResponse({'success': '리뷰가 삭제되었습니다.'})
+    else:
+        return JsonResponse({'error': '리뷰를 삭제할 권한이 없습니다.'}, status=403)
+    
+@require_http_methods(["PUT"])
+def put_review(request, review_id):
+    review = get_object_or_404(Review, pk=review_id)
+    product_id = request.GET['product']
+    product = Product.objects.get(pk=product_id)
+    form = ReviewCreateForm()
+    return render(
+        request,
+        'reviews/review_form.html',
+        {'form':form,
+         'product':product,
+        }
+    )
 # from django.shortcuts import get_object_or_404
 # def ReviewCreate(request,order_id):
 #     obj = get_object_or_404(Order, id=order_id, user=request.user)
