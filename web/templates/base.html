@@ -1,24 +1,47 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>My Site</title>
-  </head>
-  <body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Site !!! | {% block title %}{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+    <link rel="stylesheet" href="{% static 'css/signup.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'css/mypage.css' %}">
+    <link rel="stylesheet" href="{% static 'css/edit_profile.css' %}">
+
+</head>
+<body>
     <header>
-      {% if user.is_authenticated %}
-      <p>Welcome, {{ user.email }}!</p>
-      <form method="post" action="{% url 'account_logout' %}">
-        {% csrf_token %}
-        <button type="submit">Logout</button>
-      </form>
-      {% else %}
-      <a href="{% url 'account_login' %}">Login</a>
-      <a href="{% url 'account_signup' %}">Sign Up</a>
-      {% endif %}
+        {% if user.is_authenticated %}
+        <p>Welcome, {{ user.email }}!</p>
+        <form method="post" action="{% url 'account_logout' %}">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+        {% else %}
+        <a href="{% url 'account_login' %}">Login</a>
+        <a href="{% url 'account_signup' %}">Sign Up</a>
+        {% endif %}
     </header>
 
-    {% block content %} {% endblock %}
-  </body>
+    <nav>
+        <ul>
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <!-- 추가적인 내비게이션 링크 -->
+        </ul>
+    </nav>
+
+    <main>
+        {% block content %} 
+        <!-- 페이지별 내용 -->
+        {% endblock %}
+    </main>
+
+    <footer>
+        {% include 'footer.html' %}
+    </footer>
+</body>
 </html>
-
-
