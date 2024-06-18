@@ -20,6 +20,8 @@ def ReviewCreate(request):
         product_id = request.GET['product']
         product = Product.objects.get(pk=product_id)
         form = ReviewCreateForm()
+        if not request.user.is_authenticated:
+            return redirect('/accounts/login/') # 로그인 페이지로 리디렉션
         if request.user.is_authenticated and request:
             if Review.objects.filter(user=request.user, product=product).exists():
                 messages.error(request, "이미 작성된 리뷰가 있습니다.")

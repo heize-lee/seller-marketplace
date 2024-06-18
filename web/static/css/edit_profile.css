@@ -1,0 +1,95 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.nav {
+    width: 200px;
+    border-right: 1px solid #ccc;
+    padding-right: 20px;
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+}
+
+.edit-profile-header {
+    margin-bottom: 20px;
+}
+
+.edit-profile-header h1 {
+    font-size: 32px;
+    color: #171A1F;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    line-height: 48px;
+}
+
+.edit-profile-body p {
+    font-size: 12px;
+    color: #171A1F;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    line-height: 20px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    color: #424956;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    line-height: 22px;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    color: #BCC1CA;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    line-height: 22px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.profile-picture-preview {
+    display: block;
+    max-width: 150px;
+    max-height: 150px;
+    margin-bottom: 10px;
+    border-radius: 50%;
+}
+
+.btn {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    line-height: 22px;
+    text-align: center;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    margin-left: 10px;
+}

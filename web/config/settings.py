@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.kakao',
     # 'allauth.socialaccount.providers.google',
     # 'allauth.socialaccount.providers.naver',
+    'django.contrib.humanize',
     'products',
     'orders',
     'reviews',
@@ -81,24 +82,23 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 ACCOUNT_FORMS = {
     'signup': 'accounts.forms.CustomSignupForm',
 }
+ACCOUNT_SIGNUP_REDIRECT_URL = 'home'
 
 # Additional allauth settings to disable username
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_USERNAME_REQUIRED = False
 
+KAKAO_CLIENT_ID = os.getenv('KAKAO_CLIENT_ID')
+KAKAO_CLIENT_SECRET = os.getenv('KAKAO_CLIENT_SECRET')
+
 SOCIALACCOUNT_PROVIDERS = {
-    
     'kakao': {
-        'SCOPE': ['profile', 'account_email'],
-    },
-    # 'google': {
-    #     'SCOPE': ['profile', 'email'],
-    #     'AUTH_PARAMS': {'access_type': 'online'},
-    # },
-    # 'naver': {
-    #     'SCOPE': ['profile', 'account_email'],
-    # },
-}
+        'APP': {
+            'client_id': KAKAO_CLIENT_ID,
+            'secret': 'KAKAO_CLIENT_SECRET',
+            'key': ''
+        }    
+}}
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -155,11 +155,11 @@ DATABASES = {
 
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'seller_ljh',
+        'NAME': 'seller_ljh2',
         'USER': 'postgres',
         'PASSWORD': db_password,
         'HOST': 'hanslab.org',  # 또는 PostgreSQL 서버의 IP 주소
-        'PORT': '25432',       # PostgreSQL의 기본 포트 번호
+        'PORT': '35432',       # PostgreSQL의 기본 포트 번호
     }
 }
 
@@ -197,9 +197,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-# STATIC_URL = 'static/'
+# 정적 파일 URL 경로
 STATIC_URL = '/static/'
+
+# 개발 환경에서 사용할 정적 파일 디렉토리
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+# 운영 환경에서 정적 파일을 모을 디렉토리
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # Media files
 MEDIA_URL = '/media/'
@@ -209,8 +214,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
 
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
@@ -226,3 +229,7 @@ MESSAGE_TAGS = {
     messages.WARNING: 'warning',
     messages.ERROR: 'danger',
 }
+
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
+

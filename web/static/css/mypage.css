@@ -1,0 +1,161 @@
+/* static/accounts/css/mypage.css */
+.container {
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+}
+
+.nav {
+    width: 288px;
+    border-right: 1px solid #ccc;
+    padding: 20px;
+    background-color: #f8f9fa;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.nav .profile {
+    text-align: center;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.nav .profile img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #9095A0;
+    padding: 10px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.nav .profile p {
+    color: #171A1F;
+    font-size: 12px;
+    font-family: Poppins, sans-serif;
+    font-weight: 400;
+    line-height: 20px;
+    word-wrap: break-word;
+    position: absolute;
+    width: 100%;
+    top: 110px;
+    text-align: center;
+}
+
+.nav .menu {
+    position: relative;
+    top: 20px;
+}
+
+.nav .menu-header {
+    width: 100%;
+    height: 56px;
+    position: relative;
+    background: rgba(0, 0, 0, 0);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.nav .menu-header .menu-icon {
+    width: 4px;
+    height: 100%;
+    background: #171A1F;
+}
+
+.nav .menu-header h2 {
+    color: #171A1F;
+    font-size: 18px;
+    font-family: Poppins, sans-serif;
+    font-weight: 700;
+    line-height: 28px;
+    word-wrap: break-word;
+    margin: 0;
+}
+
+.nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav ul li.menu-item {
+    margin: 15px 0;
+    position: relative;
+}
+
+.nav ul li.menu-item .menu-item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.nav ul li.menu-item a {
+    text-decoration: none;
+    color: #171A1F;
+    font-size: 16px;
+    font-family: Poppins, sans-serif;
+    font-weight: 700;
+    line-height: 26px;
+    word-wrap: break-word;
+    display: flex;
+    align-items: center;
+}
+
+.nav ul li.menu-item a .icon {
+    margin-right: 10px;
+}
+
+.nav ul li.menu-item:hover a {
+    background-color: #e9ecef;
+    border-radius: 5px;
+}
+
+.nav ul .submenu {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    margin-left: 20px;
+}
+
+.nav ul .submenu li {
+    padding: 8px 0;
+}
+
+.nav ul .submenu li a {
+    text-decoration: none;
+    color: #565E6D;
+    font-size: 16px;
+    font-family: Poppins, sans-serif;
+    font-weight: 400;
+    line-height: 26px;
+    word-wrap: break-word;
+    display: block;
+}
+
+.nav ul .submenu li a:hover {
+    background-color: #e9ecef;
+    border-radius: 5px;
+}
+
+.nav .toggle-icon {
+    width: 15px;
+    height: 8.84px;
+    background: #171A1F;
+    position: relative;
+    top: 5.83px;
+    margin-left: 5px;
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+    background-color: #ffffff;
+}
