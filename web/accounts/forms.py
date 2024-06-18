@@ -3,6 +3,7 @@ from allauth.account.forms import SignupForm
 from .models import CustomUser
 import re
 from phonenumber_field.formfields import PhoneNumberField
+from django.core.exceptions import ValidationError
 
 # 지현 (회원가입)
 class CustomSignupForm(SignupForm):
@@ -12,6 +13,12 @@ class CustomSignupForm(SignupForm):
     is_agree_terms = forms.BooleanField(label='이용 약관 동의', required=True)
     is_agree_privacy_policy = forms.BooleanField(label='개인정보 처리방침 동의', required=True)
     profile_picture = forms.ImageField(label='프로필 사진', required=False)
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if CustomUser.objects.filter(email=email).exists():
+            raise ValidationError('중복된 이메일입니다.')
+        return email
 
     def clean_phone_number(self):
         phone_number = self.cleaned_data['phone_number']

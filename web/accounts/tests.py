@@ -31,6 +31,7 @@ class AccountsTests(TestCase):
             'phone_number': '+821012341235',  # Changed to a different phone number
             'is_agree_terms': True,
             'is_agree_privacy_policy': True,
+            'role': 'buyer',  # Ensure role is included
         }
         response = self.client.post(reverse('account_signup'), form_data)
         self.assertEqual(response.status_code, 302)
@@ -79,9 +80,10 @@ class AccountsTests(TestCase):
             'password1': 'NewPassword123!',
             'password2': 'NewPassword123!',
             'nickname': 'newuser',
-            'phone_number': '+821012341234',
+            'phone_number': '+821012341235',
             'is_agree_terms': True,
             'is_agree_privacy_policy': True,
+            'role': 'buyer',  # Ensure role is included
         }
         form = CustomSignupForm(data=form_data)
         self.assertTrue(form.is_valid())
