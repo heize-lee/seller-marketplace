@@ -222,6 +222,25 @@
         object-fit: cover;
         margin-bottom: 5px; 
     }
+
+
+    .noUi-connect {
+        background-color: #ccc !important; /* Change the slider color to gray */
+    }
+
+    .filter-section button[type="submit"] {
+        background-color: #fff; /* 배경색을 흰색으로 설정 */
+        border: 1px solid #007bff; /* 파란색 테두리 추가 */
+        color: #000; /* 버튼 텍스트 색상을 검정색으로 설정 */
+        transition: background-color 0.3s, color 0.3s; /* 애니메이션 효과 추가 */
+    }
+
+    .filter-section button[type="submit"]:hover {
+        background-color: #007bff; /* 마우스 호버시 배경색을 파란색으로 변경 */
+        color: #fff; /* 텍스트 색상을 흰색으로 변경 */
+    }
+
+    
 </style>
 
 <script>
@@ -251,6 +270,9 @@
                 }
             }
         });
+
+
+        priceSlider.querySelector('.noUi-connect').style.background = '#ccc';
     
         priceSlider.noUiSlider.on('update', function(values, handle) {
             minPriceInput.value = values[0];
