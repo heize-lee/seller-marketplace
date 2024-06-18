@@ -3,6 +3,8 @@ from cart.models import Cart
 from django.views.decorators.csrf import csrf_exempt
 import os
 import dotenv
+import urllib.parse
+import requests
 
 
 # Create your views here.
@@ -28,8 +30,12 @@ def orders(request):
             "channelKey":channelKey
         }
         return render(request,'orders/orders.html', context)
-    if request.method == 'POST':
-        return render(request, 'orders/order_done.html')
+    elif request.method == 'POST':
+        payment_method = request.POST.get('payment_method')
+        if payment_method == 'kakao_pay':
+            return redirect('payment:kakao_payment')
+        return redirect('orders:order_done')
+
         # 모달 정보 address테이블에 저장
 # 배송지 view
 # 결제정보 view
