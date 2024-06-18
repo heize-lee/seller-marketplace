@@ -153,33 +153,13 @@
                       createdAtSmall.classList.add('text-muted','me-3','date');
                       createdAtSmall.textContent =yyyy_mm_dd;
                       // 수정 
+                      const reviewId = review.id; // 버튼에 저장된 리뷰 ID를 가져옵니다.
                       const updateContent = document.createElement('span');
-                      updateContent.textContent='수정/'
-                      // 클릭 이벤트 리스너 추가
-                      updateContent.addEventListener('click', function() {
-                          // 여기에 클릭 시 수행할 동작을 작성합니다.
-                          if (confirm('수정 하시겠습니까?')) {
-                          const reviewId = review.id; // 버튼에 저장된 리뷰 ID를 가져옵니다.
-                          const reviewContent = document.getElementById(`reviewCommentId`).textContent; // 기존 리뷰 내용을 가져옵니다.    
-
-                          fetch(`/reviews/put/${reviewId}/`, {
-                              method: 'PUT',
-                              headers: {
-                                'X-CSRFToken': getCookie('csrftoken'),  // CSRF 토큰을 추가합니다.
-                            }
-                            
-                          })
-                          .then(response => {
-                              
-                          })
-                          .catch(error => {
-                              console.error('Error:', error);
-                              alert('서버와의 통신 중 오류가 발생했습니다.');
-                          });
-                      } else {
-                          alert('수정이 취소되었습니다.');
-                      }
-                      });
+                      const link = document.createElement('a'); // a 요소 생성
+                      link.href = `/reviews/update/${reviewId}?&product=${productId}`;  // a 요소의 href 속성 설정
+                      link.textContent = '수정/'; // a 요소의 텍스트 설정
+                      updateContent.appendChild(link); // span 요소에 a 요소를 자식으로 추가
+                      
                       // 마우스 포인터를 변경하는 스타일 추가
                       updateContent.style.cursor = 'pointer';
                       //삭제

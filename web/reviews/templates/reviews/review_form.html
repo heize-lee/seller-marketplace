@@ -55,7 +55,8 @@
                 </div>
                 {% endif %}
                 <label for="{{ form.comment.id_for_label }}" class="sub-title">상세 리뷰를 작성해주세요.</label>
-                <textarea class="form-control" id="{{ form.comment.id_for_label }}" name="{{ form.comment.name }}" rows="10"></textarea>
+                {{ form.comment }}
+                <!-- <textarea class="form-control" id="{{ form.comment.id_for_label }}" name="{{ form.comment.name }}" rows="10"></textarea> -->
             </div>
     
             <div class="form-group mb-3">

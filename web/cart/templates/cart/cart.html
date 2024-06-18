@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/a47086679e.js" crossorigin="anonymous"></script>
+    <title>Cart Summary</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .container {
+            width: 80%; 
+            height: 100vh;
+            background: white;
+            box-shadow: 0px 3px 6px rgba(18, 15, 40, 0.12);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            margin: 0 auto; /* 가운데 정렬 */
+        }
+        .cart-header {
+            font-size: 40px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            color: #171A1F;
+            margin-bottom: 20px;
+        }
+        .content {
+            display: flex;
+            justify-content: space-between;
+            flex: 1;
+        }
+        .cart-items {
+            flex: 3;
+            border: 1px solid #F3F4F6;
+            padding: 20px;
+            margin-right: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #F3F4F6;
+            padding: 10px 0;
+        }
+        .cart-item img {
+            width: 100px;
+            height: 60px;
+            margin-right: 20px;
+        }
+        .cart-item-details {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+        }
+        .cart-summary {
+            flex: 1;
+            width: 340px;
+            padding: 20px;
+            background: #F8F9FA;
+            align-self: flex-start;
+        }
+        .cart-summary h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #171A1F;
+            margin-bottom: 20px;
+        }
+        .cart-summary div {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .order-button {
+            width: 100%;
+            padding: 10px;
+            background: white;
+            color: #565E6D;
+            text-align: center;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .order-button:hover {
+            background: #565E6D;
+            color: white;
+        }
+        .trash {
+            border: 0;
+            background-color: transparent;
+            cursor: pointer; /* 커서를 포인터로 변경*/
+            transition: transform 0.3s ease;
+        }
+        .trash:hover {
+            transform: scale(1.2);
+            color: #565E6D;
+        }
+
+
+    </style>
+</head>
+    <body>
+        <div class="container">
+            <div class="cart-header">Cart</div>
+            <div class="content">
+                <div class="cart-items">
+                    {% for item in cart %}
+                    <div class="cart-item">
+                        <img src="{{ item.product.product_img }}" alt="Product Image">
+                        <div class="cart-item-details">
+                            <div>
+                                <div>{{ item.product.product_name }}</div>
+                                <div>Option</div>
+                            </div>
+                            <div>p_price{{ item.product.product_price }}</div>
+                            <div>{{ item.amount }}</div>
+                            <div>t_price{{ item.total_price }}</div>
+                            <form action="{% url 'cart:cart_delete' pk=item.pk %}" method="post">
+                                {% csrf_token %}
+                            <button class="trash" type="submit"><i class="fa-solid fa-trash-can"></i></button>
+                            </form>
+                        </div>
+                        
+                    </div>
+                    {% endfor %}
+              
+                </div>
+                <div class="cart-summary">
+                    <h2>Summary</h2>
+                    <div>
+                        <span>Payment_toal_price</span>
+                        <span>$156</span>
+                    </div>
+                    <div>
+                        <span>Delivery Fee</span>
+                        <span>$00</span>
+                    </div>
+                    <div>
+                        <strong>Pay+Delv_Total</strong>
+                        <strong>$178</strong>
+                    </div>
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <button class="order-button" type="submit">주문하기</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

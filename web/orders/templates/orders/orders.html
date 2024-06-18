@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/a47086679e.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <!-- 다음주소API -->
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <!-- 지도키 -->
+    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=09557032dcbbea742396ab7623cca8be&libraries=services"></script>
+    <!-- 포트원 -->
+    <script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Order</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .container {
+            width: 80%; 
+            background: white;
+            box-shadow: 0px 3px 6px rgba(18, 15, 40, 0.12);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            margin: 0 auto; /* 가운데 정렬 */
+        }
+        .order-header {
+            font-size: 40px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            color: #171A1F;
+            margin-bottom: 20px;
+        }
+        .content {
+            display: flex;
+            justify-content: space-between;
+            flex: 1;
+        }
+        .order-items {
+            flex: 3;
+            border: 1px solid #F3F4F6;
+            padding: 20px;
+            margin-right: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .order-item {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #F3F4F6;
+            padding: 10px 0;
+            margin-left: 16px;
+        }
+        .order-item img {
+            width: 100px;
+            height: 60px;
+            margin-right: 20px;
+        }
+        .order-item-details {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+        }
+        .order-summary {
+            flex: 1;
+            width: 340px;
+            padding: 20px;
+            background: #F8F9FA;
+            align-self: flex-start;
+        }
+        .order-summary h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #171A1F;
+            margin-bottom: 20px;
+        }
+        .order-summary div {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .order-button {
+            width: 100%;
+            padding: 10px;
+            background: white;
+            color: #565E6D;
+            text-align: center;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .order-button:hover {
+            background: #565E6D;
+            color: white;
+        }
+        .trash {
+            border: 0;
+            background-color: transparent;
+            cursor: pointer; /* 커서를 포인터로 변경*/
+            transition: transform 0.3s ease;
+        }
+        .trash:hover {
+            transform: scale(1.2);
+            color: #565E6D;
+        }
+        .content_header h2{
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #171A1F;
+            margin: 16px 0;
+        }
+        .delivery-button {
+            padding: 10px;
+            background: white;
+            color: #565E6D;
+            text-align: center;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .delivery-button:hover {
+            background: #565E6D;
+            color: white;
+        }
+        .modal {
+            position: fixed; /* .modal_fram 속성을 가진 요소를 현재 보고있는 창을 기준으로 고정, 스크롤되어도 따라다님*/
+            left: 50%; /* 보고 있는 화면 (= 뷰 포트, position이 fixed 이므로) 가로 선 중앙 50%로 이동*/
+            top: 50%;  /* 보고 있는 화면 세로 선 중앙 50% 이동*/
+            transform: translate(-50%, -50%); /* 요소를 수직 및 수평으로 -50% 만큼 이동 > 최종적으로 화면 정 중앙에 위치*/
+        }
+        .address-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        #postal-code{
+            width: auto; /* 입력 요소의 너비를 자동으로 설정 */
+        }
+        .small-input {
+            width: auto; /* 입력 요소의 너비를 자동으로 설정 */
+            background: white;
+            color: #565E6D;
+            text-align: center;
+            cursor: pointer;
+        }
+        .small-input:hover {
+            background: #565E6D;
+            color: white;
+        }
+        .footer-button {
+            background: white;
+            color: #565E6D;
+        }
+        .badge.rounded-pill.bg-secondary{
+            border: none;
+            background: #565E6D;
+            color: white;
+        }
+        .badge.rounded-pill.bg-secondary:hover {
+            color: #565E6D;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            font-size: 0.8rem; /* 글자 크기 작게 설정 */
+            opacity: 0.4; /* 투명도 설정 */
+         
+        }
+        .checkbox-label input[type="checkbox"] {
+            margin-right: 8px; /* 체크박스와 텍스트 사이에 간격 추가 */
+            color: #000;
+        }
+       
+        .checkbox-label p {
+            margin: 0; /* p 태그의 기본 마진 제거 */
+        }
+   
+    </style>
+</head>
+    <body>
+        <div class="container">
+            <div class="order-header">Order</div>
+            <div class="content">
+                <div class="order-items">
+                    <div class="content_header">
+                        <h2>🚀배송정보</h2>
+                        <span class="badge bg-secondary" style="border-radius: 14px;">기본배송지</span>
+                        
+                        <!---->
+                    </div>  
+                    
+                    <div class="order-item">
+                        <div>
+                            <p>등록된 배송지가 없습니다</p>
+                            <p>배송지 추가하기 버튼을 눌러 주소를 입력해주세요</p>
+                            <form method="post">
+                                {% csrf_token %}                                                
+                                <!-- 배송지 추가 모달 버튼 -->
+                                <button type="button"
+                                class="delivery-button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#delivery-modal">
+                                배송지 추가하기
+                                <!---->
+                                </button>
+                            </form>
+                             <!-- 모달 -->
+                             <div class="modal fade" id="delivery-modal" tabindex="-1" aria-labelledby="deliveryModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">배송지추가</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- 배송지 폼-->
+                                            <form id="payment-btn" action="{% url 'orders:order_done' %}" method="post">
+                                                {% csrf_token %}
+                                                <!-- 수령인 -->
+                                                <div class="mb-3">
+                                                    <label class="form-label">수령인</label>
+                                                    <input class="form-control form-control-sm" id="recipient" placeholder="수령인을 입력해 주세요." >
+                                                </div>
+                                                <!-- 연락처 -->
+                                                <div class="mb-3">
+                                                    <label class="form-label">휴대폰</label>
+                                                    <input class="form-control form-control-sm" id="phone" placeholder="숫자만 입력해주세요.">
+                                                </div>
+                                                <!-- 배송지명 -->
+                                                <div class="mb-3">
+                                                    <label class="form-label">배송지명</label>
+                                                    <input class="form-control form-control-sm mb-1" id="destination" placeholder="직접 입력하거나 아래에서 선택해주세요.">
+                                                    <button type="button" class="badge rounded-pill bg-secondary" onclick="setDestination('집')">집</button>
+                                                    <button type="button" class="badge rounded-pill bg-secondary" onclick="setDestination('회사')">회사</button>
+                                                    <button type="button" class="badge rounded-pill bg-secondary" onclick="setDestination('학교')">학교</button>
+                                                    <button type="button" class="badge rounded-pill bg-secondary" onclick="setDestination('가족')">가족</button>
+                                                    <button type="button" class="badge rounded-pill bg-secondary" onclick="setDestination('친구')">친구</button>
+                                                </div>
+                                                <!-- 주소 -->
+                                                <div class="mb-3">
+                                                    <label class="form-label">주소</label>
+                                                    <div class="address-row mb-1">
+                                                        <input class="form-control form-control-sm" id="postal-code" placeholder="우편번호" >
+                                                        <!-- 다음주소API -->
+                                                        <input type="button" class="btn btn-secondary small-input" onclick="sample5_execDaumPostcode()" value="주소 검색"><br>
+                                                    </div>
+                                                    <input class="form-control form-control-sm mb-1" id="address" placeholder="주소" >
+                                                    <!-- 상세주소 -->
+                                                    <input class="form-control form-control-sm mb-1" id="detailed-address" placeholder="상세주소" >
+                                                    <!-- 지도 -->
+                                                    <div id="map" style="width:300px;height:300px;margin-top:10px;display:none"></div>
+                                                </div>
+                                                <!-- 기본배송지 체크박스 -->
+                                                <div class="mb-3">
+                                                    <label class="checkbox-label">
+                                                        <input type="checkbox" checked disabled>
+                                                        <p class="fw-bold">기본배송지로 설정</p>
+                                                    </label>
+                                                </div>
+
+                                                <!-- 히든 인풋 -->
+                                                <input type="hidden" id="csrfToken" value="{{csrf_token}}">
+                                                <div class="modal-footer">
+                                                    <!-- 취소 버튼 -->
+                                                    <button type="button" class="btn btn-secondary footer-button" data-bs-dismiss="modal">취소</button>
+                                                    <!--  저장 버튼 -->
+                                                    <button type="button" class="btn btn-secondary footer-button">저장</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                        <!-- 배송요청사항 -->
+                        </div>
+                    </div>
+                    <div>
+                        <div class="content_header">
+                            <h2>🚚주문정보({{ cart|length }})</h2>
+                            <!---->
+                        </div>                    
+                    </div>
+                    {% for item in cart %}
+                    <div class="order-item">
+                        
+                        <img src="{{ item.product.product_img }}" alt="Product Image">
+                        <div class="order-item-details">
+                            <div>
+                                <div>{{ item.product.product_name }}</div>
+                                <div>Option</div>
+                            </div>
+                            <div>p_price{{ item.product.product_price }}</div>
+                            <div>{{ item.amount }}</div>
+                            <div>t_price{{ item.total_price }}</div>
+                            <form action="" method="post">
+                                {% csrf_token %}
+                            <button class="trash" type="submit"> <i class="fa-solid fa-trash-can"></i></button>
+                            </form> 
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <div>
+                        <div class="content_header">
+                            <h2>🌍결제정보</h2>
+                            <!---->
+                        </div>                    
+                    </div>
+                    <div class="order-item">
+                        <!-- 결제 시 라디오버튼 데이터 프론트/장고 편한쪽으로 선택 -->
+                        <form id="payment-form" action="" method="post">
+                            {% csrf_token %}
+                            <!-- name 그룹으로 묶음 -->
+                                <input type="radio" name="payment_method" id="choice-card" value="card">
+                                <label for="choice-card">카드결제</label>
+                                <br>
+                                <input type="radio" name="payment_method" id="choice-bank" value="bank">
+                                <label for="choice-bank">무통장입금</label>
+                                <br>
+                                <input type="radio" name="payment_method" id="choice-kakao" value="kakao_pay">
+                                <label for="choice-kakao">카카오페이</label>
+                                <br>
+                                <input type="radio" name="payment_method" id="choice-toss" value="toss_pay">
+                                <label for="choice-toss">토스페이</label>
+                                <br>
+                            <!-- <input type="submit" value="Vote"> -->
+                        </form>
+                    </div>
+                    
+              
+                </div>
+                <div class="order-summary">
+                    <h2>Summary</h2>
+                    <div>
+                        <span>Payment_toal_price</span>
+                        <span>$156</span>
+                    </div>
+                    <div>
+                        <span>Delivery Fee</span>
+                        <span>$00</span>
+                    </div>
+                    <div>
+                        <strong>Pay+Delv_Total</strong>
+                        <strong>$178</strong>
+                    </div>
+                    <form id="payment-action-form" onsubmit="return setPaymentAction();" method="post">
+                        {% csrf_token %}
+                        <button class="order-button" type="submit">결제하기</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- 카드결제  -->
+
+        <!-- 무통장입금  -->
+
+        <!-- 카카오페이  -->
+<script>
+    // 배송지명 선택 시 input 입력 
+    function setDestination(value) {
+        document.getElementById('destination').value = value;
+    }
+ 
+
+    function sample5_execDaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                var addr = data.address; // 최종 주소 변수
+
+                // 주소 정보를 해당 필드에 넣는다.
+                document.getElementById("postal-code").value = data.zonecode;
+                document.getElementById("address").value = addr;
+                // 주소로 상세 정보를 검색
+                geocoder.addressSearch(data.address, function(results, status) {
+                    // 정상적으로 검색이 완료됐으면
+                    if (status === daum.maps.services.Status.OK) {
+
+                        var result = results[0]; //첫번째 결과의 값을 활용
+
+                        // 해당 주소에 대한 좌표를 받아서
+                        var coords = new daum.maps.LatLng(result.y, result.x);
+                        // 지도를 보여준다.
+                        mapContainer.style.display = "block";
+                        map.relayout();
+                        // 지도 중심을 변경한다.
+                        map.setCenter(coords);
+                        // 마커를 결과값으로 받은 위치로 옮긴다.
+                        marker.setPosition(coords)
+                    }
+                });
+            }
+        }).open();
+    }
+    var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+        mapOption = {
+            center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
+            level: 5 // 지도의 확대 레벨
+        };
+
+    //지도를 미리 생성
+    var map = new daum.maps.Map(mapContainer, mapOption);
+    //주소-좌표 변환 객체를 생성
+    var geocoder = new daum.maps.services.Geocoder();
+    //마커를 미리 생성
+    var marker = new daum.maps.Marker({
+        position: new daum.maps.LatLng(37.537187, 127.005476),
+        map: map
+    });
+    async function requestPay(){
+                    const issueResponse = await PortOne.requestIssueBillingKey({
+                    storeId: "{{storeId}}",
+                    channelKey: "{{channelKey}}",
+                    billingKeyMethod: "EASY_PAY",
+                    issueName: "check"
+                });
+
+                // 빌링키 발급이 제대로 되지 않았을 경우 에러 처리
+                if (issueResponse.code != null) {
+                    return alert(issueResponse.message);
+                }
+
+                // 발급된 빌링키를 서버에 전송
+                try {
+                    const response = await fetch(`http://127.0.0.1:8000/billings/`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" }, // header -> headers로 변경
+                        body: JSON.stringify({
+                            billingKey: issueResponse.billingKey
+                            // 추가적인 필드가 필요한 경우 여기에 기입
+                        }),
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error: ${response.status} ${response.statusText}`);
+                    }
+
+                    // 성공적으로 빌링키를 서버에 저장한 후 처리하고자 하는 로직
+                    console.log("Billing key successfully sent to the server.");
+                } catch (error) {
+                    console.error(`Failed to send billing key: ${error.message}`);
+                }
+        }
+
+    // payment 메서드
+    function setPaymentAction() {
+            const form = document.getElementById('payment-form');
+            const selectedMethod = form.querySelector('input[name="payment_method"]:checked');
+            const actionForm = document.getElementById('payment-action-form');
+            var agent = 'my_agent'; // 실제 값으로 대체
+            var open_type = 'open_type_value'; // 실제 값으로 대체
+            console.log(selectedMethod);
+
+            if (selectedMethod) {
+                switch (selectedMethod.value) {
+                    case 'card':
+                        actionForm.action = "{% url 'payment:portone_payment' %}";
+                        break;
+                    case 'bank':
+                        actionForm.action = ""; // 무통장 입금 처리를 위한 URL
+                        break;
+                    case 'kakao_pay':
+                        // agent와 open_type 값을 설정합니다. 예: 'my_agent'와 'open_type_value'
+                        // actionForm.action = "/payment/ready/" + agent + "/" + open_type + "/";
+                        // actionForm.action = "{% url 'payment:kakao_payment' %}";
+                        actionForm.action = "/payment/kakao_process/";
+                        // const billingKeyId = document.getElementById('billingKeyId').value;
+                        // if (!billingKeyId) {
+                        //     alert('billingKeyId is required.');
+                        //     return false;
+                        // }
+                        requestPay();
+                        
+                        break;
+                    case 'toss_pay':
+                        actionForm.action = "{% url 'payment:toss_payment' %}";
+                        break;
+                    default:
+                        alert('결제 방법을 선택하세요.');
+                        return false;
+                }
+                return true;
+            } else {
+                alert('결제 방법을 선택하세요.');
+                return false;
+            }
+        }
+        
+</script>
+</body>
+</html>

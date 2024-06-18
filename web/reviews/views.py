@@ -1,12 +1,13 @@
 from django.http import HttpResponse, HttpResponseForbidden,JsonResponse
 from django.shortcuts import redirect, render
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView
 from .models import Review,Product
 from .forms import ReviewCreateForm
 from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy, reverse
 # Create your views here.
 
 # class ReviewCreate(CreateView):
@@ -29,7 +30,7 @@ def ReviewCreate(request):
             
     if request.method == 'POST':
         form = ReviewCreateForm(request.POST,request.FILES)
-         # 사용자가 이미 해당 제품에 대한 리뷰를 작성했는지 확인
+         
         product_id = request.POST['product']
         product = Product.objects.get(pk=product_id)
         
@@ -71,12 +72,43 @@ def delete_review(request, review_id):
     else:
         return JsonResponse({'error': '리뷰를 삭제할 권한이 없습니다.'}, status=403)
     
-@require_http_methods(["PUT"])
+# class ReviewUpdateView(UpdateView):
+#     model = Review
+#     form_class = ReviewCreateForm
+#     template_name = 'review_form.html'
+#     success_url = reverse_lazy('product:product_detail')
+
+#     def get_context_data(self, kwargs):
+#         context = super().get_context_data(kwargs)
+#         product_id = self.request.GET.get('product')
+#         if product_id:
+#             context['product'] = get_object_or_404(Product, pk=product_id)
+#         return context
+
+#     def get_success_url(self):
+#         return '/product/' 
+
 def put_review(request, review_id):
     review = get_object_or_404(Review, pk=review_id)
-    product_id = request.GET['product']
-    product = Product.objects.get(pk=product_id)
-    form = ReviewCreateForm()
+    
+    if request.method == 'POST':
+        form = ReviewCreateForm(request.POST,request.FILES)
+        product_id = request.POST['product']
+        product = Product.objects.get(pk=product_id)
+        
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.user = request.user  # 현재 로그인된 사용자
+            review.product = product
+            review.rating = float(request.POST['rating'])
+            # if 'image' in request.FILES:
+            #     review.image = request.FILES['image']
+            review.save()
+            return HttpResponse('처리완료')
+    else:
+        product_id = request.GET['product']
+        product = Product.objects.get(pk=product_id)
+        form = ReviewCreateForm(instance=review)
     return render(
         request,
         'reviews/review_form.html',

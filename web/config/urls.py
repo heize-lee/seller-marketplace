@@ -13,6 +13,9 @@ urlpatterns = [
     path('reviews/', include('reviews.urls')), #회성
     path('product/', include('products.urls', namespace='product')), # 정현
     path('accounts/edit-profile/', edit_profile, name='edit_profile'),  # 재웅
+    path('orders/', include('orders.urls')),
+    path('cart/', include('cart.urls')),
+    path('payment/', include('payment.urls')),
 ]
 
 if settings.DEBUG:
