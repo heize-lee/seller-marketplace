@@ -368,7 +368,6 @@
         document.getElementById('destination').value = value;
     }
  
-
     function sample5_execDaumPostcode() {
         new daum.Postcode({
             oncomplete: function(data) {
@@ -413,59 +412,9 @@
         position: new daum.maps.LatLng(37.537187, 127.005476),
         map: map
     });
-    // kakaoPay 빌링키 생성
-    async function requestPay(){
-                try {
-                    const issueResponse = await PortOne.requestIssueBillingKey({
-                    storeId: "{{storeId}}",
-                    channelKey: "{{channelKey}}",
-                    billingKeyMethod: "EASY_PAY",
-                    issueName: "check"
-                });
-
-                // 빌링키 발급이 제대로 되지 않았을 경우 에러 처리
-                if (issueResponse.code != null) {
-                    return alert(issueResponse.message);
-                }
-
-                // 발급된 빌링키를 서버에 전송
-                // try {
-                    const response = await fetch(`http://127.0.0.1:8000/payment/kakao_payment/`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" }, // header -> headers로 변경
-                        body: JSON.stringify({
-                            billingKey: issueResponse.billingKey
-                            // 추가적인 필드가 필요한 경우 여기에 기입
-                        }),
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`HTTP error: ${response.status} ${response.statusText}`);
-                    }
-                    const result = await response.json();
-
-                    if (result.success) {
-                        // 성공적으로 빌링키를 서버에 저장한 후 처리하고자 하는 로직
-                        console.log("Billing key successfully sent to the server.");
-                        window.location.href = "/orders/order_done/";
-                    } else {
-                        alert("결제에 실패했습니다. 다시 시도해주세요.");
-                    }
-
-                    // 성공적으로 빌링키를 서버에 저장한 후 처리하고자 하는 로직
-                    console.log("Billing key successfully sent to the server.");
-                } catch (error) {
-                    console.error(`Failed to send billing key: ${error.message}`);
-                }
-        }
-
-        function delay(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
 
     // payment 메서드
-    async function setPaymentAction() {
-
+    function setPaymentAction() {
             const form = document.getElementById('payment-form');
             const selectedMethod = form.querySelector('input[name="payment_method"]:checked');
             const actionForm = document.getElementById('payment-action-form');
@@ -475,6 +424,7 @@
 
             if (selectedMethod) {
                 switch (selectedMethod.value) {
+                    
                     case 'card':
                         actionForm.action = "{% url 'payment:portone_payment' %}";
                         break;
@@ -482,26 +432,8 @@
                         actionForm.action = ""; // 무통장 입금 처리를 위한 URL
                         break;
                     case 'kakao_pay':
-                        // agent와 open_type 값을 설정합니다. 예: 'my_agent'와 'open_type_value'
-                        // actionForm.action = "/payment/ready/" + agent + "/" + open_type + "/";
-                        
                         actionForm.action = "{% url 'payment:kakao_payment' %}";
-                        // await delay(3000);
-                        // actionForm.action = await requestPay();
-                        
-                        // actionForm.action = "{% url 'payment:kakao_payment' %}";
-                        // ************************************************************************
-
-                        // actionForm.action = "/payment/kakao_process/";
-                        // const billingKeyId = document.getElementById('billingKeyId').value;
-                        // if (!billingKeyId) {
-                        //     alert('billingKeyId is required.');
-                        //     return false;
-                        // }
-                        // requestPay();
                         break;
-
-                        
                     case 'toss_pay':
                         actionForm.action = "{% url 'payment:toss_payment' %}";
                         break;

@@ -31,9 +31,9 @@ def orders(request):
         }
         return render(request,'orders/orders.html', context)
     elif request.method == 'POST':
-        payment_method = request.POST.get('payment_method')
-        if payment_method == 'kakao_pay':
-            return redirect('payment:kakao_payment')
+        # payment_method = request.POST.get('payment_method')
+        # if payment_method == 'kakao_pay':
+        #     return redirect('payment:kakao_payment')
         return redirect('orders:order_done')
 
         # 모달 정보 address테이블에 저장

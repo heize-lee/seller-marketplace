@@ -1,13 +1,19 @@
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 import uuid
 import requests
 import json
 import os
 import dotenv
 import urllib.parse
-
+from cart.models import Cart
+from products.models import Product
+from orders.models import Order, OrderItems
+from .models import Payment
 from django.views.decorators.csrf import csrf_exempt
+from django.utils import timezone
 from django.views import View
 
 from .services import SampleService
@@ -75,43 +81,8 @@ dotenv.load_dotenv()
 @csrf_exempt
 def portone_payment(request):
     if request.method == "POST":
-            billing_key=os.getenv("billing_key")
-            PORTONE_API_KEY=os.getenv("PORTONE_API_KEY")
-            # print(request.method)
-            # 고객사에서 채번하는 새로운 결제 ID를 만듭니다.
-            payment_id = "test1" # 이 부분은 해당 함수의 Python 구현에 따라 다를 수 있습니다.
-            encoded_payment_id = urllib.parse.quote(payment_id)
-            # 포트원 빌링키 결제 API 호출
-            url = f"https://api.portone.io/payments/{encoded_payment_id}/billing-key"
-            headers = {
-                "Authorization": f"PortOne {PORTONE_API_KEY}",
-                "Content-Type": "application/json",
-            }
-
-            # 고객 정보와 요청 바디 구성
-            data = {
-                "billingKey": billing_key,
-                "orderName": "단건결제",
-                "customer": {
-                    "id": "seller",
-            },  # 실제 고객 정보로 채워야 합니다.
-                "amount": {
-                    "total": 900,
-                },
-                "currency": "KRW",
-            }
-            # v2의 API 키 발급 따로 받아야 함
-            # '{"type":"INVALID_REQUEST","message":"Invalid value for: body\\nexpected \'\\"\', offset: 0x0000000f, buf:\\n+----------+-------------------------------------------------+------------------+\\n|          |  0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f | 0123456789abcdef |\\n+----------+-------------------------------------------------+------------------+\\n| 00000000 | 7b 22 62 69 6c 6c 69 6e 67 4b 65 79 22 3a 20 6e | {\\"billingKey\\": n |\\n| 00000010 | 75 6c 6c 2c 20 22 6f 72 64 65 72 4e 61 6d 65 22 | ull, \\"orderName\\" |\\n| 00000020 | 3a 20 22 5c 75 63 36 64 34 5c 75 61 63 30 34 20 | : \\"\\\\uc6d4\\\\uac04  |\\n+----------+-------------------------------------------------+------------------+\\nThe original input: {\\"billingKey\\": null, \\"orderName\\": \\"\\\\uc6d4\\\\uac04 \\\\uc774\\\\uc6a9\\\\uad8c \\\\uc815\\\\uae30\\\\uacb0\\\\uc81c\\", \\"customer\\": {\\"id\\": \\"seller\\"}, \\"amount\\": {\\"total\\": 900}, \\"currency\\": \\"KRW\\"}"}'
-
-            response = requests.post(url, headers=headers, json=data)
-
-            # 응답 상태 검사
-            if not response.ok:
-                raise Exception(f"paymentResponse: {response.status_code} {response.text}")
-
-            # 응답 데이터 출력 또는 추가 처리
-            print(response.json())
-            return render(request, "payment/portone_done.html")
+        pass
+     
 
             # url: "https://api.portone.io/billing-keys"
             # method: "post"
@@ -174,18 +145,125 @@ def portone_payment(request):
 # 카카오페이
 @csrf_exempt
 def kakao_payment(request):
-    
     user = request.user
+    cart = Cart.objects.filter(user=user)
+    first_cart =  cart[0].product.product_name
+    remaining_cart_count = len(cart)-1
+    if remaining_cart_count > 0:
+        orderName = f"{first_cart} 외 {remaining_cart_count}건"
+    elif remaining_cart_count == 0:
+        orderName = first_cart
+    else:
+        raise ValueError('카트가 비어있습니다.')
+
     print(request.method)
     storeId=os.getenv("storeId")
     channelKey=os.getenv("channelKey")
     context={
         "storeId":storeId,
-        "channelKey":channelKey
+        "channelKey":channelKey,
+        "cart": cart,
+        "orderName": orderName
     }
     return render(request, "payment/portone_kakao.html",context)
-    if request.method == "POST":
-       pass
+
+@csrf_exempt
+def handle_kakao_payment(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        payment_id = data.get('paymentId')
+        
+        # payment_id DB에 저장
+        payment = Payment.objects.create(
+            pay_date=timezone.now(),
+            payment_uuid = payment_id, # 결제uuid 결제취소 시 사용
+            pay_method = "kakaoPay",
+            #******** 결제예정금액으로 업데이트 예정 ********
+            pay_totoal_price = 80000, 
+            pay_confirm = True,
+            cart_id=cart.last().id)  # 마지막 카트 아이디 설정
+        payment.save()
+        
+        # order에 cart저장
+        user = request.user
+        cart = Cart.objects.filter(user=user)
+        
+        current_time = str(timezone.now().strftime("%y%m%d"))
+        
+        # 주문번호 - 매일초기화
+# YYMMDD(6자리)+분류(1자리)+업무절차 코드(3자리)
+# 시간(6)
+# 분류(1) category_id / 수량
+# 업무절차(3) 상품 id + order_id
+        first_product_id = str(cart[0].product_id)
+        last_cart_id = str(cart.last().cart_id)
+        last_third = first_product_id + last_cart_id
+        
+        order_number = current_time+str(len(cart))+last_third
+        
+        order = Order.objects.create(
+            user = user,
+            order_number = order_number,
+            payment_total_price = payment.pay_totoal_price,
+            order_date = timezone.now(),)
+        
+        order.save()
+
+        products = []
+        for one in cart: 
+            product_id = one.product_id
+            product = get_object_or_404(Product, product_id=product_id)
+            # products.append(product)
+        for one in cart: 
+            product_id = one.product_id
+            category_id = one.product.category
+            order_items = OrderItems.objects.create(
+                product = product_id,
+                category = category_id,
+                amount = one.amount,
+                total_price = one.total_price,
+            )
+
+            order_items.save()
+
+        # 주문 생성 후 카트 비우기
+        cart.delete()   
+
+
+        
+        
+        # products = []
+        # for one in cart: 
+        #     product_id = one.product_id
+        #     product = get_object_or_404(Product, product_id=product_id)
+        #     products.append(product)
+
+       
+        # 결제 1번 - 사과 외 2건
+        #     주문번호 - 3건일 때 통합으로 3건의 주문번호를 구분할 수 있게)
+
+        # order_items = OrderItems.objects.create(
+        #     사과 외 2건 
+        # 1 사과
+        # 2 팔레트
+        # 3 팔레트
+            # 각각의 주문 추가
+            # 3개의 주문번호가 생기고 
+            # )
+        
+    
+        # order.save()
+        # 주문 생성 후 카트 비우기
+        # cart.delete()   
+        
+
+        return JsonResponse({'success': True})
+        # status = data.get('status')
+
+        # 결제 성공 여부 확인, 주문 상태 업데이트 
+       
+    else:
+        return JsonResponse({'success': False})
 
 
     #     url = "https://open-api.kakaopay.com/online/v1/payment/ready"
@@ -239,47 +317,6 @@ def kakao_payment(request):
         #         "cancel_url": "https://developers.kakao.com/cancel"
         #     }'
 
-@csrf_exempt
-def billings(request):
-    # 실제 로직은 위에서 billingkey를 발급받고 DB에 저장
-
-    billing_key=request.get("billing_key")
-    PORTONE_API_KEY=os.getenv("PORTONE_API_KEY")
-    # print(request.method)
-    # 고객사에서 채번하는 새로운 결제 ID를 만듭니다.
-    payment_id = "test1234" # 이 부분은 해당 함수의 Python 구현에 따라 다를 수 있습니다.
-    encoded_payment_id = urllib.parse.quote(payment_id)
-    # 포트원 빌링키 결제 API 호출
-    url = f"https://api.portone.io/payments/{encoded_payment_id}/billing-key"
-    headers = {
-        "Authorization": f"PortOne {PORTONE_API_KEY}",
-        "Content-Type": "application/json",
-    }
-
-    # 고객 정보와 요청 바디 구성
-    data = {
-        "billingKey": billing_key,
-        "orderName": "카카오 단건결제",
-        "customer": {
-            "id": "hans",
-    },  # 실제 고객 정보로 채워야 합니다.
-        "amount": {
-            "total": 8900,
-        },
-        "currency": "KRW",
-    }
-    # v2의 API 키 발급 따로 받아야 함
-    # '{"type":"INVALID_REQUEST","message":"Invalid value for: body\\nexpected \'\\"\', offset: 0x0000000f, buf:\\n+----------+-------------------------------------------------+------------------+\\n|          |  0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f | 0123456789abcdef |\\n+----------+-------------------------------------------------+------------------+\\n| 00000000 | 7b 22 62 69 6c 6c 69 6e 67 4b 65 79 22 3a 20 6e | {\\"billingKey\\": n |\\n| 00000010 | 75 6c 6c 2c 20 22 6f 72 64 65 72 4e 61 6d 65 22 | ull, \\"orderName\\" |\\n| 00000020 | 3a 20 22 5c 75 63 36 64 34 5c 75 61 63 30 34 20 | : \\"\\\\uc6d4\\\\uac04  |\\n+----------+-------------------------------------------------+------------------+\\nThe original input: {\\"billingKey\\": null, \\"orderName\\": \\"\\\\uc6d4\\\\uac04 \\\\uc774\\\\uc6a9\\\\uad8c \\\\uc815\\\\uae30\\\\uacb0\\\\uc81c\\", \\"customer\\": {\\"id\\": \\"hans\\"}, \\"amount\\": {\\"total\\": 8900}, \\"currency\\": \\"KRW\\"}"}'
-
-    response = requests.post(url, headers=headers, json=data)
-
-    # 응답 상태 검사
-    if not response.ok:
-        raise Exception(f"paymentResponse: {response.status_code} {response.text}")
-
-    # 응답 데이터 출력 또는 추가 처리
-    print(response.json())
-    return render(request, "orders/order_done.html")
 
 # tossPay API 연결
 @csrf_exempt

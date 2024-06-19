@@ -111,7 +111,7 @@
                 <div class="cart-items">
                     {% for item in cart %}
                     <div class="cart-item">
-                        <img src="{{ item.product.product_img }}" alt="Product Image">
+                        <img src="{{ MEDIA_URL }}{{ item.product.product_img }}" alt="Product Image">
                         <div class="cart-item-details">
                             <div>
                                 <div>{{ item.product.product_name }}</div>

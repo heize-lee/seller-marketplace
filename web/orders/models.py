@@ -1,6 +1,7 @@
 from django.db import models
-from products.models import Product
+from products.models import Product,Category
 from cart.models import Cart
+from payment.models import Payment
 from django.conf import settings
 # 카트 모델 고민
 
@@ -9,7 +10,7 @@ class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
     cart = models.ForeignKey(Cart, on_delete=models.DO_NOTHING)
-    # 주문번호
+    payment =  models.ForeignKey(Payment, on_delete=models.DO_NOTHING)
 
     # 카트에 있는 데이터가 지워지면 참조가 안됨
     # 카트 컬럼과 같은 이름으로 데이터 저장
@@ -18,10 +19,9 @@ class Order(models.Model):
     payment_total_price = models.IntegerField(default=0)    
 
     order_date = models.DateField()
-    # payment앱에 추가예정
-    # payment_date = models.DateField()
-    # pay_confirm = models.BooleanField()
-    # pay_method # 추가예정 결제방식
+    #  주문번호 
+    order_number = models.SmallIntegerField(default=0)
+    
     
     def save(self, *args, **kwargs):
         # Cart에서 같은 데이터 가져와서 Order의 각 컬럼에 할당
@@ -31,6 +31,20 @@ class Order(models.Model):
             self.payment_total_price = self.cart.payment_total_price
         super().save(*args, **kwargs)
         
+# order_detail모델
+class OrderItems(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
+    cart = models.ForeignKey(Cart, on_delete=models.DO_NOTHING)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    
+    amount = models.IntegerField(default=0) # 수량
+    total_price = models.IntegerField(default=0)
+    
+
+
 # 배송지 모델
 class DeliveryAddress(models.Model):
     pass
+
