@@ -12,9 +12,18 @@ from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 
+#리뷰모델(회성)
+from reviews.models import Review
+from django.db.models import Avg
+from django.db.models import Q
+from django.core.paginator import Paginator
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.db.models import F
 
 
 class ProductCreate(LoginRequiredMixin, FormView):
+
     template_name = 'register_product.html'
     form_class = RegisterForm
     success_url = '/product/'
@@ -128,14 +137,75 @@ class ProductDetail(DetailView):
     model = Product   
     template_name = 'product_detail.html'
     context_object_name = 'product'
-
-    #추천상품 선정
+    
+    #추천상품 선정+리뷰 데이터 할당(회성)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         product = self.get_object()
         recommended_products = Product.objects.filter(category=product.category).exclude(pk=product.pk).order_by('?')[:3]
+        reviews = Review.objects.filter(product_id=product.product_id).order_by('-created_at')
+        cnt = reviews.count()
+        # 현재 로그인된 사용자 확인(회성)
+        current_user = self.request.user.id if self.request.user.is_authenticated else None
+        try:
+            user_review = Review.objects.filter(user_id=current_user , product_id=product.product_id)[0]
+        except:
+            user_review = None
+        # 별점 백분율 계산
+        if cnt == 0:
+            rating = {
+            '1' : 0,
+            '2' : 0,
+            '3' : 0,
+            '4' : 0,
+            '5' : 0
+        }
+        else:
+            rating = {
+                '1' : reviews.filter(Q(rating=1) | Q(rating=0.5)).count()/cnt * 100,
+                '2' : reviews.filter(Q(rating=2) | Q(rating=1.5)).count()/cnt * 100,
+                '3' : reviews.filter(Q(rating=3) | Q(rating=2.5)).count()/cnt * 100,
+                '4' : reviews.filter(Q(rating=4) | Q(rating=3.5)).count()/cnt * 100,
+                '5' : reviews.filter(Q(rating=5) | Q(rating=4.5)).count()/cnt * 100
+            }
+
+        # Paginator 설정
+        paginator = Paginator(reviews, 5)  # 페이지당 5개의 리뷰
+        page_number = int(self.request.GET.get('page',1))  # GET 파라미터에서 페이지 번호를 가져옴
+        page_obj = paginator.get_page(page_number)
+    
+        average_rating = reviews.aggregate(Avg('rating'))['rating__avg']
         context['recommended_products'] = recommended_products
+        context['reviews'] = page_obj
+        context['average_rating'] = average_rating
+        context['count'] = cnt
+        context['rating'] = rating
+        context['paginator']=paginator
+        context['page_number']=page_number
+        context['user_review']=user_review
         return context
+        
+    
+    
+#리뷰 비동기 요청(회성)
+def review(request):
+    if request.method == 'GET':
+        product_id = request.GET.get('product_id')
+        product = get_object_or_404(Product, pk=product_id)
+        
+        reviews = Review.objects.filter(product=product).annotate(nickname=F('user__nickname')).values('id','nickname','comment', 'rating', 'created_at','image').order_by('-created_at')
+         # Paginator 설정
+        paginator = Paginator(reviews, 5)  # 페이지당 5개의 리뷰
+        page_number = int(request.GET.get('page',1))  # GET 파라미터에서 페이지 번호를 가져옴
+        page_obj = paginator.get_page(page_number)
+        # reviews_list = list(reviews)
+        reviews_list =list(page_obj.object_list)
+    
+        return JsonResponse(reviews_list, safe=False)
+    else:
+        # 다른 HTTP 메소드 또는 ajax 요청이 아닌 경우 처리
+        return JsonResponse({'error': 'Invalid request'}, status=400)
+#카트 구매 코드 주석 처리 해놓음
 
     
 #기존 카트 구매 코드 주석 처리 해놓음
@@ -148,7 +218,6 @@ class ProductDetail(DetailView):
         
     #     # 주문 페이지로 리디렉션합니다.
     #     return redirect('order')
-
 
 #각 판매자 판매물품 
 class ProductListByUser(LoginRequiredMixin, ListView):
@@ -200,3 +269,4 @@ class ProductDeleteView(DeleteView):
 
     # 템플릿 파일 이름 지정
     template_name = 'product_confirm_delete.html'
+

@@ -51,8 +51,11 @@ INSTALLED_APPS = [
     'products',
     'orders',
     'reviews',
+    'crispy_forms',
+    'crispy_bootstrap5',
     'cart',
     'payment',
+    'rest_framework',
 ]
 
 # social login
@@ -140,10 +143,6 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-
-load_dotenv()
-db_password = os.getenv("DB_PASSWORD")
-
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -213,5 +212,21 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
+CRISPY_TEMPLATE_PACK ='bootstrap5'
+
+
+from django.contrib.messages import constants as messages
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'debug',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'danger',
+}
+
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
 

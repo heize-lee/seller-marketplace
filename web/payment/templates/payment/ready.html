@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <title>Kakaopay Sample</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
+</head>
+<body>
+</body>
+<script th:inline="javascript">
+    var kakaopay = {
+        ref: null,
+        showTms: function(url){
+            this.ref = iframeLayer.open(url);
+        },
+        cancel: function(){
+            this.ref.close();
+        },
+        close: function(){
+            this.ref.close();
+        }
+    };
+
+    var iframeLayer = {
+        open: function (url) {
+            this.elContainer.appendChild(this.elBackgroundPanel);
+            this.createIframe(url);
+            this.elContainer.appendChild(this.elIframe);
+            document.body.insertBefore(this.elContainer, document.body.firstChild);
+            return this;
+        },
+        close: function () {
+            alert("if close");
+            document.body.removeChild(this.elContainer);
+            this.elContainer.removeChild(this.elIframe);
+            this.elIframe = null;
+        },
+        createIframe: function (url) {
+            this.elIframe = document.createElement('iframe');
+            var defaultStyle = {position: 'absolute', top: '50%', left: '50%', border: '0px solid', backgroundColor: '#fff', margin: '-255px 0 0 -213px'};
+            this.elIframe.width = '426px';
+            this.elIframe.height = '510px';
+            this.elIframe.zIndex = 9999;
+            this.elIframe.src = url;
+            for (var name in defaultStyle) {
+                this.elIframe.style[name] = defaultStyle[name];
+            }
+
+            return this.elIframe;
+        },
+        elIframe: null,
+        elContainer: (function () {
+            var el = document.createElement('div');
+            var defaultStyle = {width: '100%', height: '100%', position: 'fixed', top: 0, left: 0, zIndex:9999};
+            for (var name in defaultStyle) {
+                console.log( defaultStyle[name]);
+                el.style[name] = defaultStyle[name];
+            }
+
+            return el;
+        })(),
+        elBackgroundPanel: (function () {
+            var el = document.createElement('div');
+            var defaultStyle = {width: '100%', height: '100%', position: 'fixed', top: 0, left: 0, backgroundColor: '#000', opacity: 0.6, filter: 'alpha(opacity=50)'};
+            for (var name in defaultStyle) {
+                el.style[name] = defaultStyle[name];
+            }
+            return el;
+        })()
+    };
+
+    kakaopay.showTms([[${response.next_redirect_pc_url}]]);
+</script>
+</html>

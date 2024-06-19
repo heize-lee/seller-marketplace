@@ -1,0 +1,14 @@
+<!-- payment/templates/payment/toss_error.html -->
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Toss 결제 오류</title>
+</head>
+<body>
+    <h1>Toss 결제 처리 중 오류가 발생했습니다.</h1>
+    <p>{{ error }}</p>
+    <a href="{% url 'orders:orders' %}">주문 목록으로 돌아가기</a>
+</body>
+</html>
