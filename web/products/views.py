@@ -145,6 +145,12 @@ class ProductDetail(DetailView):
         recommended_products = Product.objects.filter(category=product.category).exclude(pk=product.pk).order_by('?')[:3]
         reviews = Review.objects.filter(product_id=product.product_id).order_by('-created_at')
         cnt = reviews.count()
+        # 현재 로그인된 사용자 확인(회성)
+        current_user = self.request.user.id if self.request.user.is_authenticated else None
+        try:
+            user_review = Review.objects.filter(user_id=current_user , product_id=product.product_id)[0]
+        except:
+            user_review = None
         # 별점 백분율 계산
         if cnt == 0:
             rating = {
@@ -176,6 +182,7 @@ class ProductDetail(DetailView):
         context['rating'] = rating
         context['paginator']=paginator
         context['page_number']=page_number
+        context['user_review']=user_review
         return context
         
     

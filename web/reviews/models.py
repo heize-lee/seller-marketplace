@@ -17,7 +17,7 @@ class Review(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.user}-{self.product}'
+        return f'{self.user}'
 
 class ReviewComment(models.Model):
     review = models.ForeignKey(Review,on_delete=models.CASCADE)

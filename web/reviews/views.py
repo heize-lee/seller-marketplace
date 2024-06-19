@@ -92,28 +92,29 @@ def put_review(request, review_id):
     review = get_object_or_404(Review, pk=review_id)
     
     if request.method == 'POST':
-        form = ReviewCreateForm(request.POST,request.FILES)
+        form = ReviewCreateForm(request.POST,request.FILES,instance=review)
         product_id = request.POST['product']
         product = Product.objects.get(pk=product_id)
         
         if form.is_valid():
             review = form.save(commit=False)
             review.user = request.user  # 현재 로그인된 사용자
-            review.product = product
+            
             review.rating = float(request.POST['rating'])
             # if 'image' in request.FILES:
             #     review.image = request.FILES['image']
             review.save()
-            return HttpResponse('처리완료')
+            return redirect('/product/'+product_id)
     else:
         product_id = request.GET['product']
         product = Product.objects.get(pk=product_id)
         form = ReviewCreateForm(instance=review)
     return render(
         request,
-        'reviews/review_form.html',
+        'reviews/review_update.html',
         {'form':form,
          'product':product,
+         'review':review
         }
     )
 # from django.shortcuts import get_object_or_404

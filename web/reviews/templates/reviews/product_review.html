@@ -114,6 +114,11 @@
     <script>
       document.addEventListener('DOMContentLoaded', function() {
           const productId = '{{ product.product_id }}';  // 템플릿에서 상품 ID를 가져옵니다.
+          const currentUser = "{{ request.user }}";
+          const reviewUser = "{{ user_review }}";
+          
+          console.log(currentUser)
+          console.log(reviewUser)
           // fetch api 로 데이터 불러온뒤 html 코드 작성
           function loadReviews(pageNumber) {
               const baseUrl = '{% url "product:review" %}?ajax=true&product_id=' + productId + '&page=' + pageNumber;
@@ -136,8 +141,8 @@
                       const reviewContent = document.createElement('div');
                       reviewContent.classList.add('flex-grow-1');
   
-                      const reviewHeader = document.createElement('div');
-                      reviewHeader.classList.add('mb-0','nickname');
+                      const reviewHeader = document.createElement('span');
+                      reviewHeader.classList.add('mb-0','nickname',);
                       reviewHeader.textContent = review.nickname;
                       
                       // 날짜
@@ -152,54 +157,10 @@
                       const createdAtSmall = document.createElement('small');
                       createdAtSmall.classList.add('text-muted','me-3','date');
                       createdAtSmall.textContent =yyyy_mm_dd;
-                      // 수정 
-                      const reviewId = review.id; // 버튼에 저장된 리뷰 ID를 가져옵니다.
-                      const updateContent = document.createElement('span');
-                      const link = document.createElement('a'); // a 요소 생성
-                      link.href = `/reviews/update/${reviewId}?&product=${productId}`;  // a 요소의 href 속성 설정
-                      link.textContent = '수정/'; // a 요소의 텍스트 설정
-                      updateContent.appendChild(link); // span 요소에 a 요소를 자식으로 추가
-                      
-                      // 마우스 포인터를 변경하는 스타일 추가
-                      updateContent.style.cursor = 'pointer';
-                      //삭제
-                      const deleteContent = document.createElement('span');
-                      deleteContent.textContent='삭제'
-                      deleteContent.addEventListener('click', function() {
-                        if (confirm('정말 삭제하시겠습니까?')) {
-                          const reviewId = review.id; // 버튼에 저장된 리뷰 ID를 가져옵니다.
-
-                          fetch(`/reviews/delete/${reviewId}/`, {
-                              method: 'DELETE',
-                              headers: {
-                                'X-CSRFToken': getCookie('csrftoken'),  // CSRF 토큰을 추가합니다.
-                                
-                            }
-                              
-                          })
-                          .then(response => {
-                              if (response.ok) {
-                                  alert('리뷰가 성공적으로 삭제되었습니다.');
-                                  window.location.reload();  // 페이지를 새로고침하여 변경 사항을 반영합니다.
-                              } else {
-                                  alert('리뷰 삭제에 실패했습니다.');
-                              }
-                          })
-                          .catch(error => {
-                              console.error('Error:', error);
-                              alert('서버와의 통신 중 오류가 발생했습니다.');
-                          });
-                      } else {
-                          alert('삭제가 취소되었습니다.');
-                      }
-                      });
-                      deleteContent.style.cursor = 'pointer';
 
                       reviewHeader.appendChild(document.createTextNode(' '));
                       reviewHeader.appendChild(createdAtSmall);
-                      reviewHeader.appendChild(updateContent)
-                      reviewHeader.appendChild(deleteContent)
-
+                     
                       const reviewComment = document.createElement('p');
                       reviewComment.id = 'reviewCommentId';
                       reviewComment.textContent = review.comment;
@@ -209,6 +170,57 @@
                       const starRatingContainer = createStarRating(review.rating);
                       
                       reviewContent.appendChild(reviewHeader);
+                      
+                      if (currentUser === reviewUser){
+                        // 수정 
+                        const update_del = document.createElement('span')
+                        const reviewId = review.id; // 버튼에 저장된 리뷰 ID를 가져옵니다.
+  
+                        const updateContent = document.createElement('span');
+                        const link = document.createElement('a'); // a 요소 생성
+                        link.classList.add('update')
+                        link.href = `/reviews/update/${reviewId}?&product=${productId}`;  // a 요소의 href 속성 설정
+                        link.textContent = '수정/'; // a 요소의 텍스트 설정
+                        updateContent.appendChild(link); // span 요소에 a 요소를 자식으로 추가
+                        update_del.appendChild(updateContent)
+                        // 마우스 포인터를 변경하는 스타일 추가
+                        updateContent.style.cursor = 'pointer';
+                        //삭제
+                        const deleteContent = document.createElement('span');
+                        deleteContent.textContent='삭제'
+                        deleteContent.addEventListener('click', function() {
+                          if (confirm('정말 삭제하시겠습니까?')) {
+                            const reviewId = review.id; // 버튼에 저장된 리뷰 ID를 가져옵니다.
+  
+                            fetch(`/reviews/delete/${reviewId}/`, {
+                                method: 'DELETE',
+                                headers: {
+                                  'X-CSRFToken': getCookie('csrftoken'),  // CSRF 토큰을 추가합니다.
+                                  
+                              }
+                                
+                            })
+                            .then(response => {
+                                if (response.ok) {
+                                    alert('리뷰가 성공적으로 삭제되었습니다.');
+                                    window.location.reload();  // 페이지를 새로고침하여 변경 사항을 반영합니다.
+                                } else {
+                                    alert('리뷰 삭제에 실패했습니다.');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('서버와의 통신 중 오류가 발생했습니다.');
+                            });
+                        } else {
+                            alert('삭제가 취소되었습니다.');
+                        }
+                        });
+                        deleteContent.style.cursor = 'pointer';
+                        update_del.appendChild(deleteContent)
+                        reviewContent.appendChild(update_del);
+                      }
+                      
                       reviewContent.appendChild(starRatingContainer);
                       reviewContent.appendChild(reviewComment);
                       
