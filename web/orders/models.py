@@ -10,7 +10,7 @@ class Order(models.Model):
     product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
     cart = models.ForeignKey(Cart, on_delete=models.DO_NOTHING)
     # 주문번호
-
+    order_number = models.SmallIntegerField(default=0) 
     # 카트에 있는 데이터가 지워지면 참조가 안됨
     # 카트 컬럼과 같은 이름으로 데이터 저장
     amount = models.IntegerField(default=0)

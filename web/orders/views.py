@@ -6,6 +6,12 @@ import dotenv
 import urllib.parse
 import requests
 
+from .models import Order # 지현
+
+# 지현 (order_list)
+def order_list(request):
+    orders = Order.objects.all()
+    return render(request, 'orders/order_list.html', {'orders': orders})
 
 # Create your views here.
 dotenv.load_dotenv()

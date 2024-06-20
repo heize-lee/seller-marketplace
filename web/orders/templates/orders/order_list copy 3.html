@@ -1,0 +1,37 @@
+<!-- templates/orders/order_list.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order List</title>
+</head>
+<body>
+    <h1>Order List</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Order Number</th>
+                <th>User</th>
+                <th>Product</th>
+                <th>Amount</th>
+                <th>Total Price</th>
+                <th>Payment Total Price</th>
+                <th>Order Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.order_number }}</td>
+                <td>{{ order.user.username }}</td>
+                <td>{{ order.product.name }}</td>
+                <td>{{ order.amount }}</td>
+                <td>{{ order.total_price }}</td>
+                <td>{{ order.payment_total_price }}</td>
+                <td>{{ order.order_date }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

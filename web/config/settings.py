@@ -152,10 +152,10 @@ DATABASES = {
 
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'seller_ljh2',
+        'NAME': 'seller_ljh_test',
         'USER': 'postgres',
         'PASSWORD': db_password,
-        'HOST': 'hanslab.org',  # 또는 PostgreSQL 서버의 IP 주소
+        'HOST': '211.110.169.141', # 'hanslab.org',  # 또는 PostgreSQL 서버의 IP 주소
         'PORT': '35432',       # PostgreSQL의 기본 포트 번호
     }
 }
