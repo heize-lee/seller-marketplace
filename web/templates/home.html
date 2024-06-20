@@ -1,3 +1,166 @@
-{% extends "base.html" %} {% block content %}
-<h1>Welcome to the Home Page</h1>
+{% extends 'base.html' %}
+{% load humanize %}
+{% load static %}
+
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+
+
+
+    <div class="container my-4">
+        <!-- 카테고리 바 -->
+        <div class="category-bar mb-4">
+            <ul class="nav nav-pills">
+                <li class="nav-item">
+                    <a class="nav-link {% if not request.GET.category %}active{% endif %}" href="{% url 'product:product' %}?{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}{% if request.GET.search_keyword %}&search_keyword={{ request.GET.search_keyword }}{% endif %}{% if request.GET.min_price %}&min_price={{ request.GET.min_price }}{% endif %}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}">
+                        <img src="{% static 'category_all_image/5110770.png' %}" alt="전체">
+                        <span>전체</span>
+                    </a>
+                </li>
+                
+                <!-- 각 카테고리 버튼들 -->
+                {% for category in categories %}
+                <li class="nav-item">
+                    <a class="nav-link {% if request.GET.category == category.id|stringformat:"s" %}active{% endif %}" href="{% url 'product:product' %}?category={{ category.id }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}{% if request.GET.search_keyword %}&search_keyword={{ request.GET.search_keyword }}{% endif %}{% if request.GET.min_price %}&min_price={{ request.GET.min_price }}{% endif %}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}">
+                        <img src="{{ category.category_image.url }}" alt="{{ category.category_name }}">
+                        <span>{{ category.category_name }}</span>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    
+
+    <!-- Carousel -->
+    <div id="carouselExampleIndicators" class="carousel slide custom-carousel" data-ride="carousel">
+        <ol class="carousel-indicators">
+            <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img class="d-block w-100" src="{% static 'homepageimage/banner1.jpg' %}" alt="First slide">
+            </div>
+            <div class="carousel-item">
+                <img class="d-block w-100" src="{% static 'homepageimage/banner2.jpg' %}" alt="Second slide">
+            </div>
+            <div class="carousel-item">
+                <img class="d-block w-100" src="{% static 'homepageimage/banner3.jpg' %}" alt="Third slide">
+            </div>
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+
+    <section class="my-5">
+        <h2 class="text-center">Products</h2>
+        <div class="container">
+            <div class="row">
+                {% for product in products|slice:":9" %}
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                    <div class="card flex-grow-1">
+                        <div class="embed-responsive embed-responsive-4by3">
+                            <a href="/product/{{ product.product_id }}">
+                                <div style="height: 180px; overflow: hidden;">
+                                    <img class="card-img-top embed-responsive-item img-fluid" style="object-fit: cover; width: 100%; height: 100%;" src="{{ product.product_img.url }}" alt="Product Image">
+                                </div>
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            <span class="badge bg-light text-dark">상품명</span>
+                            <a href="/product/{{ product.product_id }}" class="link-dark text-decoration-none">
+                                <h4 class="card-title">{{ product.product_name }}</h4>
+                            </a>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between bg-white">
+                            <div>₩{{ product.product_price|intcomma }}</div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+<style>
+    .category-bar {
+        display: flex;
+        flex-wrap: nowrap; 
+        gap: 20px;
+        justify-content: center;
+    }
+
+    .nav-link {
+        color: black; 
+        text-decoration: none; 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 150px; 
+    }
+
+    .nav-link img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        margin-bottom: 5px;
+    }
+   
+
+    .row {
+        row-gap: 30px; /* 제품 카드 행 간격을 벌림 */
+    }
+
+    .col-md-4 {
+        display: flex;
+        justify-content: center;
+    }
+    .card {
+        height: 400px;
+        position: relative;
+    }
+
+    :root {
+        --carousel-width: 1200px; /* 원하는 너비로 변경 */
+        --carousel-height: 600px; /* 원하는 높이로 변경 */
+    }
+
+    .custom-carousel {
+        max-width: var(--carousel-width); /* 원하는 최대 너비 설정 */
+        margin: 0 auto; /* 중앙 정렬 */
+    }
+
+    .custom-carousel .carousel-item img {
+        height: var(--carousel-height); /* 원하는 높이 설정 */
+        object-fit: cover;
+    }
+</style>
 {% endblock %}
+

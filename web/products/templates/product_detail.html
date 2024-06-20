@@ -72,36 +72,105 @@
     .recommended-product-card:hover .card-img-top {
         transform: scale(1.1); 
     }
+
+    .product-img-container {
+        width: 500px; /* 너비 지정 */
+        height: 500px; /* 높이 지정 */
+        position: relative;
+        overflow: hidden;
+    }
+
+    .product-img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .product-price {
+        font-size: 2rem; /* 가격 폰트 크기 지정 */
+    }
+
+    .category-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px; 
+        justify-content: center; 
+    }
+
+    .nav-link {
+        color: black; 
+        text-decoration: none; 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 150px; 
+    }
+
+    .nav-link img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        margin-bottom: 5px; 
+    }
+
 </style>
 {% endblock %}
 
 {% block content %}
 
 <div class="container mt-4">
+  <div class="category-bar mb-4">
+    <ul class="nav nav-pills">
+        <li class="nav-item">
+            <a class="nav-link {% if not request.GET.category %}active{% endif %}" href="{% url 'product:product' %}?{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}{% if request.GET.search_keyword %}&search_keyword={{ request.GET.search_keyword }}{% endif %}{% if request.GET.min_price %}&min_price={{ request.GET.min_price }}{% endif %}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}">
+                <img src="{% static 'category_all_image/5110770.png' %}" alt="전체">
+                <span>전체</span>
+            </a>
+        </li>
+        
+        <!-- 각 카테고리 버튼들 -->
+        {% for category in categories %}
+        <li class="nav-item">
+            <a class="nav-link {% if request.GET.category == category.id|stringformat:"s" %}active{% endif %}" href="{% url 'product:product' %}?category={{ category.id }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}{% if request.GET.search_keyword %}&search_keyword={{ request.GET.search_keyword }}{% endif %}{% if request.GET.min_price %}&min_price={{ request.GET.min_price }}{% endif %}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}">
+                <img src="{{ category.category_image.url }}" alt="{{ category.category_name }}">
+                <span>{{ category.category_name }}</span>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+  </div>
   <div class="row">
     <div class="col-lg-6">
       <!-- 대표 이미지 칸 -->
       <div class="card mb-3 border-0">
-        {% if product.product_img %}
-          <img src="{{ product.product_img.url }}" class="card-img-top" alt="상품 이미지">
-        {% else %}
-          <img src="{% static 'path/to/placeholder_image.jpg' %}" class="card-img-top" alt="상품 이미지 없음">
-        {% endif %}
+        <div class="product-img-container">
+          {% if product.product_img %}
+            <img src="{{ product.product_img.url }}" class="card-img-top product-img" alt="상품 이미지">
+          {% else %}
+            <img src="{% static 'path/to/placeholder_image.jpg' %}" class="card-img-top product-img" alt="상품 이미지 없음">
+          {% endif %}
+        </div>
       </div>
     </div>
     <div class="col-lg-6">
       <!-- 상품 정보 -->
       <div class="card border-0">
         <div class="card-body">
+          <p><strong>{{ product.category }}</strong></p>
           <h2>{{ product.product_name }}</h2>
-          <br><br><br>
-          <p>가격: <strong>₩{{ product.product_price|intcomma }}</strong></p>
-          <p>등록날짜: <strong>{{ product.created_date|date:'Y-m-d' }}</strong></p>
-          <p>카테고리: <strong>{{ product.category }}</strong></p>
+          <!-- 리뷰 섹션 -->
+          <p>리뷰칸</p>
+          <br><br><br><br><br><br><br><br>
+          <p class="product-price">₩{{ product.product_price|intcomma }}</p>
           
-          <!-- 목록 보기 링크 -->
-          <a href="/product/" class="btn btn-secondary">목록보기</a>
-          <button id="copyUrlBtn" class="btn btn-primary">URL 복사</button>
+          
+          <!-- 버튼들 -->
+          <a href="#" class="btn btn-secondary">Add to Cart</a>
+          <a href="#" class="btn btn-primary">Check Out</a>
         </div>
       </div>
     </div>
@@ -135,7 +204,7 @@
               <a href="{% url 'product:product_detail' recommended_product.pk %}">
                   {% if recommended_product.product_img %}
                   <div style="height: 180px; overflow: hidden;">
-                      <img src="{{ recommended_product.product_img.url }}" img class="card-img-top embed-responsive-item img-fluid" style="object-fit: cover; width: 100%; height: 100%;" alt="{{ recommended_product.product_name }}">
+                      <img src="{{ recommended_product.product_img.url }}" class="card-img-top embed-responsive-item img-fluid" style="object-fit: cover; width: 100%; height: 100%;" alt="{{ recommended_product.product_name }}">
                   </div>
                   {% else %}
                   <div style="height: 180px; overflow: hidden;">
@@ -154,8 +223,6 @@
     </div>
   </div>
 </div>
-
-
 
 <script>
     document.getElementById('copyUrlBtn').addEventListener('click', function() {

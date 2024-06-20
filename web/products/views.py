@@ -135,6 +135,8 @@ class ProductDetail(DetailView):
         product = self.get_object()
         recommended_products = Product.objects.filter(category=product.category).exclude(pk=product.pk).order_by('?')[:3]
         context['recommended_products'] = recommended_products
+        categories = Category.objects.all()
+        context['categories'] = categories
         return context
 
     

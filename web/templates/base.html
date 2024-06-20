@@ -9,8 +9,7 @@
     <link rel="stylesheet" href="{% static 'css/footer.css' %}">
     <link rel="stylesheet" href="{% static 'css/signup.css' %}">
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
-    <link rel="stylesheet" href="{% static 'css/mypage.css' %}">
-    <link rel="stylesheet" href="{% static 'css/edit_profile.css' %}">
+    
 
 </head>
 <body>
@@ -25,6 +24,9 @@
         <a href="{% url 'account_login' %}">Login</a>
         <a href="{% url 'account_signup' %}">Sign Up</a>
         {% endif %}
+
+
+        
     </header>
 
     <nav>
@@ -33,6 +35,8 @@
             <!-- 추가적인 내비게이션 링크 -->
         </ul>
     </nav>
+
+
 
     <main>
         {% block content %} 
