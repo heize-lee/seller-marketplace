@@ -23,3 +23,14 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+
+
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    following = models.ManyToManyField('self', related_name='followers', symmetrical=False)
+
+    # 기타 필요한 추가 정보 및 메서드들...

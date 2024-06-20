@@ -128,36 +128,17 @@
 {% if user.is_authenticated %}
     <button id="follow-button" data-user-id="{{ product.user.id }}">
         {% if product.user in request.user.following.all %}
-            Unfollow
+            언팔로우
         {% else %}
-            Follow
+            팔로우
         {% endif %}
     </button>
 {% else %}
-    <a href="{% url 'login' %}">Log in to follow</a>
+    <a href="{% url 'login' %}">로그인 후 팔로우</a>
 {% endif %}
 
-<script>
-    document.getElementById('follow-button').addEventListener('click', function() {
-        const userId = this.getAttribute('data-user-id');
-        fetch("{% url 'follow_user' %}", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}'
-            },
-            body: JSON.stringify({ user_id: userId })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'followed') {
-                this.textContent = 'Unfollow';
-            } else if (data.status === 'unfollowed') {
-                this.textContent = 'Follow';
-            }
-        });
-    });
-</script>
+
+
 
   <!-- 추천 제품 -->
   <div class="row mt-4">
@@ -215,6 +196,27 @@
             description.classList.add('description-collapsed');
             button.textContent = '상품 정보 더 보기';
         }
+    });
+    //재웅 팔로우 기능//
+    
+    document.getElementById('follow-button').addEventListener('click', function() {
+        const userId = this.getAttribute('data-user-id');
+        fetch("/follow/follow1/", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ user_id: userId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'followed') {
+                this.textContent = '언팔로우';
+            } else if (data.status === 'unfollowed') {
+                this.textContent = '팔로우';
+            }
+        });
     });
 </script>
 {% endblock %}
