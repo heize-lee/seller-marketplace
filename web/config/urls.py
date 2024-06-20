@@ -13,7 +13,8 @@ urlpatterns = [
 
     path('product/', include('products.urls', namespace='product')), # 정현
     
-    path('accounts/edit-profile/', edit_profile, name='edit_profile'),  # 재웅
+    path('accounts/edit-profile/', edit_profile, name='edit_profile'),
+    path('follow/', include('follow.urls')),  # 재웅
 ]
 
 if settings.DEBUG:

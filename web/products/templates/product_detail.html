@@ -124,6 +124,41 @@
     </div>
   </div>
 
+<!-- 팔로우 버튼 -->
+{% if user.is_authenticated %}
+    <button id="follow-button" data-user-id="{{ product.user.id }}">
+        {% if product.user in request.user.following.all %}
+            Unfollow
+        {% else %}
+            Follow
+        {% endif %}
+    </button>
+{% else %}
+    <a href="{% url 'login' %}">Log in to follow</a>
+{% endif %}
+
+<script>
+    document.getElementById('follow-button').addEventListener('click', function() {
+        const userId = this.getAttribute('data-user-id');
+        fetch("{% url 'follow_user' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ user_id: userId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'followed') {
+                this.textContent = 'Unfollow';
+            } else if (data.status === 'unfollowed') {
+                this.textContent = 'Follow';
+            }
+        });
+    });
+</script>
+
   <!-- 추천 제품 -->
   <div class="row mt-4">
     <div class="col">
