@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+</head>
+<body>
+    <h1>{{ user.username }}'s Profile</h1>
+    <p>Email: {{ user.email }}</p>
+    <p>Date Joined: {{ user.date_joined }}</p>
+
+    <!-- 팔로우/언팔로우 버튼 -->
+    {% if user != request.user %}
+        {% if user in request.user.following.all %}
+            <form action="{% url 'unfollow_user' user.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Unfollow</button>
+            </form>
+        {% else %}
+            <form action="{% url 'follow_user' user.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Follow</button>
+            </form>
+        {% endif %}
+    {% endif %}
+</body>
+</html>
