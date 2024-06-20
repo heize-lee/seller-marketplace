@@ -6,6 +6,7 @@ crispy-bootstrap5==2024.2
 cryptography==42.0.7
 Django==5.0.6
 django-allauth==0.63.3
+django-cors-headers==4.4.0
 django-crispy-forms==2.1
 django-filter==24.2
 django-phonenumber-field==7.3.0
