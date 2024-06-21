@@ -145,12 +145,13 @@ class ProductDetail(DetailView):
         recommended_products = Product.objects.filter(category=product.category).exclude(pk=product.pk).order_by('?')[:3]
         reviews = Review.objects.filter(product_id=product.product_id).order_by('-created_at')
         cnt = reviews.count()
-        # 현재 로그인된 사용자 확인(회성)
-        current_user = self.request.user.id if self.request.user.is_authenticated else None
-        try:
-            user_review = Review.objects.filter(user_id=current_user , product_id=product.product_id)[0]
-        except:
-            user_review = None
+        if cnt > 0 :
+            reviews_rating_mean = sum([i.rating for i in reviews])/cnt
+            product.average_rating = reviews_rating_mean
+            product.save()
+        else:
+            reviews_rating_mean = 0
+        
         # 별점 백분율 계산
         if cnt == 0:
             rating = {
@@ -182,7 +183,7 @@ class ProductDetail(DetailView):
         context['rating'] = rating
         context['paginator']=paginator
         context['page_number']=page_number
-        context['user_review']=user_review
+        context['review_rating_mean']=reviews_rating_mean
         return context
         
     
@@ -193,7 +194,9 @@ def review(request):
         product_id = request.GET.get('product_id')
         product = get_object_or_404(Product, pk=product_id)
         
-        reviews = Review.objects.filter(product=product).annotate(nickname=F('user__nickname')).values('id','nickname','comment', 'rating', 'created_at','image').order_by('-created_at')
+        reviews = Review.objects.filter(product=product).annotate(nickname=F('user__nickname'), email=F('user__email')).values('id','email','nickname','comment', 'rating', 'created_at','image').order_by('-created_at')
+        if request.GET.get('select') == 'rating_height':
+            reviews = reviews.order_by('created_at')
          # Paginator 설정
         paginator = Paginator(reviews, 5)  # 페이지당 5개의 리뷰
         page_number = int(request.GET.get('page',1))  # GET 파라미터에서 페이지 번호를 가져옴

@@ -33,8 +33,6 @@ def ReviewCreate(request):
          
         product_id = request.POST['product']
         product = Product.objects.get(pk=product_id)
-        
-            
         if request.POST['rating']=='0':
             form.add_error('rating', ' 평점을 선택해주세요.')
             if request.POST['comment']=='':
@@ -52,7 +50,7 @@ def ReviewCreate(request):
             # if 'image' in request.FILES:
             #     review.image = request.FILES['image']
             review.save()
-            return HttpResponse('처리완료')
+            return redirect('/product/'+product_id)
         
        
     return render(
@@ -72,21 +70,7 @@ def delete_review(request, review_id):
     else:
         return JsonResponse({'error': '리뷰를 삭제할 권한이 없습니다.'}, status=403)
     
-# class ReviewUpdateView(UpdateView):
-#     model = Review
-#     form_class = ReviewCreateForm
-#     template_name = 'review_form.html'
-#     success_url = reverse_lazy('product:product_detail')
 
-#     def get_context_data(self, kwargs):
-#         context = super().get_context_data(kwargs)
-#         product_id = self.request.GET.get('product')
-#         if product_id:
-#             context['product'] = get_object_or_404(Product, pk=product_id)
-#         return context
-
-#     def get_success_url(self):
-#         return '/product/' 
 
 def put_review(request, review_id):
     review = get_object_or_404(Review, pk=review_id)
@@ -96,6 +80,26 @@ def put_review(request, review_id):
         product_id = request.POST['product']
         product = Product.objects.get(pk=product_id)
         
+        if request.POST['rating']=='0':
+            form.add_error('rating', ' 평점을 선택해주세요.')
+            if request.POST['comment']=='':
+                form.add_error('comment', ' 후기를 작성해주세요.')
+            return render(request, 'reviews/review_update.html', {'form': form, 'product': product ,'review':review})
+        if request.POST['comment']=='':
+            form.add_error('comment', ' 후기를 작성해주세요.')
+            return render(request, 'reviews/review_update.html', {'form': form, 'product': product,'review':review})
+        # try:
+        #     reviews = Review.objects.filter(product_id=product.product_id)
+        #     cnt = reviews.count()
+        #     if cnt > 0 :
+        #         reviews_rating_mean = sum([i.rating for i in reviews])/cnt
+        #          # 평균 rating 값을 product 모델의 average_rating 필드에 저장
+        #     else:
+        #         reviews_rating_mean = 0
+        #     product.average_rating = reviews_rating_mean
+        #     product.save()
+        # except:
+        #     pass  
         if form.is_valid():
             review = form.save(commit=False)
             review.user = request.user  # 현재 로그인된 사용자

@@ -41,7 +41,8 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products', default=get_default_category_id)
     product_img = models.ImageField(upload_to='product_images/', null=True, blank=True)  #이름 수정됨
     seller_email = models.EmailField(null=True)
-
+    average_rating = models.FloatField(default=0.0)
+    
     def __str__(self):
         return self.product_name
     

@@ -79,6 +79,22 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css
     .recommended-product-card:hover .card-img-top {
         transform: scale(1.1); 
     }
+    .rating_mean{
+      color: #171A1F;
+      font-size: 16px;
+      font-family: Poppins;
+      font-weight: 700;
+      line-height: 26px;
+      word-wrap: break-word
+    }
+    #total_price{
+      color: #171A1F;
+      font-size: 14px;
+      font-family: Poppins;
+      font-weight: 400;
+      line-height: 22px;
+      word-wrap: break-word
+    }
 </style>
 {% endblock %}
 
@@ -102,7 +118,26 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css
       <div class="card border-0">
         <div class="card-body">
           <h2>{{ product.product_name }}</h2>
-          <br><br><br>
+          <!-- 상품평점 회성 -->
+          <div style="margin-top: 10px; display: flex; ">
+            <div class="rating_mean">{{ review_rating_mean|floatformat:1 }}</div>
+            <div id="star-rating-container" style="position: absolute; top: 58px; left: 50px;"></div>
+            <div class="rating_mean" style="margin-left: 130px;">{{count}} reviews</div> 
+          </div>
+          <!-- 상푸수량 -->
+          <div style="margin-top: 80px;">
+            <span class="rating_mean">Quantity</span>
+          <div style="display: flex; margin-top: 10px;">
+            <button id="minus_btn" style="border: none; width: 40px; height: 36px; margin-right: 12px;">-</button>
+            <label for="cnt">1</label>
+            <input type="hidden" name="cnt" id="cnt" value="1">
+            <button id="plus_btn" style="border: none; width: 40px; height: 36px; margin-left: 12px;" >+</button>
+            <label for="total_price" style="margin-left: auto;">{{product.product_price|intcomma}}원</label>
+            <input type="hidden" id="total_price" name="total_price" value="{{product.product_price}}">
+          </div>
+          </div>
+          
+          <br>
           <p>가격: <strong>₩{{ product.product_price|intcomma }}</strong></p>
           <p>등록날짜: <strong>{{ product.created_date|date:'Y-m-d' }}</strong></p>
           <p>카테고리: <strong>{{ product.category }}</strong></p>
@@ -110,6 +145,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css
           <!-- 목록 보기 링크 -->
           <a href="/product/" class="btn btn-secondary">목록보기</a>
           <button id="copyUrlBtn" class="btn btn-primary">URL 복사</button>
+          <button id="cartBtn" type="button" class="btn btn-outline-secondary">장바구니</button>
         </div>
       </div>
     </div>
@@ -205,6 +241,26 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css
             button.textContent = '상품 정보 더 보기';
         }
     });
+
+    document.getElementById('cartBtn').addEventListener('click',function(){
+      alert('장바구니에 담았습니다')
+      location.href='{% url "cart:add_cart" product.product_id %}'
+    })
+
+    document.getElementById('plus_btn').addEventListener('click',function(){
+      cnt = document.querySelector('label[for="cnt"]').textContent
+      document.querySelector('label[for="cnt"]').textContent = Number(cnt) + 1
+      document.getElementById('cnt').value = Number(cnt) + 1
+      document.querySelector('label[for="total_price"]').textContent = (Number(document.querySelector('label[for="cnt"]').textContent ) * {{product.product_price}}).toLocaleString() + '원'
+    })
+    document.getElementById('minus_btn').addEventListener('click',function(){
+      cnt = document.querySelector('label[for="cnt"]').textContent
+      if (cnt>1){
+        document.querySelector('label[for="cnt"]').textContent = Number(cnt) - 1
+        document.getElementById('cnt').value = Number(cnt) - 1
+        document.querySelector('label[for="total_price"]').textContent = (Number(document.querySelector('label[for="cnt"]').textContent ) * {{product.product_price}}).toLocaleString() + '원'
+      }
+    })
 </script>
 {% endblock %}
 

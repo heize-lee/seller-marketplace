@@ -11,6 +11,8 @@
     
 </head>
 <body>
+    
+    
     <div class="container">
         <div class="mb-3 title">리뷰 작성</div>
         <form action="{% url 'reviews:update' review.id %}" method="POST" enctype="multipart/form-data">
@@ -58,7 +60,7 @@
                 {{ form.comment }}
                 <!-- <textarea class="form-control" id="{{ form.comment.id_for_label }}" name="{{ form.comment.name }}" rows="10"></textarea> -->
             </div>
-    
+            {{form.image}}
             <div class="form-group mb-3">
                 <label class="sub-title">사진을 등록해주세요</label>
                 <div class="media-container">
@@ -133,6 +135,11 @@
         });
         
     </script>
-        
+    <script>
+        var labelElement = document.querySelector('label[for="image-clear_id"]');
+        console.log(labelElement)
+        labelElement.textContent='삭제'
+        document.querySelector('#id_image').remove()
+    </script>
 </body>
 </html>
