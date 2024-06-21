@@ -1,6 +1,7 @@
 from django import forms
 from .models import Review
 
+
 class ReviewCreateForm(forms.ModelForm):
     class Meta:
         model = Review
@@ -10,4 +11,5 @@ class ReviewCreateForm(forms.ModelForm):
         }
         widgets = {
             "comment": forms.Textarea(attrs={"class": "form-control mt-2", "rows": 10}),
+            'image': forms.ClearableFileInput(attrs={"class":"image-form"})
         }

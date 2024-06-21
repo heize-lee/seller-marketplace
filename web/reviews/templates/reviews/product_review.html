@@ -1,5 +1,23 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'review/review.css' %}">
+<!-- <style>
+  .big_size > span::before{ 
+      margin-right: 5px; /* 별 사이의 간격 조정 */
+      font-size: 40px; /* 별의 크기 조정 */
+    }
+</style> -->
+<style>
+    .review-mean{
+    color: #171A1F;
+    font-size: 40px;
+    font-family: Poppins;
+    font-weight: 700;
+    line-height: 56px;
+    word-wrap: break-word;
+    display: flex;
+    justify-content: center;
+  }
+</style>
   <!-- 상품 리뷰 -->
   <div class="row mt-4">
     <div class="col">
@@ -10,6 +28,18 @@
             {% csrf_token %}
             <input type="hidden" name="product" value="{{ product.pk }}">
             <button class="btn btn-outline-light text-primary " type="submit">후기작성</button>
+            <ul class="navbar-nav">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="dropdownMenuLink">
+                  작성시간순
+                </a>
+                <ul class="dropdown-menu dropdown-menu-white" aria-labelledby="dropdownMenuLink">
+                  <li><a class="dropdown-item" href="#"  data-value="created">작성시간순</a></li>
+                  <li><a class="dropdown-item" href="#"  data-value="rating_height">별점높은순</a></li>
+                  <li><a class="dropdown-item" href="#" data-value="rating_under">별점낮은순</a></li>
+                </ul>
+              </li>
+            </ul>
           </form>  
         </div>
       </div>
@@ -19,34 +49,40 @@
   
   <div class="row">
     <div class="col-lg-3 ">
+      <div class="review-mean">
+        {{ review_rating_mean|floatformat:1 }}
+      </div>
+      <!-- <div id="star-rating-container">
+  
+      </div> -->
       <!-- 프로그레스바 -->
       <div class="d-flex align-items-center mb-3 pro">
-        5<i class="fas fa-star mx-1" style="font-size: 24px;"></i>
-        <div class="progress flex-shrink-0" style=" width:200px;">
+        <span class="rating-number">5</span><i class="fas fa-star mx-1" style="font-size: 24px;"></i>
+        <div class="progress flex-shrink-0" style=" width:220px;">
           <div class="progress-bar " role="progressbar" style="width: {{rating.5}}%;" aria-valuenow="{{rating.5}}" aria-valuemin="0" aria-valuemax="100"></div>
         </div> <span class="mx-2">{{rating.5|floatformat:0 }}%</span>
       </div>
       <div class="d-flex align-items-center mb-3">
-        4<i class="fas fa-star fa-2x mx-1" style="font-size: 24px;"></i>
-        <div class="progress flex-shrink-0" style=" width:200px;">
+        <span class="rating-number">4</span><i class="fas fa-star fa-2x mx-1" style="font-size: 24px;"></i>
+        <div class="progress flex-shrink-0" style=" width:220px;">
           <div class="progress-bar" role="progressbar" style="width: {{rating.4}}%;" aria-valuenow="{{rating.4}}" aria-valuemin="0" aria-valuemax="100"></div>
         </div><span class="mx-2">{{rating.4|floatformat:0 }}%</span>
       </div>
       <div class="d-flex align-items-center mb-3">
-        3<i class="fas fa-star fa-2x mx-1" style="font-size: 24px;"></i>
-        <div class="progress flex-shrink-0" style=" width:200px;">
-          <div class="progress-bar " role="progressbar" style="width: {{rating.3}};" aria-valuenow="{{rating.3}}" aria-valuemin="0" aria-valuemax="100"></div>
+        <span class="rating-number">3</span><i class="fas fa-star fa-2x mx-1" style="font-size: 24px;"></i>
+        <div class="progress flex-shrink-0" style=" width:220px;">
+          <div class="progress-bar " role="progressbar" style="width: {{rating.3}}%;" aria-valuenow="{{rating.3}}" aria-valuemin="0" aria-valuemax="100"></div>
         </div><span class="mx-2">{{rating.3|floatformat:0 }}%</span>
       </div>
       <div class="d-flex align-items-center mb-3">
-        2<i class="fas fa-star fa-2x mx-1" style="font-size: 24px;"></i>
-        <div class="progress flex-shrink-0" style=" width:200px;">
+        <span class="rating-number">2</span><i class="fas fa-star fa-2x mx-1" style="font-size: 24px;"></i>
+        <div class="progress flex-shrink-0" style=" width:220px;">
           <div class="progress-bar" role="progressbar" style="width: {{rating.2}}%;" aria-valuenow="{{rating.2}}" aria-valuemin="0" aria-valuemax="100"></div>
         </div><span class="mx-2">{{rating.2|floatformat:0 }}%</span>
       </div>
       <div class="d-flex align-items-center mb-3">
-        1<i class="fas fa-star fa-2x mx-1" style="font-size: 24px;"></i>
-        <div class="progress flex-shrink-0" style=" width:200px;">
+        <span class="rating-number">1</span><i class="fas fa-star fa-2x mx-1" style="font-size: 24px;"></i>
+        <div class="progress flex-shrink-0" style=" width:220px;">
           <div class="progress-bar" role="progressbar" style="width: {{rating.1}}%;" aria-valuenow="25" aria-valuemin="{{rating.1}}" aria-valuemax="100"></div>
         </div><span class="mx-2">{{rating.1|floatformat:0 }}%</span>
       </div>
@@ -62,11 +98,11 @@
     </div>
     {% endif %}
     <!-- 리뷰 페이지네이션 바 -->
-      
-     
-      
-      {% if reviews %}
-      <div id="pagination" class="d-flex justify-content-center " >
+    
+    
+    
+    {% if reviews %}
+    <div id="pagination" class="d-flex justify-content-center " >
       <nav aria-label="Page navigation example" >
         <ul class="pagination">
           
@@ -80,7 +116,7 @@
           {% for page in paginator.page_range %}
           
           <li class="page-item {% if page == page_number %}active{% endif %}" ><a class="page-link"  href="?page={{page}}" data-page="{{page}}" >{{page}}</a></li>
-    
+          
           {% endfor %}
           <li class="page-item">
             <a class="page-link" href="#" aria-label="Next">
@@ -90,16 +126,16 @@
         </ul>
       </nav>
       
-      </div>
+    </div>
       {% endif %}
-  </div> 
-</div>
+    </div> 
+  </div>
  
 
-    <script>
+  <script>
         
-          document.getElementById('copyUrlBtn').addEventListener('click', function() {
-          var urlField = document.createElement('input');
+    document.getElementById('copyUrlBtn').addEventListener('click', function() {
+      var urlField = document.createElement('input');
           urlField.setAttribute('type', 'text');
           urlField.setAttribute('value', window.location.href);
           document.body.appendChild(urlField);
@@ -109,16 +145,15 @@
           alert('현재 페이지 URL이 복사되었습니다.');
         });
             
-    </script>
+        </script>
     <!-- 페이지네이션 ajax -->
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-          const productId = '{{ product.product_id }}';  // 템플릿에서 상품 ID를 가져옵니다.
-          const currentUser = "{{ request.user }}";
-          const reviewUser = "{{ user_review }}";
+        const productId = '{{ product.product_id }}';  // 템플릿에서 상품 ID를 가져옵니다.
+        const currentUser = "{{ request.user }}";
           
           console.log(currentUser)
-          console.log(reviewUser)
+          
           // fetch api 로 데이터 불러온뒤 html 코드 작성
           function loadReviews(pageNumber) {
               const baseUrl = '{% url "product:review" %}?ajax=true&product_id=' + productId + '&page=' + pageNumber;
@@ -126,13 +161,13 @@
               fetch(baseUrl)
               .then(response => response.json())
               .then(data => {
-                  const reviewsContainer = document.getElementById('review-list');
+                const reviewsContainer = document.getElementById('review-list');
                   reviewsContainer.innerHTML = '';
                   console.log(data)
                   data.forEach(review => {
                       const reviewItem = document.createElement('div');
                       reviewItem.classList.add('d-flex', 'align-items-start', 'mb-4');
-  
+                      
                       const profileImg = document.createElement('img');
                       profileImg.classList.add('d-flex', 'mx-4', 'rounded-circle');
                       profileImg.src = 'http://placehold.it/50x50';
@@ -140,7 +175,7 @@
   
                       const reviewContent = document.createElement('div');
                       reviewContent.classList.add('flex-grow-1');
-  
+                      
                       const reviewHeader = document.createElement('span');
                       reviewHeader.classList.add('mb-0','nickname',);
                       reviewHeader.textContent = review.nickname;
@@ -160,7 +195,7 @@
 
                       reviewHeader.appendChild(document.createTextNode(' '));
                       reviewHeader.appendChild(createdAtSmall);
-                     
+                      
                       const reviewComment = document.createElement('p');
                       reviewComment.id = 'reviewCommentId';
                       reviewComment.textContent = review.comment;
@@ -171,11 +206,11 @@
                       
                       reviewContent.appendChild(reviewHeader);
                       
-                      if (currentUser === reviewUser){
+                      if (currentUser === review.email){
                         // 수정 
                         const update_del = document.createElement('span')
                         const reviewId = review.id; // 버튼에 저장된 리뷰 ID를 가져옵니다.
-  
+                        
                         const updateContent = document.createElement('span');
                         const link = document.createElement('a'); // a 요소 생성
                         link.classList.add('update')
@@ -198,7 +233,7 @@
                                   'X-CSRFToken': getCookie('csrftoken'),  // CSRF 토큰을 추가합니다.
                                   
                               }
-                                
+                              
                             })
                             .then(response => {
                                 if (response.ok) {
@@ -211,10 +246,10 @@
                             .catch(error => {
                                 console.error('Error:', error);
                                 alert('서버와의 통신 중 오류가 발생했습니다.');
-                            });
-                        } else {
-                            alert('삭제가 취소되었습니다.');
-                        }
+                              });
+                            } else {
+                              alert('삭제가 취소되었습니다.');
+                            }
                         });
                         deleteContent.style.cursor = 'pointer';
                         update_del.appendChild(deleteContent)
@@ -224,98 +259,132 @@
                       reviewContent.appendChild(starRatingContainer);
                       reviewContent.appendChild(reviewComment);
                       
-
+                      
                       const reviewImageContainer = document.createElement('div');
                       reviewImageContainer.classList.add('flex-shrink-0', 'mx-4');
-  
+                      
                       const reviewImg = document.createElement('img');
                       reviewImg.classList.add('card-img-top','img');
                       reviewImg.alt = '상품 이미지';
                       reviewImg.style.width = '100px';
                       reviewImg.style.height = '100px';
-  
+                      
                       if (review.image) {
-                          reviewImg.src = 'http://127.0.0.1:8000/media/' + review.image;
+                        reviewImg.src = 'http://127.0.0.1:8000/media/' + review.image;
                       } else {
-                          reviewImg.src = '{% static "path/to/placeholder_image.jpg" %}';
-                          reviewImg.alt = '상품 이미지 없음';
+                        reviewImg.src = '{% static "path/to/placeholder_image.jpg" %}';
+                        reviewImg.alt = '상품 이미지 없음';
                       }
-  
+                      
                       reviewImageContainer.appendChild(reviewImg);
   
                       reviewItem.appendChild(profileImg);
                       reviewItem.appendChild(reviewContent);
                       reviewItem.appendChild(reviewImageContainer);
                       reviewsContainer.appendChild(reviewItem);
-                  });
-  
-                  // 페이지네이션 버튼의 활성 상태를 업데이트
-                  document.querySelectorAll('#pagination .page-item').forEach(function(item) {
+                    });
+                    
+                    // 페이지네이션 버튼의 활성 상태를 업데이트
+                    document.querySelectorAll('#pagination .page-item').forEach(function(item) {
                       item.classList.remove('active');
-                  });
-  
-                  const activeLink = document.querySelector(`#pagination a[data-page="${pageNumber}"]`);
-                  if (activeLink) {
+                    });
+                    
+                    const activeLink = document.querySelector(`#pagination a[data-page="${pageNumber}"]`);
+                    if (activeLink) {
                       const parentItem = activeLink.parentElement;
                       if (parentItem) {
-                          parentItem.classList.add('active');
+                        parentItem.classList.add('active');
                       }
                   }
-              })
-              .catch(error => console.error('Error fetching reviews:', error));
+                })
+                .catch(error => console.error('Error fetching reviews:', error));
           }
   
           // 초기 로드 시 첫 페이지의 리뷰를 로드합니다.
           const firstActiveLink = document.querySelector('.active .page-link');
           if (firstActiveLink) {
-              loadReviews(firstActiveLink.getAttribute('data-page'));
+            loadReviews(firstActiveLink.getAttribute('data-page'));
           } else {
               loadReviews(1);  // 기본적으로 첫 페이지를 로드합니다.
-          }
-  
-          // 페이지네이션 링크에 클릭 이벤트 리스너를 추가합니다.
-          document.querySelectorAll('#pagination .page-link').forEach(function(link) {
+            }
+            
+            // 페이지네이션 링크에 클릭 이벤트 리스너를 추가합니다.
+            document.querySelectorAll('#pagination .page-link').forEach(function(link) {
               link.addEventListener('click', function(event) {
-                  event.preventDefault();  // 링크의 기본 동작을 막습니다.
+                event.preventDefault();  // 링크의 기본 동작을 막습니다.
                   const pageNumber = this.getAttribute('data-page');
                   loadReviews(pageNumber);
               });
           });
-      });
-      //별점 표시하기
-      function createStarRating(rating) {
-            const starRatingContainer = document.createElement('div');
-            starRatingContainer.className = 'star-rating';
-
-            for (let i = 1; i <= 5; i++) {
-                const star = document.createElement('span');
-                if (i <= rating) {
-                    star.classList.add('filled');
-                } else if (i-0.5 <= rating){
+        });
+        //별점 표시하기
+        function createStarRating(rating) {
+          const starRatingContainer = document.createElement('div');
+          starRatingContainer.className = 'star-rating';
+          
+          for (let i = 1; i <= 5; i++) {
+            const star = document.createElement('span');
+            if (i <= rating) {
+              star.classList.add('filled');
+            } else if (i-0.5 <= rating){
                     star.classList.add('half-filled');
-                }
+                  }
                 starRatingContainer.appendChild(star);
+              }
+              
+              return starRatingContainer;
             }
 
-            return starRatingContainer;
-        }
-  </script>
+        
+    </script>
 
 <script>
   // CSRF 토큰을 가져오는 함수
-function getCookie(name) {
+  function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
+      const cookies = document.cookie.split(';');
         for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // 이 쿠키 문자열이 우리가 찾고자 하는 이름으로 시작하는지 확인합니다.
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
+          const cookie = cookies[i].trim();
+          // 이 쿠키 문자열이 우리가 찾고자 하는 이름으로 시작하는지 확인합니다.
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
         }
-    }
+      }
     return cookieValue;
 }
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const rating = {{ review_rating_mean }};
+      const starRatingElement = createStarRating(rating);
+      starRatingElement.classList.add('big_size')
+      document.getElementById('star-rating-container').appendChild(starRatingElement);
+  });
+</script>
+<script>
+  const productId = '{{ product.product_id }}';  // 템플릿에서 상품 ID를 가져옵니다.
+
+  document.addEventListener('DOMContentLoaded', function() {
+        const dropdownItems = document.querySelectorAll('.dropdown-item');
+        const dropdownToggle = document.getElementById('dropdownMenuLink');
+
+        dropdownItems.forEach(item => {
+            item.addEventListener('click', function(event) {
+                event.preventDefault();
+                const selectedText = this.textContent;
+                const selected = this.getAttribute('data-value');
+                dropdownToggle.textContent = selectedText;
+                const baseUrl = '{% url "product:review" %}?ajax=true&product_id=' + productId + '&select=' + selected;
+                console.log(baseUrl)
+                fetch(baseUrl)
+                .then(response => response.json())
+                .then(data =>{
+                  
+                })
+            });
+        });
+    });
 </script>
