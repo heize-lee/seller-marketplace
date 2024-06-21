@@ -35,12 +35,12 @@ class Payment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     payment_uuid = models.CharField(max_length=100, default=True, unique=True)
-    pay_method = models.CharField()
+    pay_method = models.CharField(max_length=25)
     pay_date = models.DateTimeField()
     pay_totoal_price = models.IntegerField()
-    pay_nobank_user = models.CharField()
-    pay_nobank = models.CharField()
-    pay_confirm = models.BooleanField()
+    pay_nobank_user = models.CharField(max_length=20, blank=True)
+    pay_nobank = models.CharField(max_length=50, blank=True)
+    pay_confirm = models.BooleanField(default=False)
 
     
 

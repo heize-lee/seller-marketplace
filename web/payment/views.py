@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
@@ -14,7 +15,8 @@ from orders.models import Order, OrderItems
 from .models import Payment
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
-from django.views import View
+from django.db import transaction
+
 
 from .services import SampleService
 
@@ -149,6 +151,7 @@ def kakao_payment(request):
     cart = Cart.objects.filter(user=user)
     first_cart =  cart[0].product.product_name
     remaining_cart_count = len(cart)-1
+
     if remaining_cart_count > 0:
         orderName = f"{first_cart} 외 {remaining_cart_count}건"
     elif remaining_cart_count == 0:
@@ -159,6 +162,7 @@ def kakao_payment(request):
     print(request.method)
     storeId=os.getenv("storeId")
     channelKey=os.getenv("channelKey")
+
     context={
         "storeId":storeId,
         "channelKey":channelKey,
@@ -167,76 +171,81 @@ def kakao_payment(request):
     }
     return render(request, "payment/portone_kakao.html",context)
 
+@transaction.atomic
 @csrf_exempt
 def handle_kakao_payment(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
         payment_id = data.get('paymentId')
-        
+        user = request.user
+        current_time = timezone.now()
+        formatted_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
+
         # payment_id DB에 저장
         payment = Payment.objects.create(
-            pay_date=timezone.now(),
+            pay_date = formatted_time,
             payment_uuid = payment_id, # 결제uuid 결제취소 시 사용
             pay_method = "kakaoPay",
             #******** 결제예정금액으로 업데이트 예정 ********
             pay_totoal_price = 80000, 
             pay_confirm = True,
-            cart_id=cart.last().id)  # 마지막 카트 아이디 설정
+            user=request.user
+            )  # 마지막 카트 아이디 설정
         payment.save()
         
-        # order에 cart저장
-        user = request.user
-        cart = Cart.objects.filter(user=user)
-        
-        current_time = str(timezone.now().strftime("%y%m%d"))
         
         # 주문번호 - 매일초기화
-# YYMMDD(6자리)+분류(1자리)+업무절차 코드(3자리)
-# 시간(6)
-# 분류(1) category_id / 수량
-# 업무절차(3) 상품 id + order_id
-        first_product_id = str(cart[0].product_id)
-        last_cart_id = str(cart.last().cart_id)
-        last_third = first_product_id + last_cart_id
-        
-        order_number = current_time+str(len(cart))+last_third
-        
+        # YYMMDD(6자리)+분류(1자리)+업무절차 코드(3자리)
+        # 시간(6)
+        # 분류(1) category_id / 카트수량
+        # 업무절차(4) 처리프로세스(1) + order_id(3)
+        # 1 처리중
+        # 2 처리완료
+        # 3 취소/오류
+
+        # order테이블에 cart저장
+        cart = Cart.objects.filter(user=user)
+        payment = Payment.objects.filter(user=user).last()
+
         order = Order.objects.create(
             user = user,
-            order_number = order_number,
+            product = cart[0].product,
+            payment = payment,
+            amount = cart[0].amount,
+            total_price = cart[0].total_price,
             payment_total_price = payment.pay_totoal_price,
-            order_date = timezone.now(),)
+            order_date = current_time)
         
+        code_current_date = current_time.strftime("%y%m%d")
+        code_cart_count = len(cart)
+        # 업무절차 코드 생성 (2는 고정, order_id는 3자리로 변환)
+        process_code = f"2{str(order.id).zfill(3)}"
+        
+        # 주문번호 생성 및 업데이트
+        order_number = f"{code_current_date}{code_cart_count}{process_code}"
+      
+        order.order_number = int(order_number)
         order.save()
 
-        products = []
+        # 카트 비어있다면
+        # 카트 1개
+        # 카트 여러개
         for one in cart: 
-            product_id = one.product_id
-            product = get_object_or_404(Product, product_id=product_id)
-            # products.append(product)
-        for one in cart: 
-            product_id = one.product_id
-            category_id = one.product.category
+            product_id = one.product
+            category = one.product.category.category_name
             order_items = OrderItems.objects.create(
+                user=user,
+                order = order,
                 product = product_id,
-                category = category_id,
+                category = category,
                 amount = one.amount,
                 total_price = one.total_price,
             )
-
             order_items.save()
 
-        # 주문 생성 후 카트 비우기
+        # # 주문 생성 후 카트 비우기
         cart.delete()   
 
-
-        
-        
-        # products = []
-        # for one in cart: 
-        #     product_id = one.product_id
-        #     product = get_object_or_404(Product, product_id=product_id)
-        #     products.append(product)
 
        
         # 결제 1번 - 사과 외 2건
@@ -250,17 +259,10 @@ def handle_kakao_payment(request):
             # 각각의 주문 추가
             # 3개의 주문번호가 생기고 
             # )
-        
-    
-        # order.save()
-        # 주문 생성 후 카트 비우기
-        # cart.delete()   
+            
         
 
         return JsonResponse({'success': True})
-        # status = data.get('status')
-
-        # 결제 성공 여부 확인, 주문 상태 업데이트 
        
     else:
         return JsonResponse({'success': False})

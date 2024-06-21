@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
-from cart.models import Cart
 from django.views.decorators.csrf import csrf_exempt
+from cart.models import Cart
+from accounts.models import DeliveryAddress
 import os
 import dotenv
 import urllib.parse
@@ -13,10 +14,18 @@ dotenv.load_dotenv()
 def orders(request):
     if request.method == 'GET':
         user = request.user
-        cart = Cart.objects.all()
-        print(request.method)
-        storeId=os.getenv("storeId")
-        channelKey=os.getenv("channelKey")
+        cart = Cart.objects.filter(user=user)
+
+        # if 바로구매 boolean True
+        # 단일건에 해당되는 카트 튜플만 가져오고
+        # else cart에 담긴 여러개의 상품을 가져온다
+
+        try:
+            # 기본 배송지 정보를 가져옵니다. (존재하지 않으면 except 블록으로 이동)
+            delivery_address = DeliveryAddress.objects.filter(user=user, is_default=True).last()
+        except DeliveryAddress.DoesNotExist:
+            delivery_address = None
+
         # js코드 복잡해짐
         # 등록된 배송지가 없음 > 지워지고 
         # AJAX로 
@@ -26,15 +35,47 @@ def orders(request):
         context = {
             'cart': cart,
             'user': user,
-            "storeId":storeId,
-            "channelKey":channelKey
+            'default_delivery_address': delivery_address,
         }
         return render(request,'orders/orders.html', context)
-    elif request.method == 'POST':
-        # payment_method = request.POST.get('payment_method')
-        # if payment_method == 'kakao_pay':
-        #     return redirect('payment:kakao_payment')
-        return redirect('orders:order_done')
+    
+    elif request.method == 'POST' :
+        user = request.user
+        # form에서 받은 input값
+        recipient = request.POST.get('recipient')
+        phone = request.POST.get('phone')
+        destination = request.POST.get('destination')
+        postal_code = request.POST.get('postal_code')
+        address = request.POST.get('address')
+        detailed_address = request.POST.get('detailed_address')
+        is_default = True if request.POST.get('default_delivery_hidden') == 'on' else False
+
+        # 기본 배송지가 있는지 확인
+        # if is_default:
+        # # 기본 배송지가 있는지 확인하고, 있으면 기존 기본 배송지를 False로 설정
+        #     try:
+        #         old_default_address = DeliveryAddress.objects.get(user=user, is_default=True)
+        #         old_default_address.is_default = False
+        #         old_default_address.save()
+        #     except DeliveryAddress.DoesNotExist:
+        #         pass  # 기본 배송지가 없으면 pass
+
+        delivery_address = DeliveryAddress.objects.create(
+            user = user,
+            recipient = recipient,
+            phone_number = phone,
+            destination = destination,
+            postal_code = postal_code,
+            address = address,
+            detail_address = detailed_address,
+            is_default = is_default
+        )        
+        
+        delivery_address.save()
+
+
+       
+        return redirect('orders:orders')
 
         # 모달 정보 address테이블에 저장
 # 배송지 view
