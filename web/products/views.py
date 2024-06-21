@@ -41,10 +41,8 @@ class ProductCreate(LoginRequiredMixin, FormView):
 
 
 
-from django.db.models import Min, Max
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .filters import ProductFilter
 
+from .filters import ProductFilter
 from django.views.generic import ListView
 from django.db.models import Min, Max
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -124,12 +122,15 @@ class ProductList(ListView):
         return super().get(request, *args, **kwargs)
 
 
+from django.shortcuts import get_object_or_404
+from accounts.models import CustomUser
+
 class ProductDetail(DetailView):
     model = Product   
     template_name = 'product_detail.html'
     context_object_name = 'product'
 
-    #추천상품 선정
+    # 추천상품 선정
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         product = self.get_object()
@@ -137,7 +138,16 @@ class ProductDetail(DetailView):
         context['recommended_products'] = recommended_products
         categories = Category.objects.all()
         context['categories'] = categories
+
+        # 작성자의 닉네임을 컨텍스트에 추가
+        if product.seller_email:
+            seller = get_object_or_404(CustomUser, email=product.seller_email)
+            context['creator_nickname'] = seller.nickname
+        else:
+            context['creator_nickname'] = 'Unknown'
+
         return context
+
 
     
 #기존 카트 구매 코드 주석 처리 해놓음
