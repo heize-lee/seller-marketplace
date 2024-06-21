@@ -230,6 +230,21 @@
             margin-bottom: 8px;
             display: block;
         }
+        .delivery_items{
+            display: flex;
+            margin: 12px 0;
+            
+        }
+        .delivery_items span{
+            display: flex;
+            margin-left: 0;
+        }
+        .delivery_items_content {
+            margin-left: 8px;
+        }
+        .delivery_items_subheader {
+            display: flex;
+        }
         
    
     </style>
@@ -241,6 +256,7 @@
                 <div class="order-items">
                     <div class="content_header delivery">
                         <h2>🚀배송정보</h2>
+                        {% if delivery_address %}
                         <form method="post">
                             {% csrf_token %}                                                
                             <!-- 배송지 수정 모달 버튼 -->
@@ -251,51 +267,125 @@
                             data-bs-target="#delivery-update-modal">
                             수정</button>
                         </form>
-                         <!-- 모달 -->
+                         <!-- 배송지 수정 모달 -->
                          <div class="modal fade" id="delivery-update-modal" tabindex="-1" aria-labelledby="deliveryUpdateModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">배송지수정</h5>
+                                        <h5 class="modal-title" id="exampleModalLabel">배송지 수정</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
                                         <!-- 배송지 수정 폼-->
                                         <form id="delivery-update-btn" action="{% url 'orders:orders' %}" method="post">
                                             {% csrf_token %}
-                                            <button style="width: 100%;"
+                                            <button style="width: 100%;" 
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#delivery-modal"
                                             type="button"
                                             class="delivery-button"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#delivery-modal">
+                                            id="add-address-btn">
                                             배송지 추가하기
                                             <!---->
                                             </button>
-                                            <!-- 수령인 -->
-                                            <div class="mb-3">
-                                                <input type="radio" name="delivery_choice" id="choice-delivery" value="card">
-                                                {{ default_delivery_address.recipient }}
-                                                {{ default_delivery_address.phone_number }}
-                                            
-                                            ({{ default_delivery_address.postal_code }}) {{ default_delivery_address.address }} {{ default_delivery_address.detail_address }}
-                                                
-                                            </div>
-                                           
-                                            <!-- 기본배송지 체크박스 -->
-                                            <div class="mb-3">
-                                                <label class="checkbox-label">
-                                                    <input type="checkbox" name="default_delivery" checked disabled>
-                                                    <input type="hidden" name="default_delivery_hidden" value="on">
-                                                    <p class="fw-bold">기본배송지로 설정</p>
-                                                </label>
-                                                
-                                            </div>
 
+                                             <!-- 배송지 추가 모달 -->
+                                            <div class="modal fade" id="delivery-modal" tabindex="-1" aria-labelledby="deliveryModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">배송지추가</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <!-- 배송지 폼-->
+                                                            <form id="delivery-btn" action="{% url 'orders:orders' %}" method="post">
+                                                                {% csrf_token %}
+                                                                <!-- 수령인 -->
+                                                                <div class="mb-3">
+                                                                    <label class="form-label">수령인</label>
+                                                                    <input type="text" name="recipient" class="form-control form-control-sm" id="recipient" placeholder="수령인을 입력해 주세요." required>
+                                                                </div>
+                                                                <!-- 연락처 -->
+                                                                <div class="mb-3">
+                                                                    <label class="form-label">휴대폰</label>
+                                                                    <input type="text" name="phone" class="form-control form-control-sm" id="phone" placeholder="숫자만 입력해주세요." required>
+                                                                </div>
+                                                                <!-- 배송지명 -->
+                                                                <div class="mb-3">
+                                                                    <label class="form-label">배송지명</label>
+                                                                    <input type="text" name="destination" class="form-control form-control-sm mb-1" id="destination" placeholder="직접 입력하거나 아래에서 선택해주세요." required>
+                                                                    <button type="button" class="badge rounded-pill bg-secondary" onclick="setDestination('집')">집</button>
+                                                                    <button type="button" class="badge rounded-pill bg-secondary" onclick="setDestination('회사')">회사</button>
+                                                                    <button type="button" class="badge rounded-pill bg-secondary" onclick="setDestination('학교')">학교</button>
+                                                                    <button type="button" class="badge rounded-pill bg-secondary" onclick="setDestination('가족')">가족</button>
+                                                                    <button type="button" class="badge rounded-pill bg-secondary" onclick="setDestination('친구')">친구</button>
+                                                                </div>
+                                                                <!-- 주소 -->
+                                                                <div class="mb-3">
+                                                                    <label class="form-label">주소</label>
+                                                                    <div class="address-row mb-1">
+                                                                        <input type="text" name="postal_code" class="form-control form-control-sm" id="postal-code" placeholder="우편번호" required>
+                                                                        
+                                                                        <!-- 다음주소API -->
+                                                                        <input type="button" class="btn btn-secondary small-input" onclick="sample5_execDaumPostcode()" value="주소 검색"><br>
+                                                                    </div>
+                                                                    <input type="text" name="address" class="form-control form-control-sm mb-1" id="address" placeholder="주소" required>
+                                                                    <!-- 상세주소 -->
+                                                                    <input type="text" name="detailed_address" class="form-control form-control-sm mb-1" id="detailed-address" placeholder="상세주소" required>
+                                                                    <!-- 지도 -->
+                                                                    <div id="map" style="width:300px;height:300px;margin-top:10px;display:none"></div>
+                                                                </div>
+                                                                <!-- 기본배송지 체크박스 -->
+                                                                <div class="mb-3">
+                                                                    <label class="checkbox-label" style="opacity: 1.0; /* 투명도 설정 */">
+                                                                        <input type="checkbox" name="default_delivery">  
+                                                                        <p class="fw-bold">기본배송지로 설정</p>
+                                                                    </label>
+                                                                    
+                                                                </div>
+
+                                                                <!-- 히든 인풋 -->
+                                                                <input type="hidden" id="csrfToken" value="{{csrf_token}}">
+                                                                <div class="modal-footer">
+                                                                    <!-- 취소 버튼 -->
+                                                                    <button type="button" class="btn btn-secondary footer-button" data-bs-dismiss="modal">취소</button>
+                                                                    <!--  저장 버튼 -->
+                                                                    <button type="submit" class="btn btn-secondary footer-button">저장</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+
+
+                                            <!-- 수령인 -->
+                                            {% for one in delivery_address %}
+                                            <div class="mb-3 delivery_items">
+                                                <div>
+                                                    <input type="radio" name="delivery_choice" id="choice-{{ one.recipient }}" value="{{ one.recipient }}">
+                                                </div> 
+                                                <div class="delivery_items_content">
+                                                    <div class="delivery_items_subheader">
+                                                        <span class="badge bg-secondary" style="border-radius: 14px;">기본배송지</span>
+                                                        <span style="font-weight: bold; margin-left: 8px;">{{ one.recipient }}</span>
+                                                        <span>({{ one.destination }})</span>
+
+                                                    </div>
+                                                 
+                                                    <span>{{ one.phone_number }}</span>
+                                                    <p>({{ one.postal_code }}) {{ one.address }} {{ one.detail_address }}</p>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+
+                                                                                      
                                             <!-- 히든 인풋 -->
                                             <input type="hidden" id="csrfToken" value="{{csrf_token}}">
                                             <div class="modal-footer">
-                                                <!-- 취소 버튼 -->
-                                                <button type="button" class="btn btn-secondary footer-button" data-bs-dismiss="modal">취소</button>
+                                                
                                                 <!--  저장 버튼 -->
                                                 <button type="submit" class="btn btn-secondary footer-button">저장</button>
                                             </div>
@@ -304,7 +394,10 @@
                                 </div>
                             </div>
                         </div>
+                        {% if default_delivery_address %}
                         <span class="badge bg-secondary" style="border-radius: 14px;">기본배송지</span>
+                        {% endif %}
+                        {% endif %}
                         <!---->
                     </div>
                         
@@ -327,7 +420,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>주소</label>
-                                    <input type="text" value="({{ default_delivery_address.postal_code }}) {{ default_delivery_address.address }} {{ default_delivery_address.detail_address }}" disabled readonly class="form-control read-only-input">
+                                    <input type="text" value="({{ default_delivery_address.postal_code }}) {{ default_delivery_address.address }} {{ delivery_address.detail_address }}" disabled readonly class="form-control read-only-input">
                                 </div>
                                 
                             </div>
@@ -347,7 +440,7 @@
                                 <!---->
                                 </button>
                             </form>
-                             <!-- 모달 -->
+                             <!-- 배송지 추가 모달 -->
                              <div class="modal fade" id="delivery-modal" tabindex="-1" aria-labelledby="deliveryModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
@@ -457,17 +550,17 @@
                         <form id="payment-form" action="" method="post">
                             {% csrf_token %}
                             <!-- name 그룹으로 묶음 -->
-                                <input type="radio" name="payment_method" id="choice-card" value="card">
-                                <label for="choice-card">카드결제</label>
-                                <br>
-                                <input type="radio" name="payment_method" id="choice-bank" value="bank">
-                                <label for="choice-bank">무통장입금</label>
-                                <br>
                                 <input type="radio" name="payment_method" id="choice-kakao" value="kakao_pay">
                                 <label for="choice-kakao">카카오페이</label>
                                 <br>
                                 <input type="radio" name="payment_method" id="choice-toss" value="toss_pay">
                                 <label for="choice-toss">토스페이</label>
+                                <!-- <input type="radio" name="payment_method" id="choice-card" value="card">
+                                <label for="choice-card">카드결제</label>
+                                <br>
+                                <input type="radio" name="payment_method" id="choice-bank" value="bank">
+                                <label for="choice-bank">무통장입금</label> -->
+                                
                                 <br>
                             <!-- <input type="submit" value="Vote"> -->
                         </form>
@@ -506,6 +599,25 @@
     function setDestination(value) {
         document.getElementById('destination').value = value;
     }
+    
+    // 수정모달 배송지 추가하기 기본 배송지 체크박스 체크여부
+    document.getElementById('default-delivery-checkbox').addEventListener('change', function() {
+        var checkbox = this;
+        if (checkbox.checked) {
+            checkbox.value = 'on'; // 체크된 경우 value를 'on'으로 설정
+        } else {
+            checkbox.value = 'off'; // 체크가 해제된 경우 value를 'off'로 설정
+        }
+    });
+    
+    document.getElementById('add-address-btn').addEventListener('click', function() {
+    // 배송지 추가 모달을 열기 전에 기존 모달을 닫음
+        var updateModal = new bootstrap.Modal(document.getElementById('delivery-update-modal'));
+        updateModal.hide();
+    });
+
+    
+   
  
     function sample5_execDaumPostcode() {
         new daum.Postcode({
