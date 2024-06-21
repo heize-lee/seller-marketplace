@@ -124,19 +124,23 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css
             <div id="star-rating-container" style="position: absolute; top: 58px; left: 50px;"></div>
             <div class="rating_mean" style="margin-left: 130px;">{{count}} reviews</div> 
           </div>
-          <!-- 상푸수량 -->
-          <div style="margin-top: 80px;">
-            <span class="rating_mean">Quantity</span>
-          <div style="display: flex; margin-top: 10px;">
-            <button id="minus_btn" style="border: none; width: 40px; height: 36px; margin-right: 12px;">-</button>
-            <label for="cnt">1</label>
-            <input type="hidden" name="cnt" id="cnt" value="1">
-            <button id="plus_btn" style="border: none; width: 40px; height: 36px; margin-left: 12px;" >+</button>
-            <label for="total_price" style="margin-left: auto;">{{product.product_price|intcomma}}원</label>
-            <input type="hidden" id="total_price" name="total_price" value="{{product.product_price}}">
-          </div>
-          </div>
-          
+          <form action="{% url 'orders:orders' %}" method="GET">{% csrf_token %}
+            <!-- 상푸수량 -->
+            <div style="margin-top: 80px;">
+              <span class="rating_mean">Quantity</span>
+            <div style="display: flex; margin-top: 10px;">
+              <button id="minus_btn" style="border: none; width: 40px; height: 36px; margin-right: 12px;">-</button>
+              <label for="cnt">1</label>
+              <input type="hidden" name="cnt" id="cnt" value="1">
+              <button id="plus_btn" style="border: none; width: 40px; height: 36px; margin-left: 12px;" >+</button>
+              <label for="total_price" style="margin-left: auto;">{{product.product_price|intcomma}}원</label>
+              <input type="hidden" id="total_price" name="total_price" value="{{product.product_price}}">
+              <input type="hidden" name="product_id" value="{{product.product_id}}">
+              <input type="hidden" name="detail" value="">
+            </div>
+            <button type="submit">바로구매</button>
+            </div>
+          </form>
           <br>
           <p>가격: <strong>₩{{ product.product_price|intcomma }}</strong></p>
           <p>등록날짜: <strong>{{ product.created_date|date:'Y-m-d' }}</strong></p>
@@ -146,6 +150,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css
           <a href="/product/" class="btn btn-secondary">목록보기</a>
           <button id="copyUrlBtn" class="btn btn-primary">URL 복사</button>
           <button id="cartBtn" type="button" class="btn btn-outline-secondary">장바구니</button>
+
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from cart.models import Cart
+from cart.models import Cart,Product
 from django.views.decorators.csrf import csrf_exempt
 import os
 import dotenv
@@ -11,10 +11,22 @@ dotenv.load_dotenv()
 def orders(request):
     if request.method == 'GET':
         user = request.user
-        cart = Cart.objects.all()
+        # 바로구매
+        if 'detail' in request.GET:
+            product_id = request.GET.get('product_id')
+            product = Product.objects.get(product_id=product_id)
+            quantity = request.GET.get('cnt')
+            total_price = request.GET.get('total_price')
+            context = {
+            'user': user,
+            'product':product,
+            'quantity':quantity,
+            'total_price':total_price,
+            }
+            return render(request, 'orders/orders.html',context)
+        # 카트에서 구매
+        cart = Cart.objects.filter(user=user)
         print(request.method)
-        storeId=os.getenv("storeId")
-        channelKey=os.getenv("channelKey")
         # js코드 복잡해짐
         # 등록된 배송지가 없음 > 지워지고 
         # AJAX로 
@@ -24,12 +36,11 @@ def orders(request):
         context = {
             'cart': cart,
             'user': user,
-            "storeId":storeId,
-            "channelKey":channelKey
         }
         return render(request,'orders/orders.html', context)
-    if request.method == 'POST':
-        return render(request, 'orders/order_done.html')
+    # if request.method == 'POST':
+        
+        
         # 모달 정보 address테이블에 저장
 # 배송지 view
 # 결제정보 view

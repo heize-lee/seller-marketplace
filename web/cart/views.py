@@ -47,7 +47,7 @@ def cart_delete(request, pk):
     object.delete()  
     return redirect('cart:cart')
 
-
+# 장바구니버튼 클릭시 담기
 def add_cart(request,product_id):
     product = get_object_or_404(Product,product_id=product_id)
     cart_item, created = Cart.objects.get_or_create(user=request.user, product=product)
@@ -57,7 +57,7 @@ def add_cart(request,product_id):
     cart_item.save()
     
     return redirect('cart:cart')
-
+# 카트에서 수량추가
 def plus_cart(request):
     product_id=request.GET.get('product_id')
     product = Product.objects.get(product_id=product_id)
@@ -75,6 +75,7 @@ def plus_cart(request):
                 'total_price': cart_item.total_price,
                 'payment_total_price': total_payment
             })
+#카트에서 수량빼기
 def minus_cart(request):
     product_id=request.GET.get('product_id')
     product = Product.objects.get(product_id=product_id)
