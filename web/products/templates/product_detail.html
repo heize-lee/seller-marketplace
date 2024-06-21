@@ -126,7 +126,7 @@
 
 <!-- 팔로우 버튼 -->
 {% if user.is_authenticated %}
-    <button id="follow-button" data-user-id="{{ product.user.id }}">
+    <button id="follow-button" data-user-id="{{ product.seller_email }}">
         {% if product.user in request.user.following.all %}
             언팔로우
         {% else %}
@@ -200,14 +200,14 @@
     //재웅 팔로우 기능//
     
     document.getElementById('follow-button').addEventListener('click', function() {
-        const userId = this.getAttribute('data-user-id');
-        fetch("/follow/follow1/", {
+        const following_id = this.getAttribute('data-user-id');
+        fetch("{%url 'follow_user'%}", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': '{{ csrf_token }}'
             },
-            body: JSON.stringify({ user_id: userId })
+            body: JSON.stringify({ following_id: following_id })
         })
         .then(response => response.json())
         .then(data => {
