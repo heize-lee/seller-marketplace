@@ -12,6 +12,16 @@ from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 
+#리뷰모델(회성)
+from reviews.models import Review
+from django.db.models import Avg
+from django.db.models import Q
+from django.core.paginator import Paginator
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.db.models import F
+
+
 
 
 class ProductCreate(LoginRequiredMixin, FormView):
@@ -56,12 +66,12 @@ class ProductList(ListView):
 
     def get_queryset(self):
         queryset = Product.objects.only(
-            'product_id', 'product_name', 'product_price', 'stock_quantity', 'created_date', 'updated_date', 'category_id', 'product_img', 'seller_email'
+            'product_id', 'product_name', 'product_price', 'stock_quantity', 'created_date', 'updated_date', 'category_id', 'product_img', 'seller_email', 'average_rating'
         ).all()
 
         # 카테고리 필터링 추가
         category_id = self.request.GET.get('category')
-        if category_id:
+        if (category_id):
             queryset = queryset.filter(category_id=category_id)
 
         self.filterset = ProductFilter(self.request.GET, queryset=queryset)
@@ -97,7 +107,7 @@ class ProductList(ListView):
 
         # 현재 선택된 카테고리 이름 추가
         category_id = self.request.GET.get('category')
-        if category_id:
+        if (category_id):
             context['category_name'] = Category.objects.get(id=category_id).category_name
         else:
             context['category_name'] = '전체'
@@ -120,7 +130,6 @@ class ProductList(ListView):
 
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
-
 
 from django.shortcuts import get_object_or_404
 from accounts.models import CustomUser
