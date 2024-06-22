@@ -5,65 +5,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Site !!! | {% block title %}{% endblock %}</title>
-
     <link rel="stylesheet" href="{% static 'css/footer.css' %}">
-    <link rel="stylesheet" href="{% static 'css/signup.css' %}">
-    <link rel="stylesheet" href="{% static 'css/login.css' %}">
-    <!-- <link rel="stylesheet" href="{% static 'css/mypage.css' %}"> 문제
-    <link rel="stylesheet" href="{% static 'css/edit_profile.css' %}"> 문제  -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <style>
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 20px; /* Adjust padding as needed */
+            padding: 10px 20px;
             background-color: #fff;
             border-bottom: 1px solid #ccc;
-            flex-wrap: nowrap; /* Prevent wrapping */
         }
-        .left-section {
+        .left-section, .right-section {
             display: flex;
             align-items: center;
-            flex-shrink: 0;
         }
         .left-section a img {
-            height: 30px; /* Logo image height */
+            height: 30px;
             margin-right: 20px;
         }
-        .left-section nav a {
+        .left-section nav a, .right-section nav a {
             margin-right: 20px;
             color: #000;
             text-decoration: none;
-            font-weight: bold; /* Make the links bold */
-            white-space: nowrap; /* Prevent wrapping */
+            font-weight: bold;
+            white-space: nowrap;
         }
-        .left-section nav a:hover {
+        .left-section nav a:hover, .right-section nav a:hover {
             text-decoration: underline;
-        }
-        .right-section {
-            display: flex;
-            align-items: center;
-            flex-shrink: 0;
-        }
-        .right-section nav a {
-            margin-left: 20px;
-            color: #000;
-            text-decoration: none;
-            font-weight: bold; /* Make the links bold */
-            white-space: nowrap; /* Prevent wrapping */
-        }
-        .right-section nav a:hover {
-            text-decoration: underline;
-        }
-        .right-section .search {
-            display: flex;
-            align-items: center;
-            margin-left: 20px;
-        }
-        .right-section .search input {
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
         }
     </style>
 </head>
@@ -71,12 +40,12 @@
     <header>
         <div class="left-section">
             <a href="{% url 'home' %}">
-                <img src="{% static 'homelogo/logo.png' %}" alt="Logo"> <!-- Logo image -->
+                <img src="{% static 'homelogo/logo.png' %}" alt="Logo">
             </a>
             <nav>
                 <a href="{% url 'home' %}">HOME</a>
                 <a href="#">STYLE</a>
-                <a href="#">SHOP</a>
+                <a href="{% url 'product:product' %}">SHOP</a>
             </nav>
         </div>
         <div class="right-section">
@@ -92,16 +61,12 @@
             </nav>
         </div>
     </header>
-
     <main>
-        {% block content %} 
-        <!-- Page-specific content -->
+        {% block content %}
         {% endblock %}
     </main>
-
     <footer>
         {% include 'footer.html' %}
     </footer>
 </body>
 </html>
-
