@@ -19,7 +19,7 @@
                     <li><a href="{% url 'mypage_section' section='cancellations' %}">취소/환불내역</a></li>
                 </ul>
             </li>
-            <li class="menu-item"><a href="{% url 'mypage_section' section='reviews' %}"><span class="icon">💬</span> 나의 구매후기</a></li>
+            <li class="menu-item"><a href="{% url 'reviews:review_list' section='reviews' %}"><span class="icon">💬</span> 나의 구매후기</a></li>
             <li class="menu-item"><a href="{% url 'mypage_section' section='favorites' %}"><span class="icon">❤️</span> 관심</a></li>
             <li class="menu-item"><a href="{% url 'mypage_section' section='seller_page' %}"><span class="icon">⚙️</span> 판매자 페이지</a></li>
             <li class="menu-item"><a href="{% url 'mypage_section' section='edit_profile' %}"><span class="icon">⚙️</span> 내 정보 수정</a></li>

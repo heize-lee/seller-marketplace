@@ -11,6 +11,7 @@
         {% if section == "settings" %}
             <a href="{% url 'edit_profile' %}">Edit Profile</a>
         {% else %}
+            {% include 'reviews/review_list.html' %}
             <p>Content for {{ section }} section.</p>
         {% endif %}
     </div>

@@ -25,7 +25,7 @@ def orders(request):
 
         try:
             # 기본 배송지 정보를 가져옵니다. (존재하지 않으면 except 블록으로 이동)
-            default_delivery_address = DeliveryAddress.objects.filter(user=user, is_default=True)[0]
+            default_delivery_address = DeliveryAddress.objects.filter(user=user, is_default=True)
         except DeliveryAddress.DoesNotExist:
             default_delivery_address = None
 

@@ -206,7 +206,7 @@
                     {% for item in cart %}
                     <div class="cart-item">
 
-                        <img src="{{ MEDIA_URL }}{{ item.product.product_img }}" alt="Product Image">
+
 
                         <img src="{{ item.product.product_img.url }}" alt="Product Image" style="width: 100px; height: 60px">
 
@@ -237,7 +237,7 @@
                     <h2>Summary</h2>
                     <div>
                         <span class="order_summary_name"> Payment_total_price </span>
-                        <span id="payment_total_price" class="summary_price">${{ payment_total_price|intcomma }}</span>
+                        <span id="payment_total_price" class="summary_price">{{ payment_total_price|intcomma }}원</span>
                     </div>
                     <div>
                         <span class="order_summary_name">Delivery Fee</span>
@@ -245,7 +245,7 @@
                     </div>
                     <div>
                         <strong>Pay+Delv_Total</strong>
-                        <strong id="pay_delv_total" class="summary_total_price">${{ payment_total_price|intcomma }}</strong>
+                        <strong id="pay_delv_total" class="summary_total_price">{{ payment_total_price|intcomma }}원</strong>
                     </div>
                     <form action="" method="post">
                         {% csrf_token %}
@@ -271,9 +271,9 @@
                 .then(data =>{
                     console.log(data)
                     document.querySelector(`#amount-${productId} span` ).textContent = data.amount;
-                    document.querySelector(`#t_price-${productId}`).textContent =data.total_price +'원';
-                    document.querySelector('#payment_total_price').textContent =data.payment_total_price+'원'
-                    document.querySelector('#pay_delv_total').textContent =data.payment_total_price+'원'
+                    document.querySelector(`#t_price-${productId}`).textContent =data.total_price.toLocaleString() +'원';
+                    document.querySelector('#payment_total_price').textContent =data.payment_total_price.toLocaleString() +'원'
+                    document.querySelector('#pay_delv_total').textContent =data.payment_total_price.toLocaleString() +'원'
                 })
             })
             })
@@ -292,9 +292,9 @@
                 .then(data =>{
                     console.log(data)
                     document.querySelector(`#amount-${productId} span` ).textContent = data.amount;
-                    document.querySelector(`#t_price-${productId}`).textContent =data.total_price+'원';
-                    document.querySelector('#payment_total_price').textContent =data.payment_total_price +'원';
-                    document.querySelector('#pay_delv_total').textContent =data.payment_total_price +'원';
+                    document.querySelector(`#t_price-${productId}`).textContent =data.total_price.toLocaleString() +'원';
+                    document.querySelector('#payment_total_price').textContent =data.payment_total_price.toLocaleString() +'원';
+                    document.querySelector('#pay_delv_total').textContent =data.payment_total_price.toLocaleString() +'원';
                 })
             })
             })

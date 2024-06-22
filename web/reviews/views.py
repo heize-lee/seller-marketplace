@@ -121,6 +121,16 @@ def put_review(request, review_id):
          'review':review
         }
     )
+
+def review_list(request,section):
+    review = Review.objects.filter(user=request.user)
+    return render(
+        request,
+        'reviews/review_list.html',
+        {
+            'review':review
+        }
+    )
 # from django.shortcuts import get_object_or_404
 # def ReviewCreate(request,order_id):
 #     obj = get_object_or_404(Order, id=order_id, user=request.user)
