@@ -28,8 +28,11 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
-
+# cloudtype
+ALLOWED_HOSTS = ['port-0-seller-marketplace-lxmx4z230c3ec17e.sel5.cloudtype.app']
+CORS_ALLOWED_ORIGINS = [
+    'https://port-0-seller-marketplace-lxmx4z230c3ec17e.sel5.cloudtype.app',
+]
 
 # Application definition
 
