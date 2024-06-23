@@ -21,12 +21,10 @@
             {% csrf_token %}
             <button type="submit">Logout</button>
         </form>
-        <a href="{% url 'account_change_password' %}">Change Password</a>
         {% else %}
         <a href="{% url 'account_login' %}">Login</a>
         <a href="{% url 'account_signup' %}">Sign Up</a>
         {% endif %}
-        <a href="{% url 'account_reset_password' %}">Reset Password</a>
     </header>
 
     <nav>
