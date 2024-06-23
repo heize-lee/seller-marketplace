@@ -198,7 +198,7 @@
                     <div class="order_summary"><i class="fa-solid fa-cart-shopping" style="margin-right: 10px; margin-bottom: 28px"></i>Order summary</div>
                     <div style="display: flex; justify-content: space-between;">
                         <div class="Name">Name</div>
-                        <div class="Name" style="margin-left: 290px;">Price</div>
+                        <div class="Name" style="margin-left: 270px;">Price</div>
                         <h3 class="Name">Quantity</h3>
                         <h3 class="Name" style="margin-right: 130px;">Total</h3>
                     </div>
@@ -215,14 +215,14 @@
                                 <div class="product_name">{{ item.product.product_name }}</div>
                                 <div class="option">Option</div>
                             </div>
-                            <div class="price">{{ item.product.product_price|intcomma }}원</div>
-                            <div id="amount-{{item.product_id}}" class="quantity"><span style="margin-right: 20px;">{{ item.amount }}</span>
+                            <div class="price" style="width: 100px;">{{ item.product.product_price|intcomma }}원</div>
+                            <div id="amount-{{item.product_id}}" class="quantity" style="width: 47px;"><span style="margin-right: 20px; width: 20px;">{{ item.amount }}</span>
                                 <div style="display: flex; flex-direction: column;">
                                     <i class="fa-solid fa-angle-up plus" style="cursor: pointer;" data-product-id={{item.product_id}}></i>
                                     <i class="fa-solid fa-angle-down minus" style="cursor: pointer;" data-product-id={{item.product_id}}></i>
                                 </div> 
                             </div>
-                            <div id="t_price-{{item.product_id}}" class="total">{{ item.total_price|intcomma }}원</div>
+                            <div id="t_price-{{item.product_id}}" class="total" style="width: 80px;">{{ item.total_price|intcomma }}원</div>
                             <form action="{% url 'cart:cart_delete' pk=item.pk %}" method="post">
                                 {% csrf_token %}
                             <button class="trash" type="submit"><i class="fa-solid fa-trash-can"></i></button>

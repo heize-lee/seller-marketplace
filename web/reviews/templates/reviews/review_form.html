@@ -1,4 +1,5 @@
 {% load static %}
+{% load humanize %}
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -18,15 +19,15 @@
             <!-- 상품정보 -->
             <input type="hidden" name="product" value="{{ product.pk }}">
         
-            <div class="mb-5 row" style='border: 1px solid; height: 100px;'>
+            <div class="mb-5 row" style='height: 100px;'>
                 <div class="col-lg-3">
-                <img src="{{ product.image.url }}" class="card-img-top" alt="상품 이미지">
+                <img src="{{ product.product_image.url }}" class="card-img-top" alt="상품 이미지">
                 </div>
                 <div class="col-lg-9">
                     <div class="card-body product-name">
                         {{ product.product_name }}
                         <br><br><br>
-                        <p>가격: <strong>{{ product.product_price|stringformat:"d" }} 원</strong></p>
+                        <p>가격: <strong>{{ product.product_price|intcomma}} 원</strong></p>
                     </div>
                 </div>
             </div>

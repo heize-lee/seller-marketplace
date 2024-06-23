@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.http import HttpResponse, HttpResponseForbidden,JsonResponse
 from django.shortcuts import redirect, render
 from django.views.generic import CreateView, UpdateView
@@ -60,6 +61,7 @@ def ReviewCreate(request):
          'product':product,
         }
     )
+#리뷰삭제
 @require_http_methods(["DELETE"])
 def delete_review(request, review_id):
     review = get_object_or_404(Review, pk=review_id)
@@ -71,7 +73,7 @@ def delete_review(request, review_id):
         return JsonResponse({'error': '리뷰를 삭제할 권한이 없습니다.'}, status=403)
     
 
-
+#리뷰수정
 def put_review(request, review_id):
     review = get_object_or_404(Review, pk=review_id)
     
@@ -118,7 +120,8 @@ def put_review(request, review_id):
         'reviews/review_update.html',
         {'form':form,
          'product':product,
-         'review':review
+         'review':review,
+         'MEDIA_URL' : settings.MEDIA_URL
         }
     )
 
@@ -126,7 +129,7 @@ def review_list(request,section):
     review = Review.objects.filter(user=request.user)
     return render(
         request,
-        'reviews/review_list.html',
+        'reviews/my_review_list.html',
         {
             'review':review
         }
