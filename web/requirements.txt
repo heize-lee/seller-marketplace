@@ -8,10 +8,13 @@ Django==5.0.6
 django-allauth==0.63.3
 django-cors-headers==4.4.0
 django-crispy-forms==2.1
+django-environ==0.11.2
 django-filter==24.2
 django-phonenumber-field==7.3.0
 djangorestframework==3.15.1
+gunicorn==22.0.0
 idna==3.7
+packaging==24.1
 phonenumbers==8.13.38
 pillow==10.3.0
 psycopg2-binary==2.9.9
