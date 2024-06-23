@@ -33,7 +33,9 @@ ALLOWED_HOSTS = ['port-0-seller-marketplace-lxmx4z230c3ec17e.sel5.cloudtype.app'
 CORS_ALLOWED_ORIGINS = [
     'https://port-0-seller-marketplace-lxmx4z230c3ec17e.sel5.cloudtype.app',
 ]
-
+CSRF_TRUSTED_ORIGINS = [
+    'https://port-0-seller-marketplace-lxmx4z230c3ec17e.sel5.cloudtype.app',
+]
 # Application definition
 
 INSTALLED_APPS = [
