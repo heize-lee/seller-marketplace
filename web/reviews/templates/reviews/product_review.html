@@ -140,7 +140,7 @@
         const productId = '{{ product.product_id }}';  // 템플릿에서 상품 ID를 가져옵니다.
         const currentUser = "{{ request.user }}";
           
-          console.log(currentUser)
+          console.log('{{request.user.profile_picture}}')
           
           // fetch api 로 데이터 불러온뒤 html 코드 작성
           function loadReviews(pageNumber) {
@@ -158,8 +158,9 @@
                       
                       const profileImg = document.createElement('img');
                       profileImg.classList.add('d-flex', 'mx-4', 'rounded-circle');
-                      profileImg.src = 'http://placehold.it/50x50';
+                      profileImg.src = '{{request.user.profile_picture.url}}';
                       profileImg.alt = '';
+                      profileImg.style.width='44px';
   
                       const reviewContent = document.createElement('div');
                       reviewContent.classList.add('flex-grow-1');
