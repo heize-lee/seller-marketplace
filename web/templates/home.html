@@ -14,7 +14,7 @@
         <ul class="nav nav-pills">
             <li class="nav-item">
                 <a class="nav-link {% if not request.GET.category %}active{% endif %}" href="{% url 'product:product' %}?{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}{% if request.GET.search_keyword %}&search_keyword={{ request.GET.search_keyword }}{% endif %}{% if request.GET.min_price %}&min_price={{ request.GET.min_price }}{% endif %}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}">
-                    <img src="{% static 'category_all_image/5110770.png' %}" alt="전체">
+                    <img src="{% static 'category_all_image/category_all.png' %}" alt="전체">
                     <span>전체</span>
                 </a>
             </li>

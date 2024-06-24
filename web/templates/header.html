@@ -1,0 +1,32 @@
+{% load static %}
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/header.css' %}">
+</head>
+<body>
+<header class="header">
+    <div class="left-section">
+        <a href="{% url 'home' %}">
+            <img src="{% static 'homelogo/logo.png' %}" alt="Logo">
+        </a>
+        <nav>
+            <a href="{% url 'home' %}">HOME</a>
+            <a href="{% url 'product:product' %}">SHOP</a>
+        </nav>
+    </div>
+    <div class="right-section">
+        <nav>
+            <a href="#">마이페이지</a>
+            <a href="#">관심</a>
+            <a href="#">장바구니</a>
+            {% if user.is_authenticated %}
+            <a href="{% url 'account_logout' %}">로그아웃</a>
+            {% else %}
+            <a href="{% url 'account_login' %}">로그인</a>
+            {% endif %}
+        </nav>
+    </div>
+
+
+</header>
+
+</body>

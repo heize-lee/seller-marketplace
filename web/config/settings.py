@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
-import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,19 +22,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+SECRET_KEY = 'django-insecure--rqonay!32o)0=@ac%oa$43phsn*%&muf93no5ue@1j@o$6=ih'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-# cloudtype
-ALLOWED_HOSTS = ['port-0-seller-marketplace-lxmx4z230c3ec17e.sel5.cloudtype.app']
-CORS_ALLOWED_ORIGINS = [
-    'https://port-0-seller-marketplace-lxmx4z230c3ec17e.sel5.cloudtype.app',
-]
-CSRF_TRUSTED_ORIGINS = [
-    'https://port-0-seller-marketplace-lxmx4z230c3ec17e.sel5.cloudtype.app',
-]
+ALLOWED_HOSTS = ['*']
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -57,13 +51,8 @@ INSTALLED_APPS = [
     'products',
     'orders',
     'reviews',
-    'crispy_forms',
-    'crispy_bootstrap5',
     'cart',
     'payment',
-    'rest_framework',
-    'corsheaders',  # If you need CORS settings
-    'whitenoise.runserver_nostatic',  # Whitenoise 추가
 ]
 
 # social login
@@ -91,7 +80,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 ACCOUNT_FORMS = {
     'signup': 'accounts.forms.CustomSignupForm',
 }
-ACCOUNT_SIGNUP_REDIRECT_URL = ''
+ACCOUNT_SIGNUP_REDIRECT_URL = 'home'
 
 # Additional allauth settings to disable username
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
@@ -116,9 +105,7 @@ AUTHENTICATION_BACKENDS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Whitenoise Middleware 추가
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',  # CORS
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -157,10 +144,21 @@ WSGI_APPLICATION = 'config.wsgi.application'
 load_dotenv()
 db_password = os.getenv("DB_PASSWORD")
 
+import os
+from dotenv import load_dotenv
+load_dotenv()
+db_password = os.getenv("DB_PASSWORD")
+
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL')
-    )
+
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'seller_1',
+        'USER': 'postgres',
+        'PASSWORD': db_password,
+        'HOST': 'hanslab.org',  # 또는 PostgreSQL 서버의 IP 주소
+        'PORT': '35432',       # PostgreSQL의 기본 포트 번호
+    }
 }
 
 # Password validation
@@ -206,8 +204,6 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 # 운영 환경에서 정적 파일을 모을 디렉토리
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
 # Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -217,39 +213,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
-CRISPY_TEMPLATE_PACK ='bootstrap5'
-
-
-from django.contrib.messages import constants as messages
-
-MESSAGE_TAGS = {
-    messages.DEBUG: 'debug',
-    messages.INFO: 'info',
-    messages.SUCCESS: 'success',
-    messages.WARNING: 'warning',
-    messages.ERROR: 'danger',
-}
-
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
-
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'file': {
-            'level': 'ERROR',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'error.log'),
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
-    },
-}
