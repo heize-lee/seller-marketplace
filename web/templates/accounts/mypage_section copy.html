@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}My Page - {{ section|title }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% include 'accounts/navigation.html' %}
+    <div class="content">
+        <h2>{{ section|title }}</h2>
+        {% if section == "settings" %}
+            <a href="{% url 'edit_profile' %}">Edit Profile</a>
+        {% else %}
+            <p>Content for {{ section }} section.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

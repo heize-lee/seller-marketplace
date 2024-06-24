@@ -22,6 +22,18 @@ from django.shortcuts import get_object_or_404
 from django.db.models import F
 from django.core.cache import cache   
 import re
+
+
+#리뷰모델(회성)
+from reviews.models import Review
+from django.db.models import Avg
+from django.db.models import Q
+from django.core.paginator import Paginator
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.db.models import F
+
+
 class ProductCreate(LoginRequiredMixin, FormView):
 
     template_name = 'register_product.html'
@@ -137,8 +149,10 @@ class ProductDetail(DetailView):
     model = Product   
     template_name = 'product_detail.html'
     context_object_name = 'product'
-    
+
+    #추천상품 선정
     #추천상품 선정+리뷰 데이터 할당(회성)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         product = self.get_object()
@@ -251,6 +265,7 @@ def review(request):
         # 다른 HTTP 메소드 또는 ajax 요청이 아닌 경우 처리
         return JsonResponse({'error': 'Invalid request'}, status=400)
 #카트 구매 코드 주석 처리 해놓음
+
 
 
     

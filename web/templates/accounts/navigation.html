@@ -1,20 +1,20 @@
-<div class="nav">
-    <div class="profile">
+<div class="mypage-nav">
+    <div class="mypage-profile">
         <img src="{{ user.profile_picture.url }}" alt="Profile Picture">
         <p>{{ user.nickname }}</p>
     </div>
-    <div class="menu">
-        <div class="menu-header">
-            <div class="menu-icon"></div>
+    <div class="mypage-menu">
+        <div class="mypage-menu-header">
+            <div class="mypage-menu-icon"></div>
             <h2>MY MENU</h2>
         </div>
         <ul>
-            <li class="menu-item">
-                <div class="menu-item-header">
-                    <a href="#"><span class="icon">🏠</span> 주문배송</a>
-                    <div class="toggle-icon"></div>
+            <li class="mypage-menu-item">
+                <div class="mypage-menu-item-header">
+                    <a href="#"><span class="mypage-icon">🏠</span> 주문배송</a>
+                    <div class="mypage-toggle-icon"></div>
                 </div>
-                <ul class="submenu">
+                <ul class="mypage-submenu">
                     <li><a href="{% url 'mypage_section' section='orders' %}">주문내역</a></li>
                     <li><a href="{% url 'mypage_section' section='cancellations' %}">취소/환불내역</a></li>
                 </ul>
