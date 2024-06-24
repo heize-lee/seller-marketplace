@@ -1,8 +1,5 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load static %}
-{% load socialaccount %}
-{% get_providers as socialaccount_providers %}
 
 {% block title %}Login{% endblock %}
 
@@ -59,17 +56,5 @@
                 </ul>
             </div>
         {% endif %}
-        
-        <div class="social-login">
-            <p>Or login with:</p>
-
-
-            <a href="{% provider_login_url 'kakao' %}" class="kakao-login-btn">
-                <img src="{% static 'images/kakao_login.png' %}" alt="Login with Kakao">
-            </a>
-        </div>        
     </div>
 {% endblock %}
-
-
-{"id": 3593260170, "properties": {"nickname": "heize", "profile_image": "http://t1.kakaocdn.net/account_images/default_profile.jpeg.twg.thumb.R640x640", "thumbnail_image": "http://t1.kakaocdn.net/account_images/default_profile.jpeg.twg.thumb.R110x110"}, "synched_at": "2024-06-23T23:40:25Z", "connected_at": "2024-06-23T23:40:25Z", "kakao_account": {"email": "jhlsv.dev@gmail.com", "profile": {"nickname": "heize", "is_default_image": true, "profile_image_url": "http://t1.kakaocdn.net/account_images/default_profile.jpeg.twg.thumb.R640x640", "is_default_nickname": false, "thumbnail_image_url": "http://t1.kakaocdn.net/account_images/default_profile.jpeg.twg.thumb.R110x110"}, "has_email": true, "is_email_valid": true, "has_phone_number": false, "is_email_verified": true, "email_needs_agreement": false, "phone_number_needs_agreement": false, "profile_image_needs_agreement": false, "profile_nickname_needs_agreement": false}}

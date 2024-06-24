@@ -21,6 +21,7 @@
             {% csrf_token %}
             <button type="submit">Logout</button>
         </form>
+        <a href="{% url 'kakao_login' %}">Kakao로 로그인</a>
         <a href="{% url 'account_change_password' %}">Change Password</a>
         {% else %}
         <a href="{% url 'account_login' %}">Login</a>
