@@ -1,15 +1,21 @@
 # from follow.models import Follow
 
-from django.shortcuts import render, get_object_or_404,redirect
-from django.contrib.auth import get_user_model
-from django.contrib.auth.decorators import login_required
-from .models import Follow, User
-#from .models import Profile
-from django.http import JsonResponse
-from accounts.models import CustomUser
-from django.views.decorators.http import require_POST
-#from .models import UserProfile  # 사용자 프로필 모델 임포트
+# from django.shortcuts import render, get_object_or_404,redirect
+# from django.contrib.auth import get_user_model
+# from django.contrib.auth.decorators import login_required
+# from .models import Follow, User
+# #from .models import Profile
+# from django.http import JsonResponse
+# from accounts.models import CustomUser
+# from django.views.decorators.http import require_POST
+# #from .models import UserProfile  # 사용자 프로필 모델 임포트
 
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from .models import Follow, User
+from django.views.decorators.http import require_POST
+import json
 
 
 
@@ -27,7 +33,7 @@ from django.views.decorators.http import require_POST
 
 # follow 앱의 views.py 파일
 
-import json
+
 
 @login_required
 @require_POST
@@ -52,6 +58,23 @@ def follow_user(request):
             return JsonResponse({"message": "Already following"}, status=200)
     except Exception as e:
         return JsonResponse({"message": f"An error occurred: {e}"}, status=500)
+
+
+@login_required
+@require_POST
+def unfollow_user(request):
+    current_user = request.user
+    data = json.loads(request.body)
+    seller_email = data.get('following_id')
+    seller = get_object_or_404(User, email=seller_email)
+
+    follow = Follow.objects.filter(follower=current_user, following=seller).first()
+
+    if follow:
+        follow.delete()
+        return JsonResponse({"status": "unfollowed"})
+    else:
+        return JsonResponse({"status": "not_following"})
 
 
 

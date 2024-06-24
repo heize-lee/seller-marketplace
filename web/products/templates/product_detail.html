@@ -124,20 +124,19 @@
     </div>
   </div>
 
-<!-- 팔로우 버튼 -->
-{% if user.is_authenticated %}
-    <button id="follow-button" data-user-id="{{ product.seller_email }}">
-        {% if product.user in request.user.following.all %}
-            언팔로우
-        {% else %}
-            팔로우
-        {% endif %}
-    </button>
-{% else %}
-    <a href="{% url 'login' %}">로그인 후 팔로우</a>
-{% endif %}
-
-
+  <!-- Follow/Unfollow 버튼 추가 시작 -->
+  {% if user.is_authenticated %}
+      <button id="follow-button" data-user-id="{{ product.seller_email }}">
+          {% if product.seller in request.user.following.all %}
+              언팔로우
+          {% else %}
+              팔로우
+          {% endif %}
+      </button>
+  {% else %}
+      <a href="{% url 'login' %}">로그인 후 팔로우</a>
+  {% endif %}
+  <!-- Follow/Unfollow 버튼 추가 끝 -->
 
 
   <!-- 추천 제품 -->
@@ -199,9 +198,11 @@
     });
     //재웅 팔로우 기능//
     
+
+    // Follow/Unfollow 버튼 기능 추가 시작
     document.getElementById('follow-button').addEventListener('click', function() {
         const following_id = this.getAttribute('data-user-id');
-        fetch("{%url 'follow_user'%}", {
+        fetch("{% url 'follow_user' %}", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -211,12 +212,13 @@
         })
         .then(response => response.json())
         .then(data => {
-            if (data.status === 'followed') {
-                this.textContent = '언팔로우';
-            } else if (data.status === 'unfollowed') {
-                this.textContent = '팔로우';
+            if (data.status === 'ok') {
+                this.textContent = data.action === 'follow' ? '언팔로우' : '팔로우';
             }
         });
     });
+    // Follow/Unfollow 버튼 기능 추가 끝
 </script>
+
 {% endblock %}
+
