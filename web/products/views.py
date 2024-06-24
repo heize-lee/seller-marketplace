@@ -50,10 +50,8 @@ class ProductCreate(LoginRequiredMixin, FormView):
 
 
 
-from django.db.models import Min, Max
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .filters import ProductFilter
 
+from .filters import ProductFilter
 from django.views.generic import ListView
 from django.db.models import Min, Max
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -67,12 +65,12 @@ class ProductList(ListView):
 
     def get_queryset(self):
         queryset = Product.objects.only(
-            'product_id', 'product_name', 'product_price', 'stock_quantity', 'created_date', 'updated_date', 'category_id', 'product_img', 'seller_email'
+            'product_id', 'product_name', 'product_price', 'stock_quantity', 'created_date', 'updated_date', 'category_id', 'product_img', 'seller_email', 'average_rating'
         ).all()
 
         # 카테고리 필터링 추가
         category_id = self.request.GET.get('category')
-        if category_id:
+        if (category_id):
             queryset = queryset.filter(category_id=category_id)
 
         self.filterset = ProductFilter(self.request.GET, queryset=queryset)
@@ -108,7 +106,7 @@ class ProductList(ListView):
 
         # 현재 선택된 카테고리 이름 추가
         category_id = self.request.GET.get('category')
-        if category_id:
+        if (category_id):
             context['category_name'] = Category.objects.get(id=category_id).category_name
         else:
             context['category_name'] = '전체'
@@ -132,6 +130,8 @@ class ProductList(ListView):
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
+from django.shortcuts import get_object_or_404
+from accounts.models import CustomUser
 
 class ProductDetail(DetailView):
     model = Product   
@@ -213,6 +213,16 @@ class ProductDetail(DetailView):
         context['page_number']=page_number
         context['review_rating_mean']=reviews_rating_mean
         context['custom_range']=custom_range
+        categories = Category.objects.all()
+        context['categories'] = categories
+
+        # 작성자의 닉네임을 컨텍스트에 추가
+        if product.seller_email:
+            seller = get_object_or_404(CustomUser, email=product.seller_email)
+            context['creator_nickname'] = seller.nickname
+        else:
+            context['creator_nickname'] = 'Unknown'
+
         return context
         
     
@@ -241,6 +251,7 @@ def review(request):
         # 다른 HTTP 메소드 또는 ajax 요청이 아닌 경우 처리
         return JsonResponse({'error': 'Invalid request'}, status=400)
 #카트 구매 코드 주석 처리 해놓음
+
 
     
 #기존 카트 구매 코드 주석 처리 해놓음
