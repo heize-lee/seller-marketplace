@@ -103,26 +103,64 @@ def portone_payment(request):
 def kakao_payment(request):
     user = request.user
     cart = Cart.objects.filter(user=user)
-    first_cart =  cart[0].product.product_name
-    remaining_cart_count = len(cart)-1
-
-    if remaining_cart_count > 0:
-        orderName = f"{first_cart} 외 {remaining_cart_count}건"
-    elif remaining_cart_count == 0:
-        orderName = first_cart
-    else:
-        raise ValueError('카트가 비어있습니다.')
-
-    print(request.method)
+    total_price = request.POST.get('total-price')
+    quantity = request.POST.get('quantity')
     storeId=os.getenv("storeId")
     channelKey=os.getenv("channelKey")
+    
+    
 
-    context={
+    if quantity:
+        is_direct_purchase = True # 바로구매인 경우를 나타내는 플래그
+        product_id = request.POST.get('product')
+        product = Product.objects.get(product_id=product_id)
+        orderName = product
+
+        context={
+        "storeId":storeId,
+        "channelKey":channelKey,
+        "orderName": orderName,
+        "payment_total_price":total_price,
+        "total_price": total_price,
+        "quantity": quantity,
+        'is_direct_purchase': is_direct_purchase
+
+    }
+        
+
+    else:
+        is_direct_purchase = False # 일반 카트 구매를 나타내는 플래그
+        remaining_cart_count = len(cart)-1
+        first_cart =  cart[0].product.product_name
+        payment_total_price = sum(i.total_price for i in cart)
+        total_price = payment_total_price
+        amount = sum(i.amount for i in cart)
+
+
+        if remaining_cart_count > 0:
+            orderName = f"{first_cart} 외 {remaining_cart_count}건"
+        elif remaining_cart_count == 0:
+            orderName = first_cart
+        else:
+            raise ValueError('카트가 비어있습니다.')
+        
+        context={
         "storeId":storeId,
         "channelKey":channelKey,
         "cart": cart,
-        "orderName": orderName
+        "orderName": orderName,
+        "payment_total_price":payment_total_price,
+        "total_price": total_price,
+        "quantity": amount,
+        'is_direct_purchase': is_direct_purchase
+
     }
+
+    print(request.method)
+    
+    
+
+    
     return render(request, "payment/portone_kakao.html",context)
 
 @transaction.atomic
@@ -131,9 +169,14 @@ def handle_kakao_payment(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
         payment_id = data.get('paymentId')
+        total_price = data.get('totalPrice')
+        orderName = data.get('orderName')
+        quantity = data.get('quantity')
+        isDirectPurchase = data.get('isDirectPurchase')
         user = request.user
         current_time = timezone.now()
         formatted_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
+
 
         # payment_id DB에 저장
         payment = Payment.objects.create(
@@ -141,7 +184,7 @@ def handle_kakao_payment(request):
             payment_uuid = payment_id, # 결제uuid 결제취소 시 사용
             pay_method = "kakaoPay",
             #******** 결제예정금액으로 업데이트 예정 ********
-            pay_total_price = 80000, 
+            pay_total_price = total_price, 
             pay_confirm = True,
             user=request.user
             )  # 마지막 카트 아이디 설정
@@ -159,16 +202,33 @@ def handle_kakao_payment(request):
 
         # order테이블에 cart저장
         cart = Cart.objects.filter(user=user)
-        payment = Payment.objects.filter(user=user).last()
+        
 
-        order = Order.objects.create(
-            user = user,
-            product = cart[0].product,
-            payment = payment,
-            amount = cart[0].amount,
-            total_price = cart[0].total_price,
-            payment_total_price = payment.pay_total_price,
-            order_date = current_time)
+        payment = Payment.objects.filter(user=user).last()
+        amount = sum(one.amount for one in cart)
+        if isDirectPurchase == 'True':
+            product_name = data.get('orderName')
+            product = Product.objects.get(product_name=product_name)
+            order = Order.objects.create(
+                user = user,
+                product = product,
+                payment = payment,
+                order_date = current_time,
+                amount = quantity,
+                total_price = payment.pay_total_price,
+                payment_total_price = payment.pay_total_price,
+            )
+        else:
+            order = Order.objects.create(
+                user = user,
+                product = cart[0].product,
+                payment = payment,
+                order_date = current_time,
+                amount = amount,
+                total_price = payment.pay_total_price,
+                payment_total_price = payment.pay_total_price,
+            )
+
         
         code_current_date = current_time.strftime("%y%m%d")
         code_cart_count = len(cart)

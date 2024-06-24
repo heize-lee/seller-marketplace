@@ -1,14 +1,17 @@
 # orders/views.py
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from cart.models import Cart,Product
 from django.views.decorators.csrf import csrf_exempt
 from cart.models import Cart
 from accounts.models import DeliveryAddress
+from payment.models import Payment
+from orders.models import Order
 import os
 import dotenv
 import urllib.parse
 import requests
-
+from django.http import JsonResponse
+import json
 
 # Create your views here.
 dotenv.load_dotenv()
@@ -18,7 +21,7 @@ def orders(request):
         user = request.user
 
         cart = Cart.objects.filter(user=user)
-        delivery_address = DeliveryAddress.objects.all()
+        delivery_address = DeliveryAddress.objects.filter(user=user)
 
         # if 바로구매 boolean True
         # 단일건에 해당되는 카트 튜플만 가져오고
@@ -37,12 +40,12 @@ def orders(request):
             quantity = request.GET.get('cnt')
             total_price = request.GET.get('total_price')
             context = {
-            'user': user,
-            'product':product,
-            'quantity':quantity,
-            'total_price':total_price,
-            'default_delivery_address': default_delivery_address,
-            'delivery_address': delivery_address,
+                'user': user,
+                'product':product,
+                'quantity':quantity,
+                'total_price':total_price,
+                'default_delivery_address': default_delivery_address,
+                'delivery_address': delivery_address,
             }
             return render(request, 'orders/orders.html',context)
         
@@ -55,7 +58,7 @@ def orders(request):
             'user': user,
             'default_delivery_address': default_delivery_address,
             'delivery_address': delivery_address,
-            'payment_total_price': payment_total_price
+            'payment_total_price': payment_total_price,
         }
         return render(request,'orders/orders.html', context)
     
@@ -72,16 +75,17 @@ def orders(request):
         is_default = request.POST.get('default_delivery_hidden') == 'on'  # 기본 배송지 체크박스의 값 확인
         # 처음 배송지 추가시 disabled된 input-hidden으로 기본배송지 추가
         
-        if is_default == False:
             # !!!!!!!!!배송지 수정에서 추가하기를 했을 때
-            if is_default:
-                DeliveryAddress.objects.filter(user=user, is_default=True).update(is_default=False)
+        
 
-            default_delivery_checkbox = request.POST.get('default_delivery') == 'on'
-            if default_delivery_checkbox:
-                is_default = True
-            else:
-                is_default = False
+        default_delivery_checkbox = request.POST.get('default_delivery') == 'on' or is_default
+        if default_delivery_checkbox:
+            is_default = True
+        else:
+            is_default = False
+        
+        if is_default:
+            DeliveryAddress.objects.filter(user=user, is_default=True).update(is_default=False)
 
         # 수정모달에서 배송지 추가시 기본 배송지 체크여부에 따라 기본배송지 변경 
         # 이전에 is_default가 True인 기본배송지는 False로 변경
@@ -115,7 +119,23 @@ def orders(request):
        
         return redirect('orders:orders')
 
-
+@csrf_exempt
+def set_default_delivery(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        delivery_id = data.get('delivery_id')
+        
+        # 모든 기존 기본 배송지를 False로 설정
+        DeliveryAddress.objects.filter(is_default=True).update(is_default=False)
+        
+        # 선택한 배송지를 기본 배송지로 설정
+        delivery = get_object_or_404(DeliveryAddress, id=delivery_id)
+        delivery.is_default = True
+        delivery.save()
+        # DeliveryAddress.objects.filter(id=delivery_id).update(is_default=True)
+        
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False})
         # 모달 정보 address테이블에 저장
 # 배송지 view
 # 결제정보 view
@@ -127,4 +147,12 @@ def orders_cart_delete(request,pk):
     return redirect('orders:orders')
 
 def order_done(request):
-    return render(request, 'orders/order_done.html')
+    user = request.user
+    order = Order.objects.filter(user=user).last()
+    payment = Payment.objects.get(order=order)
+    context = {
+        'payment': payment,
+        'order': order,
+
+    }
+    return render(request, 'orders/order_done.html', context)

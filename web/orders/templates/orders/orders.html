@@ -365,11 +365,13 @@
                                             {% for one in delivery_address %}
                                             <div class="mb-3 delivery_items">
                                                 <div>
-                                                    <input type="radio" name="delivery_choice" id="choice-{{ one.recipient }}" value="{{ one.recipient }}">
+                                                    <input type="radio" name="delivery_choice" id="choice-{{ one.id }}" value="{{ one.id }}">
                                                 </div> 
                                                 <div class="delivery_items_content">
                                                     <div class="delivery_items_subheader">
+                                                        {% if one.is_default %}
                                                         <span class="badge bg-secondary" style="border-radius: 14px;">기본배송지</span>
+                                                        {% endif %}
                                                         <span style="font-weight: bold; margin-left: 8px;">{{ one.recipient }}</span>
                                                         <span>({{ one.destination }})</span>
                                                     </div>
@@ -385,7 +387,7 @@
                                             <div class="modal-footer">
                                                 
                                                 <!--  저장 버튼 -->
-                                                <button type="submit" class="btn btn-secondary footer-button">저장</button>
+                                                <button type="submit" class="btn btn-secondary footer-button"  onclick="setDefaultDelivery()">저장</button>
                                             </div>
                                         </form>
                                     </div>
@@ -613,6 +615,9 @@
                     <form id="payment-action-form" onsubmit="return setPaymentAction();" method="post">
                         {% csrf_token %}
                         <button class="order-button" type="submit">결제하기</button>
+                        <input type="hidden" value="{{ total_price }}" name="total-price">
+                        <input type="hidden" value="{{ quantity }}" name="quantity">
+                        <input type="hidden" value="{{ product.pk }}" name="product">
                     </form>
                 </div>
                
@@ -656,7 +661,10 @@
                 // 주소 정보를 해당 필드에 넣는다.
                 document.getElementById("postal-code").value = data.zonecode;
                 document.getElementById("address").value = addr;
+
                 // 주소로 상세 정보를 검색
+                //주소-좌표 변환 객체를 생성
+                var geocoder = new daum.maps.services.Geocoder();
                 geocoder.addressSearch(data.address, function(results, status) {
                     // 정상적으로 검색이 완료됐으면
                     if (status === daum.maps.services.Status.OK) {
@@ -666,7 +674,20 @@
                         // 해당 주소에 대한 좌표를 받아서
                         var coords = new daum.maps.LatLng(result.y, result.x);
                         // 지도를 보여준다.
+                        var mapContainer = document.getElementById('map'); // 지도를 표시할 div
                         mapContainer.style.display = "block";
+                        mapOption = {
+                            center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
+                            level: 5 // 지도의 확대 레벨
+                        };
+                        //지도를 미리 생성
+                        var map = new daum.maps.Map(mapContainer, mapOption);
+
+                        //마커를 미리 생성
+                        var marker = new daum.maps.Marker({
+                            position: new daum.maps.LatLng(37.537187, 127.005476),
+                            map: map
+                        });
                         map.relayout();
                         // 지도 중심을 변경한다.
                         map.setCenter(coords);
@@ -677,21 +698,35 @@
             }
         }).open();
     }
-    var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-        mapOption = {
-            center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
-            level: 5 // 지도의 확대 레벨
-        };
+   
+    // 기본배송지 목록 라디오 버튼 클릭 시 기본 배송지 변경
+    // 기본 배송지 설정 함수
+    function setDefaultDelivery() {
+        var deliveryId = document.querySelector('input[name="delivery_choice"]:checked').value;
 
-    //지도를 미리 생성
-    var map = new daum.maps.Map(mapContainer, mapOption);
-    //주소-좌표 변환 객체를 생성
-    var geocoder = new daum.maps.services.Geocoder();
-    //마커를 미리 생성
-    var marker = new daum.maps.Marker({
-        position: new daum.maps.LatLng(37.537187, 127.005476),
-        map: map
+
+        fetch("/orders/set-default-delivery/", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ delivery_id: deliveryId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            location.reload(); // 페이지를 새로고침하여 변경 사항 반영
+        });
+    }
+
+    // 라디오 버튼 클릭 시 기본 배송지 설정
+    document.querySelectorAll('input[name="delivery_choice"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            setDefaultDelivery(this.value);
+        });
     });
+
+    
 
     // payment 메서드
     function setPaymentAction() {

@@ -132,6 +132,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 # 'allauth.account.context_processors.account',  # allauth
                 # 'allauth.socialaccount.context_processors.socialaccount',  # 수정된 부분
+                'django.template.context_processors.media',# 미디어 파일사용 - 박룡
             ],
         },
     },
