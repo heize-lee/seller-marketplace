@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseForbidden,JsonResponse
 from django.shortcuts import redirect, render
 from django.views.generic import CreateView, UpdateView
 from .models import Review,Product
+from orders.models import Order
 from .forms import ReviewCreateForm
 from django.core.exceptions import PermissionDenied
 from django.contrib import messages
@@ -28,7 +29,9 @@ def ReviewCreate(request):
             if Review.objects.filter(user=request.user, product=product).exists():
                 messages.error(request, "이미 작성된 리뷰가 있습니다.")
                 return redirect('/product/'+ product_id,)  # 제품 상세 페이지로 리디렉션
-            
+            if not Order.objects.filter(user=request.user, product=product):
+                messages.error(request, "구매한 상품만 후기작성 가능합니다.")
+                return redirect('/product/'+product_id)
     if request.method == 'POST':
         form = ReviewCreateForm(request.POST,request.FILES)
          

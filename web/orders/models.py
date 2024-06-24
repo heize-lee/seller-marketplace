@@ -1,7 +1,7 @@
 from django.db import models
 from products.models import Product,Category
 from cart.models import Cart
-from payment.models import Payment
+# from payment.models import Payment
 from django.conf import settings
 # 카트 모델 고민
 
@@ -9,7 +9,7 @@ from django.conf import settings
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
-    payment =  models.ForeignKey(Payment, on_delete=models.DO_NOTHING, default=1)
+    # payment =  models.ForeignKey(Payment, on_delete=models.DO_NOTHING, default=1)
 
     # 카트에 있는 데이터가 지워지면 참조가 안됨
     # 카트 컬럼과 같은 이름으로 데이터 저장
