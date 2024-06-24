@@ -7,35 +7,12 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 {% endblock %}
 
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/my_products.css' %}">
+{% endblock %}
+
 {% block content %}
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var isAuthenticated = "{{ request.user.is_authenticated }}";
-        
-        if (isAuthenticated === "False") {
-            var confirmed = confirm("로그인이 필요합니다. 확인을 클릭하면 로그인 페이지로 이동합니다.");
-            if (confirmed) {
-                window.location.href = "{% url 'account_login' %}";
-            } else {
-                // 사용자가 취소를 선택한 경우 다른 처리를 추가할 수 있음
-            }
-        }
-
-        // 모든 카드를 페이드인 효과로 표시
-        const cards = document.querySelectorAll('.card');
-        cards.forEach(card => {
-            card.style.opacity = 0;
-            card.classList.add('fade-in');
-        });
-
-        setTimeout(() => {
-            cards.forEach(card => {
-                card.style.opacity = 1;
-            });
-        }, 100);
-    });
-</script>
 
 <div class="container mt-4">
     <h3>전체</h3>
@@ -67,23 +44,33 @@
     </div>
 </div>
 
-<style>
-    .card {
-        height: 400px;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        opacity: 0;
-    }
-    .card:hover {
-        transform: scale(1.05);
-        box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-    }
-    .fade-in {
-        animation: fadeInAnimation 3s forwards; 
-    }
-    @keyframes fadeInAnimation {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var isAuthenticated = "{{ request.user.is_authenticated }}";
+        
+        if (isAuthenticated === "False") {
+            var confirmed = confirm("로그인이 필요합니다. 확인을 클릭하면 로그인 페이지로 이동합니다.");
+            if (confirmed) {
+                window.location.href = "{% url 'account_login' %}";
+            } else {
+                // 사용자가 취소를 선택한 경우 다른 처리를 추가할 수 있음
+            }
+        }
+
+        // 모든 카드를 페이드인 효과로 표시
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            card.style.opacity = 0;
+            card.classList.add('fade-in');
+        });
+
+        setTimeout(() => {
+            cards.forEach(card => {
+                card.style.opacity = 1;
+            });
+        }, 100);
+    });
+</script>
 
 {% endblock %}
