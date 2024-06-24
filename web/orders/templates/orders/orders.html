@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load humanize %}
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -346,7 +347,6 @@
                                                                 </div>
 
                                                                 <!-- 히든 인풋 -->
-                                                                <input type="hidden" id="csrfToken" value="{{csrf_token}}">
                                                                 <div class="modal-footer">
                                                                     <!-- 취소 버튼 -->
                                                                     <button type="button" class="btn btn-secondary footer-button" data-bs-dismiss="modal">취소</button>
@@ -372,7 +372,6 @@
                                                         <span class="badge bg-secondary" style="border-radius: 14px;">기본배송지</span>
                                                         <span style="font-weight: bold; margin-left: 8px;">{{ one.recipient }}</span>
                                                         <span>({{ one.destination }})</span>
-
                                                     </div>
                                                  
                                                     <span>{{ one.phone_number }}</span>
@@ -383,7 +382,6 @@
 
                                                                                       
                                             <!-- 히든 인풋 -->
-                                            <input type="hidden" id="csrfToken" value="{{csrf_token}}">
                                             <div class="modal-footer">
                                                 
                                                 <!--  저장 버튼 -->
@@ -420,7 +418,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>주소</label>
-                                    <input type="text" value="({{ default_delivery_address.postal_code }}) {{ default_delivery_address.address }} {{ delivery_address.detail_address }}" disabled readonly class="form-control read-only-input">
+                                    <input type="text" value="({{ default_delivery_address.postal_code }}) {{ default_delivery_address.address }} {{ default_delivery_address.detail_address }}" disabled readonly class="form-control read-only-input">
                                 </div>
                                 
                             </div>
@@ -498,7 +496,6 @@
                                                 </div>
 
                                                 <!-- 히든 인풋 -->
-                                                <input type="hidden" id="csrfToken" value="{{csrf_token}}">
                                                 <div class="modal-footer">
                                                     <!-- 취소 버튼 -->
                                                     <button type="button" class="btn btn-secondary footer-button" data-bs-dismiss="modal">취소</button>
@@ -514,24 +511,28 @@
                         <!-- 배송요청사항 -->
                         </div>
                     </div>
+                    <!-- 카트구매 -->
                     <div>
                         <div class="content_header">
+                    {% if cart %}
                             <h2>🚚주문정보({{ cart|length }})</h2>
-                            <!---->
+                    {% else %}
+                            <h2>🚚주문정보(1)</h2>
+                    {% endif %}
                         </div>                    
                     </div>
+                    {% if cart %}
                     {% for item in cart %}
                     <div class="order-item">
-                        
-                        <img src="{{ item.product.product_img }}" alt="Product Image">
+                        <img src="{{ item.product.product_img.url }}" alt="Product Image" style="width: 100px; height: 60px">
                         <div class="order-item-details">
                             <div>
                                 <div>{{ item.product.product_name }}</div>
-                                <div>Option</div>
+                                <div>{{ item.product.product_price|intcomma }}원</div>
                             </div>
-                            <div>p_price{{ item.product.product_price }}</div>
-                            <div>{{ item.amount }}</div>
-                            <div>t_price{{ item.total_price }}</div>
+                            
+                            <div>{{ item.amount }}개</div>
+                            <div>{{ item.total_price|intcomma }}원</div>
                             <form action="" method="post">
                                 {% csrf_token %}
                             <button class="trash" type="submit"> <i class="fa-solid fa-trash-can"></i></button>
@@ -539,9 +540,28 @@
                         </div>
                     </div>
                     {% endfor %}
+                    {% else %}
+                    <div class="order-item">
+                        <img src="{{ product.product_img.url }}" alt="Product Image" style="width: 100px; height: 60px">
+                        <div class="order-item-details">
+                            <div>
+                                <div>{{ product.product_name }}</div>
+                                <div>{{ product.product_price|intcomma }}원</div>
+                            </div>
+                            
+                            <div>{{ quantity }}개</div>
+                            <div>{{ total_price|intcomma }}원</div>
+                            <form action="" method="post">
+                                {% csrf_token %}
+                            <button class="trash" type="submit"> <i class="fa-solid fa-trash-can"></i></button>
+                            </form> 
+                        </div>
+                    </div>
+                    {% endif %}
+
                     <div>
                         <div class="content_header">
-                            <h2>🌍결제정보</h2>
+                            <h2>🌍결제수단</h2>
                             <!---->
                         </div>                    
                     </div>
@@ -569,24 +589,33 @@
               
                 </div>
                 <div class="order-summary">
-                    <h2>Summary</h2>
+                    <h2>결제정보</h2>
                     <div>
-                        <span>Payment_toal_price</span>
-                        <span>$156</span>
+                        <span class="order_summary_name"> 작품금액 </span>
+                        {% if cart %}
+                        <span id="payment_total_price" class="summary_price">{{ payment_total_price|intcomma }}원</span>
+                        {% else %}
+                        <span id="payment_total_price" class="summary_price">{{ total_price|intcomma }}원</span>
+                        {% endif %}
                     </div>
                     <div>
-                        <span>Delivery Fee</span>
-                        <span>$00</span>
+                        <span>배송비</span>
+                        <span>00원</span>
                     </div>
                     <div>
-                        <strong>Pay+Delv_Total</strong>
-                        <strong>$178</strong>
+                        <strong>최종 결제 금액</strong>
+                        {% if cart %}
+                        <strong id="pay_delv_total" class="summary_total_price">{{ payment_total_price|intcomma }}원</strong>
+                        {% else %}
+                        <strong id="pay_delv_total" class="summary_total_price">{{ total_price|intcomma }}원</strong>
+                        {% endif %}
                     </div>
                     <form id="payment-action-form" onsubmit="return setPaymentAction();" method="post">
                         {% csrf_token %}
                         <button class="order-button" type="submit">결제하기</button>
                     </form>
                 </div>
+               
             </div>
         </div>
         <!-- 카드결제  -->

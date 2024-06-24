@@ -197,25 +197,21 @@
                 <div class="cart-items mx-3" >
                     <div class="order_summary"><i class="fa-solid fa-cart-shopping" style="margin-right: 10px; margin-bottom: 28px"></i>Order summary</div>
                     <div style="display: flex; justify-content: space-between;">
-                        <div class="Name">Name</div>
-                        <div class="Name" style="margin-left: 290px;">Price</div>
-                        <h3 class="Name">Quantity</h3>
+                        <div class="Name">Name/Price</div>
+                        <h3 class="Name" style="margin-left: 290px;"">Quantity</h3>
                         <h3 class="Name" style="margin-right: 130px;">Total</h3>
                     </div>
                     
                     {% for item in cart %}
                     <div class="cart-item">
-
-                        <img src="{{ MEDIA_URL }}{{ item.product.product_img }}" alt="Product Image">
-
                         <img src="{{ item.product.product_img.url }}" alt="Product Image" style="width: 100px; height: 60px">
 
                         <div class="cart-item-details">
                             <div style="width: 200px;">
                                 <div class="product_name">{{ item.product.product_name }}</div>
-                                <div class="option">Option</div>
+                                <div class="price">{{ item.product.product_price|intcomma }}원</div>
                             </div>
-                            <div class="price">{{ item.product.product_price|intcomma }}원</div>
+                            
                             <div id="amount-{{item.product_id}}" class="quantity"><span style="margin-right: 20px;">{{ item.amount }}</span>
                                 <div style="display: flex; flex-direction: column;">
                                     <i class="fa-solid fa-angle-up plus" style="cursor: pointer;" data-product-id={{item.product_id}}></i>
@@ -234,18 +230,18 @@
               
                 </div>
                 <div class="cart-summary">
-                    <h2>Summary</h2>
+                    <h2>결제정보</h2>
                     <div>
-                        <span class="order_summary_name"> Payment_total_price </span>
-                        <span id="payment_total_price" class="summary_price">${{ payment_total_price|intcomma }}</span>
+                        <span class="order_summary_name"> 작품금액 </span>
+                        <span id="payment_total_price" class="summary_price">{{ payment_total_price|intcomma }}</span>
                     </div>
                     <div>
-                        <span class="order_summary_name">Delivery Fee</span>
-                        <span class="summary_price">$00</span>
+                        <span class="order_summary_name">배송비</span>
+                        <span class="summary_price">00원</span>
                     </div>
                     <div>
-                        <strong>Pay+Delv_Total</strong>
-                        <strong id="pay_delv_total" class="summary_total_price">${{ payment_total_price|intcomma }}</strong>
+                        <strong>최종 결제 금액</strong>
+                        <strong id="pay_delv_total" class="summary_total_price">{{ payment_total_price|intcomma }}</strong>
                     </div>
                     <form action="" method="post">
                         {% csrf_token %}

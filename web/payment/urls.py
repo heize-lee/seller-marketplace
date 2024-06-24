@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import toss_payment, kakao_payment, handle_kakao_payment, portone_payment, ReadyView, ApproveView, CancelView, FailView
+from .views import toss_payment, kakao_payment, handle_kakao_payment, portone_payment
 
 app_name = 'payment'
 
@@ -9,8 +9,5 @@ urlpatterns = [
     path('portone_process/', portone_payment, name='portone_payment'),
     path('handle_kakao_payment/', handle_kakao_payment, name='handle_kakao_payment'),
     
-    path('ready/<str:agent>/<str:open_type>/', ReadyView.as_view(), name='ready'),
-    path('approve/<str:agent>/<str:open_type>/', ApproveView.as_view(), name='approve'),
-    path('cancel/<str:agent>/<str:open_type>/', CancelView.as_view(), name='cancel'),
-    path('fail/<str:agent>/<str:open_type>/', FailView.as_view(), name='fail'),
+    
 ]

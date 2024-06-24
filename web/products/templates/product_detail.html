@@ -129,10 +129,10 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css
             <div style="margin-top: 80px;">
               <span class="rating_mean">Quantity</span>
             <div style="display: flex; margin-top: 10px;">
-              <button id="minus_btn" style="border: none; width: 40px; height: 36px; margin-right: 12px;">-</button>
+              <button type="button" id="minus_btn" style="border: none; width: 40px; height: 36px; margin-right: 12px;">-</button>
               <label for="cnt">1</label>
               <input type="hidden" name="cnt" id="cnt" value="1">
-              <button id="plus_btn" style="border: none; width: 40px; height: 36px; margin-left: 12px;" >+</button>
+              <button type="button" id="plus_btn" style="border: none; width: 40px; height: 36px; margin-left: 12px;" >+</button>
               <label for="total_price" style="margin-left: auto;">{{product.product_price|intcomma}}원</label>
               <input type="hidden" id="total_price" name="total_price" value="{{product.product_price}}">
               <input type="hidden" name="product_id" value="{{product.product_id}}">
@@ -258,14 +258,16 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css
       document.querySelector('label[for="cnt"]').textContent = Number(cnt) + 1
       document.getElementById('cnt').value = Number(cnt) + 1
       document.querySelector('label[for="total_price"]').textContent = (Number(document.querySelector('label[for="cnt"]').textContent ) * {{product.product_price}}).toLocaleString() + '원'
+      document.getElementById('total_price').value = (Number(document.querySelector('label[for="cnt"]').textContent ) * {{product.product_price}})
     });
-    
+
     document.getElementById('minus_btn').addEventListener('click',function(){
       cnt = document.querySelector('label[for="cnt"]').textContent
       if (cnt>1){
         document.querySelector('label[for="cnt"]').textContent = Number(cnt) - 1
         document.getElementById('cnt').value = Number(cnt) - 1
         document.querySelector('label[for="total_price"]').textContent = (Number(document.querySelector('label[for="cnt"]').textContent ) * {{product.product_price}}).toLocaleString() + '원'
+        document.getElementById('total_price').value = (Number(document.querySelector('label[for="cnt"]').textContent ) * {{product.product_price}})
       }
     });
 

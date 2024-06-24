@@ -21,52 +21,6 @@ from django.db import transaction
 from .services import SampleService
 
 # Create your views here.
-# 카카오페이 java 예제코드 > python
-class ReadyView(View):
-    def get(self, request, agent, open_type):
-        service = SampleService()
-        ready_response = service.ready(agent, open_type)
-
-        if agent == "mobile":
-            return redirect(ready_response.next_redirect_mobile_url)
-
-        if agent == "app":
-            context = {"webviewUrl": f"app://webview?url={ready_response.next_redirect_app_url}"}
-            return render(request, 'payment/ready.html', context)
-
-        context = {"response": ready_response}
-        return render(request, f"{agent}/{open_type}/ready.html", context)
-    
-    def post(self, request, agent, open_type):
-        service = SampleService()
-        ready_response = service.ready(agent, open_type)
-
-        if agent == "mobile":
-            return redirect(ready_response.next_redirect_mobile_url)
-
-        if agent == "app":
-            context = {"webviewUrl": f"app://webview?url={ready_response.next_redirect_app_url}"}
-            return render(request, 'payment/ready.html', context)
-
-        context = {"response": ready_response}
-        return render(request, f"{agent}/{open_type}/ready.html", context)
-
-class ApproveView(View):
-    def get(self, request, agent, open_type):
-        pg_token = request.GET.get("pg_token")
-        service = SampleService()
-        approve_response = service.approve(pg_token)
-        context = {"response": approve_response}
-        return render(request, f"{agent}/{open_type}/approve.html", context)
-
-class CancelView(View):
-    def get(self, request, agent, open_type):
-        return render(request, f"{agent}/{open_type}/cancel.html")
-
-class FailView(View):
-    def get(self, request, agent, open_type):
-        return render(request, f"{agent}/{open_type}/fail.html")
-
 
 # 고유한 주문 번호 생성
 order_no = str(uuid.uuid4())
@@ -187,7 +141,7 @@ def handle_kakao_payment(request):
             payment_uuid = payment_id, # 결제uuid 결제취소 시 사용
             pay_method = "kakaoPay",
             #******** 결제예정금액으로 업데이트 예정 ********
-            pay_totoal_price = 80000, 
+            pay_total_price = 80000, 
             pay_confirm = True,
             user=request.user
             )  # 마지막 카트 아이디 설정
@@ -213,7 +167,7 @@ def handle_kakao_payment(request):
             payment = payment,
             amount = cart[0].amount,
             total_price = cart[0].total_price,
-            payment_total_price = payment.pay_totoal_price,
+            payment_total_price = payment.pay_total_price,
             order_date = current_time)
         
         code_current_date = current_time.strftime("%y%m%d")
@@ -245,79 +199,12 @@ def handle_kakao_payment(request):
 
         # # 주문 생성 후 카트 비우기
         cart.delete()   
-
-
-       
-        # 결제 1번 - 사과 외 2건
-        #     주문번호 - 3건일 때 통합으로 3건의 주문번호를 구분할 수 있게)
-
-        # order_items = OrderItems.objects.create(
-        #     사과 외 2건 
-        # 1 사과
-        # 2 팔레트
-        # 3 팔레트
-            # 각각의 주문 추가
-            # 3개의 주문번호가 생기고 
-            # )
-            
-        
-
         return JsonResponse({'success': True})
-       
     else:
         return JsonResponse({'success': False})
 
 
-    #     url = "https://open-api.kakaopay.com/online/v1/payment/ready"
-    #     headers = {
-    #         'Authorization': "KakaoAK " + "fe83a8063428f1aaa8bde37f101ec1a4",
-    #         'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
-    #     }
-    #     params = {
-    #         'cid': "TC0ONETIME",
-    #         'partner_order_id': order_no,
-    #         'partner_user_id': user,
-    #         'item_name': '포인트',
-    #         'quantity': 1,
-    #         'total_amount': 0,
-    #         'vat_amount': 200,
-    #         'tax_free_amount': 0,
-    #         'approval_url': 'http://localhost:8080', # 결제 성공 시 이동 url
-    #         'fail_url': 'http://localhost:8080',    # 결제 취소 시 이동 url
-    #         'cancel_url': 'http://localhost:8080', # 결제 실패 시 이동 url
-    #     }
-    #     response = requests.post(url, params=params, headers=headers)
-    #     if response.status_code == 200:
-    #         response_data = response.json()
-    #         next_redirect_pc_url = response_data.get('next_redirect_pc_url')
-    #         return redirect(next_redirect_pc_url)
-    #     else:
-    #         return render(request, 'payment/kakao_error.html', {'error': '카카오페이 결제 준비 중 오류가 발생했습니다.'})
-    #     # response = json.loads(response.text)
-    #     # return redirect(response) 
-    # return render(request, 'orders:order_done.html', )
-    
-        # POST /online/v1/payment/ready HTTP/1.1
-        # Host: open-api.kakaopay.com
-        # Authorization: SECRET_KEY ${SECRET_KEY}
-        # Content-Type: application/json
-        # ####
-        # curl --location 'https://open-api.kakaopay.com/online/v1/payment/ready' \
-        # --header 'Authorization: SECRET_KEY ${SECRET_KEY}' \
-        # --header 'Content-Type: application/json' \
-        # --data '{
-        #         "cid": "TC0ONETIME",
-        #         "partner_order_id": "partner_order_id",
-        #         "partner_user_id": "partner_user_id",
-        #         "item_name": "초코파이",
-        #         "quantity": "1",
-        #         "total_amount": "2200",
-        #         "vat_amount": "200",
-        #         "tax_free_amount": "0",
-        #         "approval_url": "https://developers.kakao.com/success",
-        #         "fail_url": "https://developers.kakao.com/fail",
-        #         "cancel_url": "https://developers.kakao.com/cancel"
-        #     }'
+   
 
 
 # tossPay API 연결

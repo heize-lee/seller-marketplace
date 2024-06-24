@@ -1,4 +1,4 @@
-# web/orders/urls.py
+# orders/urls.py
 
 from django.urls import path
 from .views import orders, orders_cart_delete, order_done
