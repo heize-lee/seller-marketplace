@@ -68,7 +68,7 @@ INSTALLED_APPS = [
 
 # social login
 AUTH_USER_MODEL = 'accounts.CustomUser'
-SITE_ID = 1
+SITE_ID = 5
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
