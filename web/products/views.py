@@ -179,9 +179,7 @@ class ProductDetail(DetailView):
         page_number = int(self.request.GET.get('page',1))  # GET 파라미터에서 페이지 번호를 가져옴
         page_obj = paginator.get_page(page_number)
         custom_range = paginator.page_range
-        pag=re.findall(r'\d+', custom_range)[1]
-        if pag>5:
-            custom_range = range(1,5)
+        
         if self.request.GET.get('p'):
             custom = re.findall(r'\d+', self.request.GET.get('p'))
             custom = max([int(i) for i in custom])
