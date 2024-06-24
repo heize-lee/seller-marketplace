@@ -4,6 +4,7 @@ cffi==1.16.0
 charset-normalizer==3.3.2
 crispy-bootstrap5==2024.2
 cryptography==42.0.7
+dj-database-url==2.2.0
 Django==5.0.6
 django-allauth==0.63.3
 django-cors-headers==4.4.0
