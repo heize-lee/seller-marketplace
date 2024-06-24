@@ -148,7 +148,7 @@ db_password = os.getenv("DB_PASSWORD")
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'seller_1',
+        'NAME': 'seller_2',
         'USER': 'postgres',
         'PASSWORD': db_password,
         'HOST': '211.110.169.141',  # 또는 PostgreSQL 서버의 IP 주소 hanslab.org
