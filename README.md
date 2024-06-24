@@ -18,7 +18,6 @@ Seller Marketplace는 판매자와 구매자를 위한 이커머스 플랫폼입
 # seller 쇼핑몰 프로젝트
 
 # 박정현
-
 ## UI
 ### 페이지
 - 홈
