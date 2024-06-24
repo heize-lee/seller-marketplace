@@ -5,7 +5,7 @@ from django.conf import settings
 
 # Create your models here.
 class Cart(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     # product에 있으면 다른 유저가 담을 때 마다 total_price가 바뀜
     total_price = models.IntegerField(default=0)

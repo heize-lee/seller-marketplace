@@ -60,7 +60,7 @@ INSTALLED_APPS = [
 
 # social login
 AUTH_USER_MODEL = 'accounts.CustomUser'
-SITE_ID = 1
+SITE_ID = 5
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
@@ -242,8 +242,7 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 # Cache
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'unique-snowflake',
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://hanslab.org:26379/1',
     }
 }
-
