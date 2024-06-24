@@ -57,7 +57,7 @@ INSTALLED_APPS = [
 
 # social login
 AUTH_USER_MODEL = 'accounts.CustomUser'
-SITE_ID = 1
+SITE_ID = 5
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
@@ -156,7 +156,7 @@ DATABASES = {
         'NAME': 'seller_ljh2',
         'USER': 'postgres',
         'PASSWORD': db_password,
-        'HOST': '211.110.169.141',  # 또는 PostgreSQL 서버의 IP 주소
+        'HOST': 'hanslab.org',  # 또는 PostgreSQL 서버의 IP 주소
         'PORT': '35432',       # PostgreSQL의 기본 포트 번호
     }
 }
