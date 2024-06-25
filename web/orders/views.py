@@ -12,9 +12,11 @@ import urllib.parse
 import requests
 from django.http import JsonResponse
 import json
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 dotenv.load_dotenv()
+@login_required
 @csrf_exempt
 def orders(request):
     if request.method == 'GET':
@@ -63,6 +65,12 @@ def orders(request):
         return render(request,'orders/orders.html', context)
     
     elif request.method == 'POST' :
+        # 주문정보 삭제 시 
+        if 'orders_cart_delete' in request.POST:
+            object = Cart.objects.get(pk=pk)
+            object.delete()  
+            return redirect('orders:orders')
+        
         user = request.user
         # form에서 받은 input값
         recipient = request.POST.get('recipient')
@@ -146,6 +154,7 @@ def orders_cart_delete(request,pk):
     object.delete()  
     return redirect('orders:orders')
 
+@login_required
 def order_done(request):
     user = request.user
     order = Order.objects.filter(user=user).last()

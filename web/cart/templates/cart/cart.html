@@ -196,10 +196,10 @@
             <div class="content">
                 <div class="cart-items mx-3" >
                     <div class="order_summary"><i class="fa-solid fa-cart-shopping" style="margin-right: 10px; margin-bottom: 28px"></i>Order summary</div>
-                    <div style="display: flex; justify-content: space-between;">
+                    <div style="display: flex; justify-content: space-between; margin-left: 120px;">
                         <div class="Name">Name/Price</div>
-                        <h3 class="Name" style="margin-left: 290px;"">Quantity</h3>
-                        <h3 class="Name" style="margin-right: 130px;">Total</h3>
+                        <h3 class="Name" style="margin-left: 100px;">Quantity</h3>
+                        <h3 class="Name" style="margin-right: 200px;">Total</h3>
                     </div>
                     
                     {% for item in cart %}
@@ -221,7 +221,7 @@
                             <div id="t_price-{{item.product_id}}" class="total">{{ item.total_price|intcomma }}원</div>
                             <form action="{% url 'cart:cart_delete' pk=item.pk %}" method="post">
                                 {% csrf_token %}
-                            <button class="trash" type="submit"><i class="fa-solid fa-trash-can"></i></button>
+                                <button class="trash" type="submit"><i class="fa-solid fa-trash-can"></i></button>
                             </form>
                         </div>
                         
