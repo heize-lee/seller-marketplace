@@ -11,6 +11,8 @@
     
 </head>
 <body>
+    
+    
     <div class="container">
         <div class="mb-3 title">리뷰 작성</div>
         <form action="{% url 'reviews:update' review.id %}" method="POST" enctype="multipart/form-data">
@@ -18,9 +20,9 @@
             <!-- 상품정보 -->
             <input type="hidden" name="product" value="{{ product.pk }}">
         
-            <div class="mb-5 row" style='border: 1px solid; height: 100px;'>
+            <div class="mb-5 row" style='height: 100px;'>
                 <div class="col-lg-3">
-                <img src="{{ product.image.url }}" class="card-img-top" alt="상품 이미지">
+                <img src="{{ product.product_image.url }}" class="card-img-top" alt="상품 이미지">
                 </div>
                 <div class="col-lg-9">
                     <div class="card-body product-name">
@@ -58,7 +60,7 @@
                 {{ form.comment }}
                 <!-- <textarea class="form-control" id="{{ form.comment.id_for_label }}" name="{{ form.comment.name }}" rows="10"></textarea> -->
             </div>
-    
+            {{form.image}}
             <div class="form-group mb-3">
                 <label class="sub-title">사진을 등록해주세요</label>
                 <div class="media-container">
@@ -133,6 +135,11 @@
         });
         
     </script>
-        
+    <script>
+        var labelElement = document.querySelector('label[for="image-clear_id"]');
+        console.log(labelElement)
+        labelElement.textContent='삭제'
+        document.querySelector('#id_image').remove()
+    </script>
 </body>
 </html>

@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from products.models import Product
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.cache import cache
 
 
 # Create your models here.
@@ -15,6 +16,14 @@ class Review(models.Model):
     image = models.ImageField(upload_to='review_images/%Y/%m/%d/', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        cache.clear()
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        cache.clear()
+        super().delete(*args, **kwargs)
 
     def __str__(self):
         return f'{self.user}'

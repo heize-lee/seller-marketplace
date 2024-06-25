@@ -9,6 +9,11 @@ from django.urls import re_path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    path('orders/', include('orders.urls')),
+    path('cart/', include('cart.urls')),
+    # path('', include('home.urls')),  # home 앱의 URL을 포함
+    path('payment/', include('payment.urls')),
     path('accounts/', include('accounts.urls')),  # 지현 (accounts 앱의 URL 패턴 포함)
     path('', views.home, name='home'),  # 지현
     path('reviews/', include('reviews.urls')),  # 회성

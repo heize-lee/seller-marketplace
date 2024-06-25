@@ -14,6 +14,11 @@ from django.urls import reverse_lazy, reverse
 #     model = Review
 #     fields = ['rating','comment','image']
 
+from django.shortcuts import render
+
+def review_list(request, section):
+    # 로직 구현
+    return render(request, 'reviews/review_list.html', {'section': section})
 
 def ReviewCreate(request):
     
