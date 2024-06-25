@@ -149,24 +149,19 @@ from dotenv import load_dotenv
 load_dotenv()
 db_password = os.getenv("DB_PASSWORD")
 
-# DATABASES = {
-
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'seller_ljh2',
-#         'USER': 'postgres',
-#         'PASSWORD': db_password,
-#         'HOST': '211.110.169.141',  # 또는 PostgreSQL 서버의 IP 주소 hanslab.org
-#         'PORT': '35432',       # PostgreSQL의 기본 포트 번호
-#     }
-# }
-
 DATABASES = {
+
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'seller_ljh',
+        'USER': 'postgres',
+        'PASSWORD': db_password,
+        'HOST': 'hanslab.org',  # 또는 PostgreSQL 서버의 IP 주소 hanslab.org
+        'PORT': '35432',       # PostgreSQL의 기본 포트 번호
     }
 }
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

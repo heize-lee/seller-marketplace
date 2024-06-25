@@ -48,6 +48,8 @@ def orders(request):
                 'total_price':total_price,
                 'default_delivery_address': default_delivery_address,
                 'delivery_address': delivery_address,
+                'is_direct': True,
+                
             }
             return render(request, 'orders/orders.html',context)
         
@@ -61,15 +63,16 @@ def orders(request):
             'default_delivery_address': default_delivery_address,
             'delivery_address': delivery_address,
             'payment_total_price': payment_total_price,
+            'is_direct': False,
+
+
         }
         return render(request,'orders/orders.html', context)
     
     elif request.method == 'POST' :
         # 주문정보 삭제 시 
         if 'orders_cart_delete' in request.POST:
-            object = Cart.objects.get(pk=pk)
-            object.delete()  
-            return redirect('orders:orders')
+            return redirect('orders:orders_cart_delete')
         
         user = request.user
         # form에서 받은 input값
@@ -150,9 +153,12 @@ def set_default_delivery(request):
 # 결제하기 view
 
 def orders_cart_delete(request,pk):
-    object = Cart.objects.get(pk=pk)
+    # cart 삭제 
+    user = request.user
+    object = Cart.objects.filter(user=user, product_id=pk)
     object.delete()  
     return redirect('orders:orders')
+    # 바로구매 product삭제
 
 @login_required
 def order_done(request):

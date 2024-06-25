@@ -535,7 +535,7 @@
                     {% endif %}
                         </div>                    
                     </div>
-                    {% if cart %}
+                    {% if not is_direct %}
                     {% for item in cart %}
                     <div class="order-item">
                         <img src="{{ item.product.product_img.url }}" alt="Product Image" style="width: 100px; height: 60px">
@@ -550,9 +550,9 @@
                                 <div>{{ item.amount }}개</div>
                                 <div style="font-weight: 700;">{{ item.total_price|intcomma }}원</div>
                             </div>
-                            <form action="" method="post">
+                            <form action="{% url 'orders:order_cart_delete' pk=item.product.pk %}" method="post">
                                 {% csrf_token %}
-                            <button class="trash" type="submit"> <i class="fa-solid fa-trash-can"></i></button>
+                                <button class="trash" type="submit"> <i class="fa-solid fa-trash-can"></i></button>
                             </form> 
                         </div>
                     </div>
@@ -570,9 +570,9 @@
                                 <div>{{ quantity }}개</div>
                                 <div>{{ total_price|intcomma }}원</div>
                             </div>
-                            <form action="" method="post">
+                            <form action="{% url 'home' %}" method="post">
                                 {% csrf_token %}
-                            <button class="trash" type="submit"> <i class="fa-solid fa-trash-can"></i></button>
+                                <button class="trash" type="submit"> <i class="fa-solid fa-trash-can"></i></button>
                             </form> 
                         </div>
                     </div>
