@@ -1,9 +1,11 @@
 <!DOCTYPE html>
+{% load humanize %}
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/a47086679e.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <title>Cart Summary</title>
     <style>
         body {
@@ -85,6 +87,10 @@
             text-align: center;
             font-size: 16px;
             cursor: pointer;
+            font-family: Poppins;
+            font-weight: 400;
+            line-height: 26px;
+            word-wrap: break-word;
         }
         .order-button:hover {
             background: #565E6D;
@@ -100,26 +106,123 @@
             transform: scale(1.2);
             color: #565E6D;
         }
-
-
+        .Name{
+            color: #171A1F;
+            font-size: 14px;
+            font-family: Montserrat;
+            font-weight: 600;
+            line-height: 22px;
+            word-wrap: break-word
+        }
+        .order_summary{
+            color: #171A1F;
+            font-size: 18px;
+            font-family: Montserrat;
+            font-weight: 700;
+            line-height: 28px;
+            word-wrap: break-word
+        }
+        .product_name{
+            color: #171A1F;
+            font-size: 14px;
+            font-family: Poppins;
+            font-weight: 700;
+            line-height: 22px;
+            word-wrap: break-word
+        }
+        .total{
+            color: #171A1F;
+            font-size: 14px;
+            font-family: Poppins;
+            font-weight: 700;
+            line-height: 22px;
+            word-wrap: break-word
+        }
+        .price{
+            color: #171A1F;
+            font-size: 14px;
+            font-family: Poppins;
+            font-weight: 400;
+            line-height: 22px;
+            word-wrap: break-word
+        }
+        .quantity{
+            display:flex;
+            color: #171A1F;
+            font-size: 14px;
+            font-family: Poppins;
+            font-weight: 400;
+            line-height: 22px;
+            word-wrap: break-word
+        }
+        .option{
+            color: #171A1F;
+            font-size: 11px;
+            font-family: Poppins;
+            font-weight: 300;
+            line-height: 22px;
+            word-wrap: break-word
+        }
+        .summary_price{
+            color: #171A1F;
+            font-size: 14px;
+            font-family: Poppins;
+            font-weight: 700;
+            line-height: 22px;
+            word-wrap: break-word
+        }
+        .summary_total_price{
+            color: #171A1F;
+            font-size: 18px;
+            font-family: Poppins;
+            font-weight: 700;
+            line-height: 28px;
+            word-wrap: break-word
+        }
+        .order_summary_name{
+            color: #171A1F;
+            font-size: 12px;
+            font-family: Poppins;
+            font-weight: 400;
+            line-height: 20px;
+            word-wrap: break-word
+        }
     </style>
 </head>
     <body>
+        
         <div class="container">
-            <div class="cart-header">Cart</div>
+            <div class="cart-header" style="margin-left: 30px; margin-bottom: 40px;">Cart</div>
             <div class="content">
-                <div class="cart-items">
+                <div class="cart-items mx-3" >
+                    <div class="order_summary"><i class="fa-solid fa-cart-shopping" style="margin-right: 10px; margin-bottom: 28px"></i>Order summary</div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <div class="Name">Name</div>
+                        <div class="Name" style="margin-left: 270px;">Price</div>
+                        <h3 class="Name">Quantity</h3>
+                        <h3 class="Name" style="margin-right: 130px;">Total</h3>
+                    </div>
+                    
                     {% for item in cart %}
                     <div class="cart-item">
-                        <img src="{{ item.product.product_img }}" alt="Product Image">
+
+
+
+                        <img src="{{ item.product.product_img.url }}" alt="Product Image" style="width: 100px; height: 60px">
+
                         <div class="cart-item-details">
-                            <div>
-                                <div>{{ item.product.product_name }}</div>
-                                <div>Option</div>
+                            <div style="width: 200px;">
+                                <div class="product_name">{{ item.product.product_name }}</div>
+                                <div class="option">Option</div>
                             </div>
-                            <div>p_price{{ item.product.product_price }}</div>
-                            <div>{{ item.amount }}</div>
-                            <div>t_price{{ item.total_price }}</div>
+                            <div class="price" style="width: 100px;">{{ item.product.product_price|intcomma }}원</div>
+                            <div id="amount-{{item.product_id}}" class="quantity" style="width: 47px;"><span style="margin-right: 20px; width: 20px;">{{ item.amount }}</span>
+                                <div style="display: flex; flex-direction: column;">
+                                    <i class="fa-solid fa-angle-up plus" style="cursor: pointer;" data-product-id={{item.product_id}}></i>
+                                    <i class="fa-solid fa-angle-down minus" style="cursor: pointer;" data-product-id={{item.product_id}}></i>
+                                </div> 
+                            </div>
+                            <div id="t_price-{{item.product_id}}" class="total" style="width: 80px;">{{ item.total_price|intcomma }}원</div>
                             <form action="{% url 'cart:cart_delete' pk=item.pk %}" method="post">
                                 {% csrf_token %}
                             <button class="trash" type="submit"><i class="fa-solid fa-trash-can"></i></button>
@@ -133,23 +236,87 @@
                 <div class="cart-summary">
                     <h2>Summary</h2>
                     <div>
-                        <span>Payment_toal_price</span>
-                        <span>$156</span>
+                        <span class="order_summary_name"> Payment_total_price </span>
+                        <span id="payment_total_price" class="summary_price">{{ payment_total_price|intcomma }}원</span>
                     </div>
                     <div>
-                        <span>Delivery Fee</span>
-                        <span>$00</span>
+                        <span class="order_summary_name">Delivery Fee</span>
+                        <span class="summary_price">$00</span>
                     </div>
                     <div>
                         <strong>Pay+Delv_Total</strong>
-                        <strong>$178</strong>
+                        <strong id="pay_delv_total" class="summary_total_price">{{ payment_total_price|intcomma }}원</strong>
                     </div>
                     <form action="" method="post">
                         {% csrf_token %}
+                        <input type="hidden" name="cart">
                         <button class="order-button" type="submit">주문하기</button>
                     </form>
                 </div>
             </div>
         </div>
+        <script>
+            document.querySelectorAll('.plus').forEach(function(element){
+                element.addEventListener('click',function(){
+                const productId = this.getAttribute('data-product-id');
+                const action = 'plus';
+                console.log(productId)
+                fetch(`plus-cart-item/?product_id=${productId}`,{
+                    method:'POST',
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken'),  // CSRF 토큰을 추가합니다.
+                    }
+                })
+                .then(response => response.json())
+                .then(data =>{
+                    console.log(data)
+                    document.querySelector(`#amount-${productId} span` ).textContent = data.amount;
+                    document.querySelector(`#t_price-${productId}`).textContent =data.total_price.toLocaleString() +'원';
+                    document.querySelector('#payment_total_price').textContent =data.payment_total_price.toLocaleString() +'원'
+                    document.querySelector('#pay_delv_total').textContent =data.payment_total_price.toLocaleString() +'원'
+                })
+            })
+            })
+            document.querySelectorAll('.minus').forEach(function(element){
+                element.addEventListener('click',function(){
+                const productId = this.getAttribute('data-product-id');
+                const action = 'minus';
+                console.log(productId)
+                fetch(`minus-cart-item/?product_id=${productId}`,{
+                    method:'POST',
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken'),  // CSRF 토큰을 추가합니다.
+                    }
+                })
+                .then(response => response.json())
+                .then(data =>{
+                    console.log(data)
+                    document.querySelector(`#amount-${productId} span` ).textContent = data.amount;
+                    document.querySelector(`#t_price-${productId}`).textContent =data.total_price.toLocaleString() +'원';
+                    document.querySelector('#payment_total_price').textContent =data.payment_total_price.toLocaleString() +'원';
+                    document.querySelector('#pay_delv_total').textContent =data.payment_total_price.toLocaleString() +'원';
+                })
+            })
+            })
+            
+        </script>
+        <script>
+            // CSRF 토큰을 가져오는 함수
+          function getCookie(name) {
+              let cookieValue = null;
+              if (document.cookie && document.cookie !== '') {
+                  const cookies = document.cookie.split(';');
+                  for (let i = 0; i < cookies.length; i++) {
+                      const cookie = cookies[i].trim();
+                      // 이 쿠키 문자열이 우리가 찾고자 하는 이름으로 시작하는지 확인합니다.
+                      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                          break;
+                      }
+                  }
+              }
+              return cookieValue;
+          }
+        </script>
 </body>
 </html>

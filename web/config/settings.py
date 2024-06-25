@@ -145,19 +145,14 @@ WSGI_APPLICATION = 'config.wsgi.application'
 load_dotenv()
 db_password = os.getenv("DB_PASSWORD")
 
-import os
-from dotenv import load_dotenv
-load_dotenv()
-db_password = os.getenv("DB_PASSWORD")
 
 DATABASES = {
-
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'seller',
         'USER': 'postgres',
         'PASSWORD': db_password,
-        'HOST': 'hanslab.org',  # 또는 PostgreSQL 서버의 IP 주소
+        'HOST': '211.110.169.141',  # 또는 PostgreSQL 서버의 IP 주소 hanslab.org
         'PORT': '35432',       # PostgreSQL의 기본 포트 번호
     }
 }

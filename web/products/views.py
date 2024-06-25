@@ -20,6 +20,8 @@ from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.db.models import F
+from django.core.cache import cache   
+import re
 
 
 #리뷰모델(회성)
@@ -149,43 +151,82 @@ class ProductDetail(DetailView):
     context_object_name = 'product'
 
     #추천상품 선정
+    #추천상품 선정+리뷰 데이터 할당(회성)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         product = self.get_object()
         recommended_products = Product.objects.filter(category=product.category).exclude(pk=product.pk).order_by('?')[:3]
-        reviews = Review.objects.filter(product_id=product.product_id).order_by('-created_at')
-        cnt = reviews.count()
-        # 현재 로그인된 사용자 확인(회성)
-        current_user = self.request.user.id if self.request.user.is_authenticated else None
-        try:
-            user_review = Review.objects.filter(user_id=current_user , product_id=product.product_id)[0]
-        except:
-            user_review = None
-        # 별점 백분율 계산
-        if cnt == 0:
-            rating = {
-            '1' : 0,
-            '2' : 0,
-            '3' : 0,
-            '4' : 0,
-            '5' : 0
-        }
-        else:
-            rating = {
-                '1' : reviews.filter(Q(rating=1) | Q(rating=0.5)).count()/cnt * 100,
-                '2' : reviews.filter(Q(rating=2) | Q(rating=1.5)).count()/cnt * 100,
-                '3' : reviews.filter(Q(rating=3) | Q(rating=2.5)).count()/cnt * 100,
-                '4' : reviews.filter(Q(rating=4) | Q(rating=3.5)).count()/cnt * 100,
-                '5' : reviews.filter(Q(rating=5) | Q(rating=4.5)).count()/cnt * 100
-            }
+        # cache_key = f'review_{product.product_id}'
+        # review_score=cache.get('cache_key')
+        # if not review_score:
+        review_score = Review.objects.filter(product_id=product.product_id).order_by('-created_at')
+            # cache.set(cache_key, review_score,timeout=180)
+        # review_score = Review.objects.filter(product_id=product.product_id).order_by('-created_at')
+        cnt = review_score.count()
+        cache_key =f'review_mean_{product.product_id}'
+        reviews_rating_mean = cache.get(cache_key)
+        if not reviews_rating_mean:
+            if cnt > 0 :
+                reviews_rating_mean = sum([i.rating for i in review_score])/cnt
+                
+                product.average_rating = reviews_rating_mean
+                product.save()
+            elif cnt==0:
+                reviews_rating_mean = 0
+            cache.set(cache_key,reviews_rating_mean)
 
+        cache_key = f'review_rating_{product.product_id}'
+        rating = cache.get(cache_key)
+        if not rating:
+                # 별점 백분율 계산
+            if cnt == 0:
+                rating = {
+                '1' : 0,
+                '2' : 0,
+                '3' : 0,
+                '4' : 0,
+                '5' : 0
+                }  
+            else:
+                rating = {
+                    '1' : review_score.filter(Q(rating=1) | Q(rating=0.5)).count()/cnt * 100,
+                    '2' : review_score.filter(Q(rating=2) | Q(rating=1.5)).count()/cnt * 100,
+                    '3' : review_score.filter(Q(rating=3) | Q(rating=2.5)).count()/cnt * 100,
+                    '4' : review_score.filter(Q(rating=4) | Q(rating=3.5)).count()/cnt * 100,
+                    '5' : review_score.filter(Q(rating=5) | Q(rating=4.5)).count()/cnt * 100
+                }
+            cache.set(cache_key,rating)
         # Paginator 설정
-        paginator = Paginator(reviews, 5)  # 페이지당 5개의 리뷰
+        paginator = Paginator(review_score, 5)  # 페이지당 5개의 리뷰
         page_number = int(self.request.GET.get('page',1))  # GET 파라미터에서 페이지 번호를 가져옴
         page_obj = paginator.get_page(page_number)
-    
-        average_rating = reviews.aggregate(Avg('rating'))['rating__avg']
+        custom_range = paginator.page_range
+        
+        if self.request.GET.get('p'):
+            custom = re.findall(r'\d+', self.request.GET.get('p'))
+            custom = max([int(i) for i in custom])
+            if custom+5 >= paginator.num_pages :
+                custom_range = range(custom,paginator.num_pages)
+            custom_range = range(custom,custom+5)
+        elif self.request.GET.get('previous'):
+            custom = re.findall(r'\d+', self.request.GET.get('previous'))
+            custom = min([int(i) for i in custom])
+            if custom == 1:
+                pass
+            else:
+                custom_range = range(custom-5,custom)
+        average_rating = review_score.aggregate(Avg('rating'))['rating__avg']
+
         context['recommended_products'] = recommended_products
+        context['reviews'] = page_obj
+        context['average_rating'] = average_rating
+        context['count'] = cnt
+        context['rating'] = rating
+        context['paginator']=paginator
+        context['page_number']=page_number
+        context['review_rating_mean']=reviews_rating_mean
+        context['custom_range']=custom_range
         categories = Category.objects.all()
         context['categories'] = categories
 
@@ -199,21 +240,26 @@ class ProductDetail(DetailView):
         return context
         
     
-    
+
 #리뷰 비동기 요청(회성)
 def review(request):
     if request.method == 'GET':
         product_id = request.GET.get('product_id')
         product = get_object_or_404(Product, pk=product_id)
-        
-        reviews = Review.objects.filter(product=product).annotate(nickname=F('user__nickname')).values('id','nickname','comment', 'rating', 'created_at','image').order_by('-created_at')
-         # Paginator 설정
+        # 캐시에서 리뷰 조회
+        cache_key=f'reviews_{product.product_id}'
+        reviews=cache.get(cache_key)
+        if not reviews :
+            reviews = cache.get_or_set(cache_key,lambda : Review.objects.filter(product=product).annotate(nickname=F('user__nickname'), email=F('user__email')).values('id','email','nickname','comment', 'rating', 'created_at','image').order_by('-created_at'),timeout=180)
+        # reviews = Review.objects.filter(product=product).annotate(nickname=F('user__nickname'), email=F('user__email')).values('id','email','nickname','comment', 'rating', 'created_at','image').order_by('-created_at')
+            cache.set(cache_key,reviews)
+        # Paginator 설정
         paginator = Paginator(reviews, 5)  # 페이지당 5개의 리뷰
         page_number = int(request.GET.get('page',1))  # GET 파라미터에서 페이지 번호를 가져옴
         page_obj = paginator.get_page(page_number)
         # reviews_list = list(reviews)
         reviews_list =list(page_obj.object_list)
-    
+
         return JsonResponse(reviews_list, safe=False)
     else:
         # 다른 HTTP 메소드 또는 ajax 요청이 아닌 경우 처리

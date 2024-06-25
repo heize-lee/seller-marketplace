@@ -4,7 +4,6 @@ from products.models import Product
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.cache import cache
 
-
 # Create your models here.
 
 class Review(models.Model):

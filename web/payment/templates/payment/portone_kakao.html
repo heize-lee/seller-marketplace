@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kakaoPay</title>
+    <script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <!-- <button onclick="requestPay()">결제 등록</button> -->
+    <script>
+         async function requestPay_billings(){
+                const response = await PortOne.requestPayment({
+                // Store ID 설정
+                storeId: "{{storeId}}",
+                // 채널 키 설정
+                channelKey: "{{channelKey}}",
+                paymentId: `payment-${crypto.randomUUID()}`,
+                orderName: "{{orderName}}",
+                // 금액 백엔드 개발 후 추가
+                totalAmount: 80000, 
+                currency: "CURRENCY_KRW",
+                payMethod: "EASY_PAY",
+            });
+            console.log(response); // 결과 확인을 위해 콘솔에 출력
+
+            // 결제 결과를 서버로 전송
+            try {
+                const serverResponse = await axios.post('/payment/handle_kakao_payment/', {
+                    paymentId: response.paymentId,
+
+                    // 필요한 추가 데이터를 여기에 포함
+                    
+                });
+
+                // 서버에서 성공적으로 처리한 경우 리디렉션
+                if (serverResponse.data.success) {
+                    window.location.href = "/orders/order_done/";
+                } else {
+                    console.log(serverResponse);
+                    console.log(serverResponse.data);
+                    console.log(serverResponse.data.success);
+                    alert("결제 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
+                }
+            } catch (error) {
+                console.error('Error processing payment:', error);
+                alert('결제 처리 중 오류가 발생했습니다.');
+            }
+        }
+        requestPay_billings()
+    </script>
+</body>
+</html>
