@@ -1,0 +1,148 @@
+.container {
+    display: flex;
+}
+
+.nav {
+    width: 20%;
+    margin-right: 20px;
+}
+
+.content {
+    width: 80%;
+}
+
+.order-container {
+    width: 100%;
+    background: white;
+    box-shadow: 0px 3px 6px rgba(18, 15, 40, 0.12);
+    padding: 20px;
+}
+
+.order-header {
+    margin-bottom: 20px;
+}
+
+.order-header h1 {
+    color: #171A1F;
+    font-size: 28px;
+    font-family: Montserrat, sans-serif;
+    font-weight: 700;
+    line-height: 42px;
+    word-wrap: break-word;
+}
+
+.order-header p {
+    color: #171A1F;
+    font-size: 16px;
+    font-family: Poppins, sans-serif;
+    font-weight: 400;
+    line-height: 26px;
+    word-wrap: break-word;
+}
+
+.order-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 10px 0;
+}
+
+.order-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.order-info .order-number,
+.order-info .delivery-date {
+    color: #171A1F;
+    font-size: 14px;
+    font-family: Poppins, sans-serif;
+    line-height: 22px;
+    word-wrap: break-word;
+}
+
+.order-info .order-number {
+    font-weight: 700;  /* Bold 처리 */
+}
+
+.order-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.order-actions a {
+    color: #171A1F;
+    font-size: 14px;
+    font-family: Poppins, sans-serif;
+    text-decoration: underline;
+    line-height: 22px;
+    word-wrap: break-word;
+}
+
+.order-details {
+    display: flex;
+    align-items: center;
+    background: white;
+    padding: 20px 0;
+}
+
+.product-image {
+    width: 148px;
+    height: 128px;
+    margin-right: 20px;
+}
+
+.product-info {
+    flex-grow: 1;
+}
+
+.product-info .product-name,
+.product-info .product-quantity,
+.product-info .product-price {
+    color: #171A1F;
+    font-family: Poppins, sans-serif;
+    word-wrap: break-word;
+    display: block;  /* 줄바꿈을 위해 block으로 설정 */
+}
+
+.product-info .product-name,
+.product-info .product-price {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 22px;
+}
+
+.product-info .product-quantity {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+.product-actions .buy-again {
+    color: white;
+    font-size: 12px;
+    font-family: Poppins, sans-serif;
+    font-weight: 400;
+    line-height: 20px;
+    word-wrap: break-word;
+    padding: 6px 20px;
+    background: #565E6D;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.product-actions .view-product {
+    color: #565E6D;
+    font-size: 12px;
+    font-family: Poppins, sans-serif;
+    font-weight: 400;
+    line-height: 20px;
+    word-wrap: break-word;
+    padding: 6px 10.5px;
+    background: #F3F4F6;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}

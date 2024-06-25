@@ -10,9 +10,33 @@ import os
 import dotenv
 import urllib.parse
 import requests
-from django.http import JsonResponse
-import json
+
+# 지현
+from .models import Order 
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from orders.models import Order
+
+# 지현 (order_list)
+@login_required
+def order_list(request):
+    orders = Order.objects.filter(user=request.user)  # 현재 로그인한 사용자의 주문만 필터링
+    return render(request, 'orders/order_list.html', {'orders': orders})
+
+@login_required
+def mypage_section(request, section):
+    context = {}
+    if section == 'orders':
+        return order_list(request)  # order_list 뷰를 호출하여 같은 템플릿을 사용
+    elif section == 'edit_profile':
+        # 다른 섹션 처리
+        template_name = 'accounts/edit_profile.html'
+    else:
+        # 기본 섹션 처리
+        template_name = f'accounts/{section}.html'
+    
+    return render(request, template_name, context)
+
 
 # Create your views here.
 dotenv.load_dotenv()

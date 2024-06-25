@@ -16,6 +16,8 @@
                 </div>
                 <ul class="mypage-submenu">
                     <li><a href="{% url 'mypage_section' section='orders' %}">주문내역</a></li>
+                <ul class="submenu">
+                    <li><a href="{% url 'orders:order_list' %}">주문내역</a></li>
                     <li><a href="{% url 'mypage_section' section='cancellations' %}">취소/환불내역</a></li>
                 </ul>
             </li>
@@ -26,4 +28,8 @@
 
         </ul>
     </div>
+<<<<<<< HEAD
 </div>
+=======
+</div> 
+>>>>>>> feat/order_list
