@@ -26,24 +26,20 @@
                     </div>
                 </div>
                 <div class="order-details">
-                    {% for item in order.orderitems_set.all %}
-                    <div class="product-detail">
-                        {% if item.product and item.product.product_img %}
-                        <img class="product-image" src="{{ item.product.product_img.url }}" alt="Product image"/>
-                        {% else %}
-                        <img class="product-image" src="https://via.placeholder.com/148x128" alt="Product image"/>
-                        {% endif %}
-                        <div class="product-info">
-                            <span class="product-name">{{ item.product.product_name }}</span> <!-- Product name -->
-                            <span class="product-quantity">Quantity: {{ item.amount }}</span> <!-- Quantity -->
-                            <span class="product-price">{{ item.total_price|intcomma }}원</span> <!-- Price in 원 with comma -->
-                        </div>
-                        <div class="product-actions">
-                            <button class="buy-again">Buy again</button>
-                            <button class="view-product">View product</button>
-                        </div>
+                    {% if order.product and order.product.product_img %}
+                    <img class="product-image" src="{{ order.product.product_img.url }}" alt="Product image"/>
+                    {% else %}
+                    <img class="product-image" src="https://via.placeholder.com/148x128" alt="Product image"/>
+                    {% endif %}
+                    <div class="product-info">
+                        <span class="product-name">{{ order.product.product_name }}</span> <!-- Product name -->
+                        <span class="product-quantity">Quantity: {{ order.amount }}</span> <!-- Quantity -->
+                        <span class="product-price">{{ order.total_price|intcomma }}원</span> <!-- Price in 원 with comma -->
                     </div>
-                    {% endfor %}
+                    <div class="product-actions">
+                        <button class="buy-again">Buy again</button>
+                        <button class="view-product">View product</button>
+                    </div>
                 </div>
                 <hr class="order-divider"/>
                 {% endfor %}
