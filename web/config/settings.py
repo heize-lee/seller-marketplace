@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'reviews',
     'cart',
     'payment',
+    'whitenoise.runserver_nostatic',  # Whitenoise 추가
 ]
 
 # social login

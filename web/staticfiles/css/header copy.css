@@ -1,0 +1,32 @@
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+}
+
+.left-section, .right-section {
+    display: flex;
+    align-items: center;
+}
+
+.left-section a img {
+    height: 30px;
+    margin-right: 20px;
+}
+
+.left-section nav a,
+.right-section nav a {
+    margin-right: 20px;
+    color: #000;
+    text-decoration: none;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.left-section nav a:hover,
+.right-section nav a:hover {
+    text-decoration: underline;
+}

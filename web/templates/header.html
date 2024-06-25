@@ -15,9 +15,8 @@
     </div>
     <div class="right-section">
         <nav>
-            <a href="#">마이페이지</a>
-            <a href="#">관심</a>
-            <a href="#">장바구니</a>
+            <a href="{% url 'mypage_nav' %}">마이페이지</a>
+            <a href="{"#"}">장바구니</a>
             {% if user.is_authenticated %}
             <a href="{% url 'account_logout' %}">로그아웃</a>
             {% else %}
@@ -25,7 +24,6 @@
             {% endif %}
         </nav>
     </div>
-
 
 </header>
 </body>
