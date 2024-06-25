@@ -44,7 +44,7 @@ Seller Marketplace는 판매자와 구매자를 위한 이커머스 플랫폼입
 
 - 장바구니 버튼을 통해 담긴 장바구니 정보를 조회할 수 있으며 휴지통 아이콘으로 해당 목록을 삭제 할 수 있습니다.
 - 주문하기 버튼을 누르면 주문페이지로 이동합니다.
-  ![카트]
+  ![cart페이지](https://github.com/heize-lee/seller-marketplace/assets/134121857/0442fbad-d9ac-402f-b567-dd649597a26f)
 
 ### 주문
 
@@ -58,10 +58,10 @@ Seller Marketplace는 판매자와 구매자를 위한 이커머스 플랫폼입
 - 결제 수단은 TEST버전이기 때문에 100만원 이상 결제가 불가능하며 카카오페이를 클릭하여 결제합니다
 - 결제하기 버튼을 누르면 카카오API와 연결되며 품목과 결제금액으로 결제를 진행합니다
 
-  ![주문]
+  ![order페이지](https://github.com/heize-lee/seller-marketplace/assets/134121857/55fbfd06-aecd-403b-9770-3d9809681851)
 
 ### 주문완료
 
 - 결제가 완료됐을 때 결제완료 페이지에 주문정보가 조회됩니다
 - 계속 쇼핑하기 / 주문 상세보기를 통해 메인 페이지로 이동하거나 주문의 상세정보 페이지로 이동합니다
-  ![카트]
+  ![order_done페이지](https://github.com/heize-lee/seller-marketplace/assets/134121857/9c0d6bbe-17eb-471e-a92b-6d8cb8a859e8)
