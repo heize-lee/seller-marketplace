@@ -1,0 +1,133 @@
+
+.custom-file-input {
+    display: none;
+}
+.custom-file-label {
+    display: inline-block;
+    width: 150px;
+    height: 150px;
+    background: #f0f0f0;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 150px;
+    cursor: pointer;
+    font-size: 24px;
+    color: #666;
+    margin-top: 10px;
+    background-size: cover;
+    background-position: center;
+    
+}
+
+.sub-title{
+    color: #171A1F;
+    font-size: 14px;
+    font-family: Poppins;
+    font-weight: 700;
+    line-height: 22px;
+    word-wrap: break-word
+}
+
+.title{
+    color: #171A1F;
+    font-size: 24px;
+    font-family: Montserrat;
+    font-weight: 600;
+    line-height: 36px;
+    word-wrap: break-word
+}
+
+.product-name{
+    color: #171A1F;
+    font-size: 14px;
+    font-family: Poppins;
+    font-weight: 500;
+    line-height: 22px;
+    word-wrap: break-word
+}
+
+
+
+    .page-link {
+    color: #000; 
+    background-color: #fff;
+    border: 1px solid #ccc; 
+    }
+
+    .page-item.active .page-link{
+    z-index: 1 ; 
+    color: #555;
+    font-weight:bold;
+    background-color: #f1f1f1;
+    border-color: #ccc;
+
+    }
+
+    .page-link:focus, .page-link:hover {
+    color: #000;
+    background-color: #fafafa; 
+    border-color: #ccc;
+    }
+    
+    .star-rating > span::before{
+        content: "\2605"; /* 빈 별 문자 */
+        color: lightgray;
+        font-size: 20px;
+        
+    }
+    .star-rating > .filled::before {
+        content: "\2605";
+        color: gold; /* 채워진 별 색상 */
+    }
+    .star-rating > .half-filled::before {
+    background: linear-gradient(90deg, gold 50%, lightgray 50%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    }
+  .nickname{
+    color: #171A1F;
+    font-size: 14px;
+    font-family: Poppins;
+    font-weight: 700;
+    line-height: 22px;
+    word-wrap: break-word;
+  }
+  .date{
+    color: #171A1F;
+    font-size: 12px;
+    font-family: Poppins;
+    font-weight: 400;
+    line-height: 20px;
+    word-wrap: break-word
+  }
+  .review{
+    color: #171A1F;
+    font-size: 16px;
+    font-family: Poppins;
+    font-weight: 700;
+    line-height: 26px;
+    word-wrap: break-word
+  }
+  .img{
+    width: 120px; height: 97px;
+  }
+
+.update{
+  text-decoration-line: none;
+  color: black;
+}
+
+  .rating-number{
+    color: #171A1F;
+    font-size: 14px;
+    font-family: Poppins;
+    font-weight: 400;
+    line-height: 22px;
+    word-wrap: break-word
+  }
+
+
+

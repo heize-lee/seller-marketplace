@@ -58,7 +58,7 @@ INSTALLED_APPS = [
     'corsheaders',  # If you need CORS settings
     'whitenoise.runserver_nostatic',  # Whitenoise 추가
 ]
-]
+
 
 # social login
 AUTH_USER_MODEL = 'accounts.CustomUser'

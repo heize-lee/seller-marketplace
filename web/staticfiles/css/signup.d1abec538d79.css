@@ -1,0 +1,177 @@
+body {
+  font-family: Montserrat;
+  background-color: #777777;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+}
+
+.signup-container {
+  background: white;
+  padding: 50px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  margin: 50px auto; /* 위아래 50px의 마진을 추가하고 가로 중앙 정렬 */
+}
+
+.signup-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.signup-header p {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.role {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.agreement {
+  margin-top: 20px;
+}
+
+.agreement p {
+  font-size: 14px;
+}
+
+.input-group {
+  margin-top: 20px;
+}
+
+.input-group input[type="text"],
+.input-group input[type="email"],
+.input-group input[type="password"],
+.input-group input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.input-group label {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.signup-btn {
+  width: 100%;
+  padding: 10px;
+  margin-top: 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+
+.signup-btn:hover {
+  background-color: #0056b3;
+}
+
+.checkbox {
+  margin-top: 20px;
+}
+
+.checkbox label {
+  display: block;
+  font-size: 14px;
+}
+
+.checkbox input[type="checkbox"] {
+  margin-right: 5px;
+  transform: translateY(1px);
+}
+
+.profile-photo-group {
+  position: relative;
+  margin-top: 20px;
+}
+
+.profile-photo-group label {
+  display: block;
+}
+
+.profile-photo-group input[type="file"] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.logo-container {
+  text-align: center;
+  margin-top: 45px;
+  margin-bottom: 45px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="tel"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  margin-top: 5px; /* 각 입력란 사이의 간격 조절 */
+  background: #F3F4F6; /* 배경색 변경 */
+  color: #424956; /* 텍스트 색상 변경 */
+  font-size: 14px; /* 폰트 크기 변경 */
+  font-family: Poppins; /* 폰트 변경 */
+  font-weight: 700; /* 폰트 두께 변경 */
+  line-height: 22px; /* 줄 간격 변경 */
+}
+
+.password-input {
+  color: #BCC1CA;
+  font-size: 14px;
+  font-family: Poppins;
+  font-weight: 400;
+  line-height: 22px;
+  word-wrap: break-word;
+}
+
+.password-label {
+  color: #424956;
+  font-size: 14px;
+  font-family: Poppins;
+  font-weight: 700;
+  line-height: 22px;
+  word-wrap: break-word;
+}
+
+
+
+
+.errorlist {
+  color: red;
+  font-size: 12px;
+  list-style-type: none;
+  padding: 0;
+}
+
+main {
+  flex: 1;
+}
+

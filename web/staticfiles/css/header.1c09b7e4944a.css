@@ -1,0 +1,34 @@
+/* header.css */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+}
+
+.header .left-section,
+.header .right-section {
+    display: flex;
+    align-items: center;
+}
+
+.header .left-section a img {
+    height: 30px;
+    margin-right: 20px;
+}
+
+.header .left-section nav a,
+.header .right-section nav a {
+    margin-right: 20px;
+    color: #000;
+    text-decoration: none;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.header .left-section nav a:hover,
+.header .right-section nav a:hover {
+    text-decoration: underline;
+}
