@@ -12,3 +12,21 @@ Seller Marketplace는 판매자와 구매자를 위한 이커머스 플랫폼입
 | **박룡**   | `orders` 앱 (판매 중인 물건 구매, 주문 생성 및 결제 처리, 주문 내역 조회, 장바구니, 구매 이력 조회)                                                                |
 | **문회성** | `reviews` 앱 + `products` 앱 지원 (리뷰 CRUD, 평점, 조회 및 필터링, 제품 검색 및 필터링, 카테고리 관리, 좋아요, 팔로우, 특정 구매자에게만 공개, 새 상품 알림 기능) |
 | **윤재웅** | `accounts` 앱 (유저 프로필 이미지 수정, 좋아요, 팔로우), `orders` 앱 (구매 이력 조회)                                                                              |
+
+
+<img width="1367" alt="스크린샷 2024-06-25 오후 2 00 08" src="https://github.com/heize-lee/seller-marketplace/assets/162934244/d89a057e-8e1b-4224-9bd7-083426a2ebb0">
+
+팔로우         버튼 클릭시   
+
+
+<img width="605" alt="스크린샷 2024-06-25 오후 2 09 44" src="https://github.com/heize-lee/seller-marketplace/assets/162934244/8248484b-81aa-4ced-a681-053a4907974a">
+
+DB에 쌓이게 연결 개발 했습니다
+
+<img width="887" alt="스크린샷 2024-06-25 오후 2 10 38" src="https://github.com/heize-lee/seller-marketplace/assets/162934244/b60ef1af-615a-425c-8e6a-5248fed87cbd">
+
+follow라는 앱을 생성하여서 db연결은 팔로우 앱에서 연결시키도록 구상했습니다.
+
+<img width="786" alt="스크린샷 2024-06-25 오후 2 11 37" src="https://github.com/heize-lee/seller-marketplace/assets/162934244/dd10b2c9-12ff-4e50-a086-07b7f75323e7">
+
+팔로우 버튼 클릭시 follow앱으로 보내는 기능을 product_detail.html 및에 구축해서 버튼만 나오게 했습니다
