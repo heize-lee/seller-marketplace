@@ -3,6 +3,7 @@ from django.db import models
 from products.models import Product,Category
 from cart.models import Cart
 from payment.models import Payment
+# from payment.models import Payment
 from django.conf import settings
 # 카트 모델 고민
 
@@ -20,7 +21,7 @@ class Order(models.Model):
 
     order_date = models.DateField()
     #  주문번호 
-    order_number = models.SmallIntegerField(default=0)
+    order_number = models.BigIntegerField(default=0)
     
     
     # def save(self, *args, **kwargs):

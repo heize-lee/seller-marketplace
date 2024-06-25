@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('payment', '0001_initial'),
-        ('products', '0003_product_average_rating'),
+        ('products', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
@@ -25,7 +25,6 @@ class Migration(migrations.Migration):
                 ('payment_total_price', models.IntegerField(default=0)),
                 ('order_date', models.DateField()),
                 ('order_number', models.SmallIntegerField(default=0)),
-                ('payment', models.ForeignKey(default=1, on_delete=django.db.models.deletion.DO_NOTHING, to='payment.payment')),
                 ('product', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='products.product')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],

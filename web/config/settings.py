@@ -51,11 +51,9 @@ INSTALLED_APPS = [
     'products',
     'orders',
     'reviews',
-    'crispy_forms',
-    'crispy_bootstrap5',
     'cart',
     'payment',
-    'rest_framework',
+    'whitenoise.runserver_nostatic',  # Whitenoise 추가
 ]
 
 # social login
@@ -144,10 +142,10 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-import os
-from dotenv import load_dotenv
+
 load_dotenv()
 db_password = os.getenv("DB_PASSWORD")
+
 
 DATABASES = {
 
@@ -160,9 +158,13 @@ DATABASES = {
     #     'PORT': '25432',       # PostgreSQL의 기본 포트 번호
     # }
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-        }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'seller_3',
+        'USER': 'postgres',
+        'PASSWORD': db_password,
+        'HOST': '211.110.169.141',  # 또는 PostgreSQL 서버의 IP 주소 hanslab.org
+        'PORT': '35432',       # PostgreSQL의 기본 포트 번호
+    }
 }
 
 
@@ -221,21 +223,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
-CRISPY_TEMPLATE_PACK ='bootstrap5'
-
-
-from django.contrib.messages import constants as messages
-
-MESSAGE_TAGS = {
-    messages.DEBUG: 'debug',
-    messages.INFO: 'info',
-    messages.SUCCESS: 'success',
-    messages.WARNING: 'warning',
-    messages.ERROR: 'danger',
-}
-
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
-
+# Cache
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://hanslab.org:26379/1',
+    }
+}

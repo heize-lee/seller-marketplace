@@ -4,9 +4,9 @@
 {% block title %}Edit Profile{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="edit-profile-container">
     {% include 'accounts/navigation.html' %}
-    <div class="content">
+    <div class="edit-profile-content">
         <div class="edit-profile-header">
             <h1>Edit profile</h1>
         </div>
@@ -14,35 +14,35 @@
             <p>Your photo should be in PNG or JPG format</p>
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                <div class="form-group">
+                <div class="edit-profile-form-group">
                     <label for="profile_picture">Profile photo</label>
                     {% if user.profile_picture %}
-                        <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="profile-picture-preview">
+                        <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="edit-profile-picture-preview">
                     {% endif %}
                     {{ form.profile_picture }}
                 </div>
-                <div class="form-group">
+                <div class="edit-profile-form-group">
                     <label for="nickname">Nickname</label>
                     {{ form.nickname }}
                 </div>
-                <div class="form-group">
+                <div class="edit-profile-form-group">
                     <label for="email">Email</label>
                     {{ form.email }}
                 </div>
-                <div class="form-group">
+                <div class="edit-profile-form-group">
                     <label for="phone_number">Phone number</label>
                     {{ form.phone_number }}
                 </div>
-                <div class="form-group">
+                <div class="edit-profile-form-group">
                     <label for="is_agree_terms">Agree to Terms</label>
                     {{ form.is_agree_terms }}
                 </div>
-                <div class="form-group">
+                <div class="edit-profile-form-group">
                     <label for="is_agree_privacy_policy">Agree to Privacy Policy</label>
                     {{ form.is_agree_privacy_policy }}
                 </div>
-                <button type="submit" class="btn btn-primary">Save profile</button>
-                <a href="{% url 'mypage_section' section='settings' %}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="edit-profile-btn edit-profile-btn-primary">Save profile</button>
+                <a href="{% url 'mypage_section' section='settings' %}" class="edit-profile-btn edit-profile-btn-secondary">Cancel</a>
             </form>
         </div>
     </div>

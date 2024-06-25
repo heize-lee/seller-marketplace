@@ -42,7 +42,6 @@ class Product(models.Model):
     product_img = models.ImageField(upload_to='product_images/', null=True, blank=True)  #이름 수정됨
     seller_email = models.EmailField(null=True)
     average_rating = models.FloatField(default=0.0)
-    
     def __str__(self):
         return self.product_name
     

@@ -1,3 +1,4 @@
+
 {% load static %}
 <link rel="stylesheet" href="{% static 'review/review.css' %}">
 <!-- <style>
@@ -16,6 +17,7 @@
     word-wrap: break-word;
     display: flex;
     justify-content: center;
+    margin-right: 30px;
   }
 </style>
   <!-- 상품 리뷰 -->
@@ -28,18 +30,6 @@
             {% csrf_token %}
             <input type="hidden" name="product" value="{{ product.pk }}">
             <button class="btn btn-outline-light text-primary " type="submit">후기작성</button>
-            <ul class="navbar-nav">
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="dropdownMenuLink">
-                  작성시간순
-                </a>
-                <ul class="dropdown-menu dropdown-menu-white" aria-labelledby="dropdownMenuLink">
-                  <li><a class="dropdown-item" href="#"  data-value="created">작성시간순</a></li>
-                  <li><a class="dropdown-item" href="#"  data-value="rating_height">별점높은순</a></li>
-                  <li><a class="dropdown-item" href="#" data-value="rating_under">별점낮은순</a></li>
-                </ul>
-              </li>
-            </ul>
           </form>  
         </div>
       </div>
@@ -48,7 +38,7 @@
   </div>
   
   <div class="row">
-    <div class="col-lg-3 ">
+    <div class="col-lg-3" style="justify-content: center;">
       <div class="review-mean">
         {{ review_rating_mean|floatformat:1 }}
       </div>
@@ -107,19 +97,19 @@
         <ul class="pagination">
           
           <li class="page-item">
-            <a class="page-link" href="#" aria-label="Previous">
+            <a class="btn btn-light next" href="/product/{{product.product_id}}/?previous={{custom_range}}" aria-label="Previous">
               <span aria-hidden="true">&laquo;</span>
             </a>
           </li>
           <!-- 페이지네이션 바 -->
           
-          {% for page in paginator.page_range %}
-          
+          {% for page in custom_range %}
+         
           <li class="page-item {% if page == page_number %}active{% endif %}" ><a class="page-link"  href="?page={{page}}" data-page="{{page}}" >{{page}}</a></li>
           
           {% endfor %}
           <li class="page-item">
-            <a class="page-link" href="#" aria-label="Next">
+            <a class="btn btn-light next" href="/product/{{product.product_id}}/?p={{custom_range}}" aria-label="Next">
               <span aria-hidden="true">&raquo;</span>
             </a>
           </li>
@@ -152,7 +142,7 @@
         const productId = '{{ product.product_id }}';  // 템플릿에서 상품 ID를 가져옵니다.
         const currentUser = "{{ request.user }}";
           
-          console.log(currentUser)
+          console.log('{{request.user.profile_picture}}')
           
           // fetch api 로 데이터 불러온뒤 html 코드 작성
           function loadReviews(pageNumber) {
@@ -170,8 +160,9 @@
                       
                       const profileImg = document.createElement('img');
                       profileImg.classList.add('d-flex', 'mx-4', 'rounded-circle');
-                      profileImg.src = 'http://placehold.it/50x50';
+                      profileImg.src = '{{request.user.profile_picture.url}}';
                       profileImg.alt = '';
+                      profileImg.style.width='44px';
   
                       const reviewContent = document.createElement('div');
                       reviewContent.classList.add('flex-grow-1');
@@ -316,6 +307,7 @@
                   loadReviews(pageNumber);
               });
           });
+          
         });
         //별점 표시하기
         function createStarRating(rating) {
@@ -363,28 +355,4 @@
       starRatingElement.classList.add('big_size')
       document.getElementById('star-rating-container').appendChild(starRatingElement);
   });
-</script>
-<script>
-  const productId = '{{ product.product_id }}';  // 템플릿에서 상품 ID를 가져옵니다.
-
-  document.addEventListener('DOMContentLoaded', function() {
-        const dropdownItems = document.querySelectorAll('.dropdown-item');
-        const dropdownToggle = document.getElementById('dropdownMenuLink');
-
-        dropdownItems.forEach(item => {
-            item.addEventListener('click', function(event) {
-                event.preventDefault();
-                const selectedText = this.textContent;
-                const selected = this.getAttribute('data-value');
-                dropdownToggle.textContent = selectedText;
-                const baseUrl = '{% url "product:review" %}?ajax=true&product_id=' + productId + '&select=' + selected;
-                console.log(baseUrl)
-                fetch(baseUrl)
-                .then(response => response.json())
-                .then(data =>{
-                  
-                })
-            });
-        });
-    });
 </script>

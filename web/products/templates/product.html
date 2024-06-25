@@ -1,5 +1,8 @@
+{% extends 'base.html' %}
 {% load humanize %} <!-- intcomma필터 -->
 {% load static %}
+
+
 {% block content %}
 <div class="container my-4">
     <!-- 카테고리 선택 바 -->
@@ -7,7 +10,7 @@
         <ul class="nav nav-pills">
             <li class="nav-item">
                 <a class="nav-link {% if not request.GET.category %}active{% endif %}" href="?{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}{% if request.GET.search_keyword %}&search_keyword={{ request.GET.search_keyword }}{% endif %}{% if request.GET.min_price %}&min_price={{ request.GET.min_price }}{% endif %}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}">
-                    <img src="{% static 'category_all_image/5110770.png' %}" alt="전체">
+                    <img src="{% static 'category_all_image/category_all.png' %}" alt="전체">
                     <span>전체</span>
                 </a>
             </li>
@@ -25,18 +28,18 @@
     </div>
 
     <!-- 배너 섹션 -->
-    <div class="banner" style="position: relative; text-align: center; color: white;">
-        <img src="{{ MEDIA_URL }}banner_image/banner_image.jpg" alt="배너 이미지" style="width: 100%; height: auto;">
-        <div class="banner-text" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 2em; font-weight: bold;">
-            <!-- 여기에 원하는 글자를 입력 -->
+    <div class="banner" style="position: relative; text-align: center; color: white; background-color: black; height: 200px;">
+        <div class="banner-text" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 2em; font-weight: bold; z-index: 10;">
+            SHOP
         </div>
     </div>
+
     <br>
 
     {% if search_info %}
     <span class="row m-0" style="font-size: 31px; font-family: Lexend; font-weight: 700; line-height: 48px;">{{ search_info }}</span>
     {% endif %}
-    <span class="row m-0" style="font-size: 31px; font-family: Lexend; font-weight: 700; line-height: 48px;">{{ category }}</span>
+    <span class="row m-0" style="font-size: 31px; font-family: Lexend; font-weight: 700; line-height: 48px;"></span>
     
     <!-- 메인 컨텐츠 -->
     <div class="row mt-4">
@@ -75,7 +78,17 @@
         <!-- 오른쪽 상품 목록 섹션 -->
         <div class="col-lg-9">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3>전체</h3>
+                <h3>
+                    {% if request.GET.category %}
+                        {% for category in categories %}
+                            {% if request.GET.category == category.id|stringformat:"s" %}
+                                {{ category.category_name }} 쇼핑하기
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        전체 쇼핑하기
+                    {% endif %}
+                </h3>
                 <!-- 정렬 옵션 드롭다운 -->
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -83,8 +96,10 @@
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="sortDropdown">
                         <li><a class="dropdown-item" href="?{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}{% if request.GET.search_keyword %}&search_keyword={{ request.GET.search_keyword }}{% endif %}{% if request.GET.min_price %}&min_price={{ request.GET.min_price }}{% endif %}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}&sort=created_date&order=desc">최신순</a></li>
-                        <li><a class="dropdown-item" href="?{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}{% if request.GET.search_keyword %}&search_keyword={{ request.GET.search_keyword }}{% endif %}{% if request.GET.min_price %}&min_price={{ request.GET.min_price }}{% endif %}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}&sort=product_price&order=asc">낮은 가격순</a></li>
-                        <li><a class="dropdown-item" href="?{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}{% if request.GET.search_keyword %}&search_keyword={{ request.GET.search_keyword }}{% endif %}{% if request.GET.min_price %}&min_price={{ request.GET.min_price }}{% endif %}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}&sort=product_price&order=desc">높은 가격순</a></li>
+                        <li><a class="dropdown-item" href="?{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}{% if request.GET.search_keyword %}&search_keyword={{ request.GET.search_keyword }}{% endif %}{% if request.GET.min_price %}&min_price={{ request.GET.min_price }}{% endif %}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}&sort=product_price&order=asc">가격 낮은순</a></li>
+                        <li><a class="dropdown-item" href="?{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}{% if request.GET.search_keyword %}&search_keyword={{ request.GET.search_keyword }}{% endif %}{% if request.GET.min_price %}&min_price={{ request.GET.min_price }}{% endif %}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}&sort=product_price&order=desc">가격 높은순</a></li>
+                        <li><a class="dropdown-item" href="?{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}{% if request.GET.search_keyword %}&search_keyword={{ request.GET.search_keyword }}{% endif %}{% if request.GET.min_price %}&min_price={{ request.GET.min_price }}{% endif %}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}&sort=average_rating&order=desc">별점 높은순</a></li>
+                        <li><a class="dropdown-item" href="?{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}{% if request.GET.search_keyword %}&search_keyword={{ request.GET.search_keyword }}{% endif %}{% if request.GET.min_price %}&min_price={{ request.GET.min_price }}{% endif %}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}&sort=average_rating&order=asc">별점 낮은순</a></li>
                     </ul>
                 </div>
             </div>
@@ -146,14 +161,19 @@
     </div>
 </div>
 
-<!-- base.html에 bootstrap 코드 없어서 일단 html에 추가해놓음 -->
+
 <!-- Bootstrap CSS CDN 링크 -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.4.0/nouislider.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.4.0/nouislider.min.js"></script>
 
+
 <style>
+    .col-md-4 {
+        display: flex;
+        justify-content: center;
+    }
     .card {
         height: 400px;
         transition: transform 0.3s, box-shadow 0.3s, opacity 0.3s; 
@@ -222,6 +242,25 @@
         object-fit: cover;
         margin-bottom: 5px; 
     }
+
+
+    .noUi-connect {
+        background-color: #ccc !important; /* Change the slider color to gray */
+    }
+
+    .filter-section button[type="submit"] {
+        background-color: #fff; /* 배경색을 흰색으로 설정 */
+        border: 1px solid #007bff; /* 파란색 테두리 추가 */
+        color: #000; /* 버튼 텍스트 색상을 검정색으로 설정 */
+        transition: background-color 0.3s, color 0.3s; /* 애니메이션 효과 추가 */
+    }
+
+    .filter-section button[type="submit"]:hover {
+        background-color: #007bff; /* 마우스 호버시 배경색을 파란색으로 변경 */
+        color: #fff; /* 텍스트 색상을 흰색으로 변경 */
+    }
+
+    
 </style>
 
 <script>
@@ -251,6 +290,9 @@
                 }
             }
         });
+
+
+        priceSlider.querySelector('.noUi-connect').style.background = '#ccc';
     
         priceSlider.noUiSlider.on('update', function(values, handle) {
             minPriceInput.value = values[0];
@@ -266,3 +308,5 @@
     });
 </script>
 {% endblock %}
+
+

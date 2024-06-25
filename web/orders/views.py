@@ -33,6 +33,10 @@ def orders(request):
             # default_delivery_address = DeliveryAddress.objects.filter(user=user, is_default=True)[0]
             
         default_delivery_address = DeliveryAddress.objects.filter(user=user, is_default=True).first()
+        # try:
+        #     default_delivery_address = DeliveryAddress.objects.filter(user=user, is_default=True)
+        # except DeliveryAddress.DoesNotExist:
+        #     default_delivery_address = None
 
 
         # 바로구매
