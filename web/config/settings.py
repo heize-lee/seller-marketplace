@@ -130,6 +130,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 # 'allauth.account.context_processors.account',  # allauth
                 # 'allauth.socialaccount.context_processors.socialaccount',  # 수정된 부분
+                'django.template.context_processors.media',# 미디어 파일사용 - 박룡
             ],
         },
     },
@@ -145,17 +146,17 @@ WSGI_APPLICATION = 'config.wsgi.application'
 load_dotenv()
 db_password = os.getenv("DB_PASSWORD")
 
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'seller',
         'USER': 'postgres',
         'PASSWORD': db_password,
-        'HOST': '211.110.169.141',  # 또는 PostgreSQL 서버의 IP 주소 hanslab.org
+        'HOST': 'db.hanslab.org',  # 또는 PostgreSQL 서버의 IP 주소 hanslab.org
         'PORT': '35432',       # PostgreSQL의 기본 포트 번호
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

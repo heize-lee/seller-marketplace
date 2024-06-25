@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load humanize %}
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -68,9 +69,20 @@
             margin-right: 20px;
         }
         .order-item-details {
+            flex: 3;
+            display: flex;
+            justify-content: space-between;
+        }
+        .order-item-details-left {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+        }
+        .order-item-details-right {
             flex: 1;
             display: flex;
             justify-content: space-between;
+            margin-right: 40px;
         }
         .order-summary {
             flex: 1;
@@ -99,6 +111,7 @@
             text-align: center;
             font-size: 16px;
             cursor: pointer;
+            border: 2px solid #565E6D;
         }
         .order-button:hover {
             background: #565E6D;
@@ -346,7 +359,6 @@
                                                                 </div>
 
                                                                 <!-- 히든 인풋 -->
-                                                                <input type="hidden" id="csrfToken" value="{{csrf_token}}">
                                                                 <div class="modal-footer">
                                                                     <!-- 취소 버튼 -->
                                                                     <button type="button" class="btn btn-secondary footer-button" data-bs-dismiss="modal">취소</button>
@@ -365,14 +377,15 @@
                                             {% for one in delivery_address %}
                                             <div class="mb-3 delivery_items">
                                                 <div>
-                                                    <input type="radio" name="delivery_choice" id="choice-{{ one.recipient }}" value="{{ one.recipient }}">
+                                                    <input type="radio" name="delivery_choice" id="choice-{{ one.id }}" value="{{ one.id }}">
                                                 </div> 
                                                 <div class="delivery_items_content">
                                                     <div class="delivery_items_subheader">
+                                                        {% if one.is_default %}
                                                         <span class="badge bg-secondary" style="border-radius: 14px;">기본배송지</span>
+                                                        {% endif %}
                                                         <span style="font-weight: bold; margin-left: 8px;">{{ one.recipient }}</span>
                                                         <span>({{ one.destination }})</span>
-
                                                     </div>
                                                  
                                                     <span>{{ one.phone_number }}</span>
@@ -383,11 +396,10 @@
 
                                                                                       
                                             <!-- 히든 인풋 -->
-                                            <input type="hidden" id="csrfToken" value="{{csrf_token}}">
                                             <div class="modal-footer">
                                                 
                                                 <!--  저장 버튼 -->
-                                                <button type="submit" class="btn btn-secondary footer-button">저장</button>
+                                                <button type="submit" class="btn btn-secondary footer-button"  onclick="setDefaultDelivery()">저장</button>
                                             </div>
                                         </form>
                                     </div>
@@ -420,7 +432,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>주소</label>
-                                    <input type="text" value="({{ default_delivery_address.postal_code }}) {{ default_delivery_address.address }} {{ delivery_address.detail_address }}" disabled readonly class="form-control read-only-input">
+                                    <input type="text" value="({{ default_delivery_address.postal_code }}) {{ default_delivery_address.address }} {{ default_delivery_address.detail_address }}" disabled readonly class="form-control read-only-input">
                                 </div>
                                 
                             </div>
@@ -498,7 +510,6 @@
                                                 </div>
 
                                                 <!-- 히든 인풋 -->
-                                                <input type="hidden" id="csrfToken" value="{{csrf_token}}">
                                                 <div class="modal-footer">
                                                     <!-- 취소 버튼 -->
                                                     <button type="button" class="btn btn-secondary footer-button" data-bs-dismiss="modal">취소</button>
@@ -514,34 +525,63 @@
                         <!-- 배송요청사항 -->
                         </div>
                     </div>
+                    <!-- 카트구매 -->
                     <div>
                         <div class="content_header">
+                    {% if cart %}
                             <h2>🚚주문정보({{ cart|length }})</h2>
-                            <!---->
+                    {% else %}
+                            <h2>🚚주문정보(1)</h2>
+                    {% endif %}
                         </div>                    
                     </div>
+                    {% if not is_direct %}
                     {% for item in cart %}
                     <div class="order-item">
-                        
-                        <img src="{{ item.product.product_img }}" alt="Product Image">
+                        <img src="{{ item.product.product_img.url }}" alt="Product Image" style="width: 100px; height: 60px">
                         <div class="order-item-details">
-                            <div>
-                                <div>{{ item.product.product_name }}</div>
-                                <div>Option</div>
+                            <div class="order-item-details-left">
+                                <div class="product-name" style="font-weight: 700;">{{ item.product.product_name }}</div>
+                                <p class="product-price">{{ item.product.product_price|intcomma }}원</p>
                             </div>
-                            <div>p_price{{ item.product.product_price }}</div>
-                            <div>{{ item.amount }}</div>
-                            <div>t_price{{ item.total_price }}</div>
-                            <form action="" method="post">
+
+                            <div class="order-item-details-right">
+                            
+                                <div>{{ item.amount }}개</div>
+                                <div style="font-weight: 700;">{{ item.total_price|intcomma }}원</div>
+                            </div>
+                            <form action="{% url 'orders:order_cart_delete' pk=item.product.pk %}" method="post">
                                 {% csrf_token %}
-                            <button class="trash" type="submit"> <i class="fa-solid fa-trash-can"></i></button>
+                                <button class="trash" type="submit"> <i class="fa-solid fa-trash-can"></i></button>
                             </form> 
                         </div>
                     </div>
                     {% endfor %}
+                    {% else %}
+                    <div class="order-item">
+                        <img src="{{ product.product_img.url }}" alt="Product Image" style="width: 100px; height: 60px">
+                        <div class="order-item-details">
+                            <div class="order-item-details-left">
+                                <div class="product-name" style="font-weight: 700;">{{ product.product_name }}</div>
+                                <p class="product-price">{{ product.product_price|intcomma }}원</p>
+                            </div>
+
+                            <div class="order-item-details-right">
+                                <div>{{ quantity }}개</div>
+                                <div>{{ total_price|intcomma }}원</div>
+                            </div>
+                            <form action="{% url 'home' %}" method="post">
+                                {% csrf_token %}
+                                <button class="trash" type="submit"> <i class="fa-solid fa-trash-can"></i></button>
+                            </form> 
+                        </div>
+                    </div>
+                    {% endif %}
+
                     <div>
                         <div class="content_header">
-                            <h2>🌍결제정보</h2>
+                            <h2>🌍결제수단</h2>
+                            <p style="margin-left: 16px; font-size: small;">100만원 이상 결제❌</p>
                             <!---->
                         </div>                    
                     </div>
@@ -551,10 +591,13 @@
                             {% csrf_token %}
                             <!-- name 그룹으로 묶음 -->
                                 <input type="radio" name="payment_method" id="choice-kakao" value="kakao_pay">
-                                <label for="choice-kakao">카카오페이</label>
+                                <label for="choice-kakao">카카오페이
+                                   <img class="paymethod-img" src="{{ MEDIA_URL }}orders/payment_icon_yellow_small.png" alt="kakaoPay Image"style="width: 40px; height: 20px;"  >
+                                </label>
+                                
                                 <br>
-                                <input type="radio" name="payment_method" id="choice-toss" value="toss_pay">
-                                <label for="choice-toss">토스페이</label>
+                                <!-- <input type="radio" name="payment_method" id="choice-toss" value="toss_pay">
+                                <label for="choice-toss">토스페이</label> -->
                                 <!-- <input type="radio" name="payment_method" id="choice-card" value="card">
                                 <label for="choice-card">카드결제</label>
                                 <br>
@@ -569,24 +612,36 @@
               
                 </div>
                 <div class="order-summary">
-                    <h2>Summary</h2>
+                    <h2>결제정보</h2>
                     <div>
-                        <span>Payment_toal_price</span>
-                        <span>$156</span>
+                        <span class="order_summary_name"> 작품금액 </span>
+                        {% if cart %}
+                        <span id="payment_total_price" class="summary_price">{{ payment_total_price|intcomma }}원</span>
+                        {% else %}
+                        <span id="payment_total_price" class="summary_price">{{ total_price|intcomma }}원</span>
+                        {% endif %}
                     </div>
                     <div>
-                        <span>Delivery Fee</span>
-                        <span>$00</span>
+                        <span>배송비</span>
+                        <span>00원</span>
                     </div>
                     <div>
-                        <strong>Pay+Delv_Total</strong>
-                        <strong>$178</strong>
+                        <strong>최종 결제 금액</strong>
+                        {% if cart %}
+                        <strong id="pay_delv_total" class="summary_total_price">{{ payment_total_price|intcomma }}원</strong>
+                        {% else %}
+                        <strong id="pay_delv_total" class="summary_total_price">{{ total_price|intcomma }}원</strong>
+                        {% endif %}
                     </div>
                     <form id="payment-action-form" onsubmit="return setPaymentAction();" method="post">
                         {% csrf_token %}
                         <button class="order-button" type="submit">결제하기</button>
+                        <input type="hidden" value="{{ total_price }}" name="total-price">
+                        <input type="hidden" value="{{ quantity }}" name="quantity">
+                        <input type="hidden" value="{{ product.pk }}" name="product">
                     </form>
                 </div>
+               
             </div>
         </div>
         <!-- 카드결제  -->
@@ -627,7 +682,10 @@
                 // 주소 정보를 해당 필드에 넣는다.
                 document.getElementById("postal-code").value = data.zonecode;
                 document.getElementById("address").value = addr;
+
                 // 주소로 상세 정보를 검색
+                //주소-좌표 변환 객체를 생성
+                var geocoder = new daum.maps.services.Geocoder();
                 geocoder.addressSearch(data.address, function(results, status) {
                     // 정상적으로 검색이 완료됐으면
                     if (status === daum.maps.services.Status.OK) {
@@ -637,7 +695,20 @@
                         // 해당 주소에 대한 좌표를 받아서
                         var coords = new daum.maps.LatLng(result.y, result.x);
                         // 지도를 보여준다.
+                        var mapContainer = document.getElementById('map'); // 지도를 표시할 div
                         mapContainer.style.display = "block";
+                        mapOption = {
+                            center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
+                            level: 5 // 지도의 확대 레벨
+                        };
+                        //지도를 미리 생성
+                        var map = new daum.maps.Map(mapContainer, mapOption);
+
+                        //마커를 미리 생성
+                        var marker = new daum.maps.Marker({
+                            position: new daum.maps.LatLng(37.537187, 127.005476),
+                            map: map
+                        });
                         map.relayout();
                         // 지도 중심을 변경한다.
                         map.setCenter(coords);
@@ -648,21 +719,35 @@
             }
         }).open();
     }
-    var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-        mapOption = {
-            center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
-            level: 5 // 지도의 확대 레벨
-        };
+   
+    // 기본배송지 목록 라디오 버튼 클릭 시 기본 배송지 변경
+    // 기본 배송지 설정 함수
+    function setDefaultDelivery() {
+        var deliveryId = document.querySelector('input[name="delivery_choice"]:checked').value;
 
-    //지도를 미리 생성
-    var map = new daum.maps.Map(mapContainer, mapOption);
-    //주소-좌표 변환 객체를 생성
-    var geocoder = new daum.maps.services.Geocoder();
-    //마커를 미리 생성
-    var marker = new daum.maps.Marker({
-        position: new daum.maps.LatLng(37.537187, 127.005476),
-        map: map
+
+        fetch("/orders/set-default-delivery/", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ delivery_id: deliveryId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            location.reload(); // 페이지를 새로고침하여 변경 사항 반영
+        });
+    }
+
+    // 라디오 버튼 클릭 시 기본 배송지 설정
+    document.querySelectorAll('input[name="delivery_choice"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            setDefaultDelivery(this.value);
+        });
     });
+
+    
 
     // payment 메서드
     function setPaymentAction() {

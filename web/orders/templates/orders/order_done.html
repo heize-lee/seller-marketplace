@@ -1,230 +1,196 @@
 <!DOCTYPE html>
+{% load humanize %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/a47086679e.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <title>Order Confirmation</title>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
+         body {
             font-family: Poppins, sans-serif;
             background: white;
+            margin: 0;
+            padding: 0;
         }
         .container {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            background: white;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
             box-shadow: 0px 3px 6px rgba(18, 15, 40, 0.12);
+            background: white;
         }
         .thank-you {
-            position: absolute;
-            left: 50%;
-            top: 435px;
-            transform: translateX(-50%);
             text-align: center;
             color: #171A1F;
             font-size: 32px;
             font-family: Montserrat, sans-serif;
             font-weight: 700;
-            line-height: 48px;
-        }
-        .confirmation {
-            position: absolute;
-            left: 50%;
-            top: 495px;
-            transform: translateX(-50%);
-            color: #171A1F;
-            font-size: 14px;
-            line-height: 22px;
+            margin-bottom: 20px;
         }
         .order-details {
-            position: absolute;
-            width: 560px;
-            height: 670px;
-            left: 50%;
-            top: 565px;
-            transform: translateX(-50%);
-            background: white;
-            padding: 20px;
+            margin: 20px auto;
+            width: 70%;
         }
-        .continue-shopping {
-            position: absolute;
-            left: 50%;
-            top: 602px;
-            transform: translateX(-50%);
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        .detail-label {
+            font-size: 16px;
+            color: #171A1F;
+        }
+        .detail-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #171A1F;
+        }
+        .order-items {
+            margin: 20px auto;
+            width: 70%;
+        }
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid #DEE1E6;
+        }
+        .order-item img {
+            width: 100px;
+            height: 60px;
+            margin-right: 20px;
+        }
+        .item-details {
+            flex: 1;
+        }
+        .item-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #171A1F;
+        }
+        .item-description {
+            font-size: 12px;
+            color: #171A1F;
+        }
+        .item-quantity {
+            background: #F3F4F6;
+            border-radius: 14px;
+            padding: 4px 8px;
+            font-size: 12px;
+            color: #323842;
+            text-align: center;
+        }
+        .item-price {
+            font-size: 14px;
+            font-weight: 700;
+            color: #171A1F;
+        }
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .button-group button {
             background: #565E6D;
             padding: 9px 16px;
             color: white;
             font-size: 16px;
-            line-height: 26px;
-            text-align: center;
+            border: none;
             cursor: pointer;
         }
-        .order-line, .total, .order-number, .payment-method, .customer, .date {
-            position: absolute;
-            color: #171A1F;
-            font-size: 16px;
-            line-height: 26px;
-        }
-        .order-line {
-            left: 24px;
-            top: 312px;
-        }
-        .total {
-            left: 60px;
-            top: 240px;
-        }
-        .order-number {
-            left: 60px;
-            top: 189px;
-        }
-        .payment-method {
-            left: 60px;
-            top: 119px;
-        }
-        .customer {
-            left: 60px;
-            top: 70px;
-        }
-        .date {
-            left: 60px;
-            top: 24px;
-        }
-        .value {
-            position: absolute;
-            text-align: right;
-            color: #171A1F;
-            font-size: 16px;
-            font-family: Montserrat, sans-serif;
-            font-weight: 700;
-            line-height: 26px;
-        }
-        .value.order-number {
-            left: 445px;
-            top: 189px;
-        }
-        .value.payment-method, .value.customer, .value.date {
-            left: 443px;
-        }
-        .value.payment-method {
-            top: 116px;
-        }
-        .value.customer {
-            top: 70px;
-        }
-        .value.date {
-            top: 24px;
-        }
-        .order-items {
-            position: relative;
-        }
-        .order-item {
-            position: absolute;
-            left: 204px;
-            top: 356px;
-            color: #171A1F;
-            font-size: 16px;
-            font-family: Poppins, sans-serif;
-            font-weight: 700;
-            line-height: 26px;
-        }
-        .order-item-description {
-            position: absolute;
-            left: 204px;
-            top: 382px;
-            color: #171A1F;
-            font-size: 12px;
-            line-height: 20px;
-        }
-        .order-item-price {
-            position: absolute;
-            left: 510px;
-            top: 385px;
-            text-align: right;
-            color: #171A1F;
-            font-size: 14px;
-            font-weight: 700;
-            line-height: 22px;
-        }
-        .order-item-quantity {
-            position: absolute;
-            left: 204px;
-            top: 408px;
-            background: #F3F4F6;
-            border-radius: 14px;
-            padding: 4px 8px;
-            color: #323842;
-            font-size: 12px;
-            line-height: 20px;
-            text-align: center;
-        }
-        .order-item img {
-            position: absolute;
-            left: 24px;
-            width: 164px;
-            height: 100px;
-        }
-        .order-item:nth-child(2) img {
-            top: 346px;
-        }
-        .order-item:nth-child(3) img {
-            top: 466px;
-        }
-        .divider {
-            position: absolute;
-            width: 512px;
-            border: 1px #DEE1E6 solid;
-        }
-        .divider.top {
-            left: 24px;
-            top: 168px;
+        .main-img {
+            display: block;
+            margin: 0 auto 20px;
         }
         .divider.bottom {
-            left: 24px;
-            top: 291px;
+            border: 1px #DEE1E6 solid;
+            margin-bottom: 15px;
         }
+        .order-line{
+            margin-bottom: 20px;
+        }
+        .button-group button.go-shopping {
+            background: white;
+            color: #565E6D;
+            border: 2px solid #565E6D;
+            font-weight: border;
+        }
+        .button-group button.order-detail {
+            background: white;
+            color: #565E6D;
+            border: 2px solid #565E6D;
+            font-weight: border;
+        }
+        .button-group button:hover {
+            background: #565E6D;
+            color: white;
+        }
+        i{
+            width: 18px;
+        }
+       
     </style>
 </head>
 <body>
     <div class="container">
-        <div><img src="https://via.placeholder.com/321x283" alt="Product Image"></div>
-        <div class="thank-you">Thank you for your purchase! 🎉</div>
-        <div class="confirmation">You will receive a confirmation letter through your email</div>
+        <img class="main-img" src="{{ MEDIA_URL }}orders/order_done(upklyak).jpg" alt="Order_done Image" style="width: 321px; height: 295px;">
+        <div class="thank-you">주문완료 되었습니다. 🎉</div>
         <div class="order-details">
-            <div class="continue-shopping">Continue shopping</div>
-            <div class="order-line">Order Line</div>
+            <div class="detail-row">
+                <div class="detail-label"><i class="fa-solid fa-calendar-days"></i>&nbsp;날짜</div>
+                <div class="detail-value">{{order.order_date|date:"y-m-d"}}</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label"><i class="fa-regular fa-user"></i>&nbsp;고객명</div>
+                <div class="detail-value">{{user}}</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label"><i class="fa-solid fa-credit-card"></i>&nbsp;결제수단</div>
+                <div class="detail-value">
+                    <img class="paymethod-img" src="{{ MEDIA_URL }}orders/payment_icon_yellow_small.png" alt="kakaoPay Image"style="width: 60px; height: 24px;"  >
+                </div>
+            </div>
             <div class="divider bottom"></div>
-            <div class="order-items">
-                <div class="order-item">
-                    <img src="https://via.placeholder.com/164x100" alt="Product Image">
-                    <div class="order-item-name">Product's name</div>
-                    <div class="order-item-description">Incididunt esse ea exercit</div>
-                    <div class="order-item-price">$73</div>
-                    <div class="order-item-quantity">x3 Items</div>
-                </div>
-                <div class="order-item" style="top: 476px;">
-                    <img src="https://via.placeholder.com/164x100" alt="Product Image">
-                    <div class="order-item-name">Product's name</div>
-                    <div class="order-item-description">Incididunt esse ea exercit</div>
-                    <div class="order-item-price">$50</div>
-                    <div class="order-item-quantity">x4 Items</div>
-                </div>
+            <div class="detail-row">
+                <div class="detail-label"><i class="fa-solid fa-receipt"></i>&nbsp;주문번호</div>
+                <div class="detail-value">{{ order.order_number }}</div>
             </div>
-            <div class="order-number">Order Number</div>
-            <div class="value order-number">586789963</div>
-            <div class="value" style="left: 477px; top: 235px; font-size: 24px; line-height: 36px;">$273</div>
-            <div class="divider top"></div>
-            <div class="payment-method">Payment Method</div>
-            <div class="value payment-method">
-                <img src="https://via.placeholder.com/45x31" alt="Payment Icon">
+            <div class="detail-row">
+                <div class="detail-label"><i class="fa-solid fa-sack-dollar"></i>&nbsp;총 결제금액</div>
+                <div class="detail-value">{{order.total_price|intcomma}}원</div>
             </div>
-            <div class="customer">Customer</div>
-            <div class="value customer">John Miller</div>
-            <div class="date">Date</div>
-            <div class="value date">27/04/2022</div>
-            <div class="total">Total</div>
+            <div class="divider bottom"></div>
+        </div>
+        <div class="order-items">
+            <div class="order-line">Order Line</div>
+            {% for item in order.items %}
+            <div class="order-item">
+                <img src="{{ item.image_url }}" alt="Item Image">
+                <div class="item-details">
+                    <div class="item-name">{{ item.name }}</div>
+                    <div class="item-description">{{ item.description }}</div>
+                    <div class="item-quantity">x{{ item.quantity }}</div>
+                </div>
+                <div class="item-price">{{ item.price|intcomma }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="button-group">
+            <form action="\" method="post">
+                {% csrf_token %}
+                <button class="go-shopping">계속 쇼핑하기</button>
+            </form>
+            <form action="\" method="post">
+                {% csrf_token %}
+                <button class="order-detail">주문 상세보기</button>
+            </form>
         </div>
     </div>
 </body>

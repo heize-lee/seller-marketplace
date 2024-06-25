@@ -285,7 +285,7 @@
       document.getElementById('total_price_head').textContent ='Total price  ' + (Number(document.querySelector('label[for="cnt"]').textContent ) * {{product.product_price}}).toLocaleString() + '원'
       document.getElementById('total_price').value = (Number(document.querySelector('label[for="cnt"]').textContent ) * {{product.product_price}})
     });
-    
+
     document.getElementById('minus_btn').addEventListener('click',function(){
       cnt = document.querySelector('label[for="cnt"]').textContent
       if (cnt>1){

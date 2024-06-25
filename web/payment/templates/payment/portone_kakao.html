@@ -10,16 +10,31 @@
 <body>
     <!-- <button onclick="requestPay()">결제 등록</button> -->
     <script>
-         async function requestPay_billings(){
-                const response = await PortOne.requestPayment({
+        const isDirectPurchase = "{{ is_direct_purchase }}" === "True";
+
+        async function requestPay_billings(){
+            
+            let orderName = "";
+            let totalPrice = "";
+
+            if (isDirectPurchase) {
+                orderName = "{{ orderName }}";
+                totalPrice = "{{ total_price }}";
+            }
+            else {
+                orderName = "{{ orderName }}";
+                totalPrice = "{{ payment_total_price }}";
+            }
+            console.log(isDirectPurchase);
+            const response = await PortOne.requestPayment({
                 // Store ID 설정
                 storeId: "{{storeId}}",
                 // 채널 키 설정
                 channelKey: "{{channelKey}}",
                 paymentId: `payment-${crypto.randomUUID()}`,
                 orderName: "{{orderName}}",
-                // 금액 백엔드 개발 후 추가
-                totalAmount: 80000, 
+                // 금액 백엔드 개발 후 추가  total_price
+                totalAmount: totalPrice, 
                 currency: "CURRENCY_KRW",
                 payMethod: "EASY_PAY",
             });
@@ -29,8 +44,14 @@
             try {
                 const serverResponse = await axios.post('/payment/handle_kakao_payment/', {
                     paymentId: response.paymentId,
-
                     // 필요한 추가 데이터를 여기에 포함
+
+                    totalPrice: "{{ payment_total_price}}", 
+                    orderName: "{{orderName}}",
+                    quantity: "{{quantity}}",
+                    isDirectPurchase: "{{is_direct_purchase}}",
+
+
                     
                 });
 
