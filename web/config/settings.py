@@ -151,15 +151,21 @@ db_password = os.getenv("DB_PASSWORD")
 
 DATABASES = {
 
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'seller_ljh',
+    #     'USER': 'postgres',
+    #     'PASSWORD': db_password,
+    #     'HOST': 'hanslab.org',  # 또는 PostgreSQL 서버의 IP 주소 hanslab.org
+    #     'PORT': '25432',       # PostgreSQL의 기본 포트 번호
+    # }
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'seller_ljh',
-        'USER': 'postgres',
-        'PASSWORD': db_password,
-        'HOST': 'hanslab.org',  # 또는 PostgreSQL 서버의 IP 주소 hanslab.org
-        'PORT': '25432',       # PostgreSQL의 기본 포트 번호
-    }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+        }
 }
+
+
 
 
 
