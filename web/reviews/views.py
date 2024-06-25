@@ -16,11 +16,6 @@ from django.urls import reverse_lazy, reverse
 #     model = Review
 #     fields = ['rating','comment','image']
 
-from django.shortcuts import render
-
-def review_list(request, section):
-    # 로직 구현
-    return render(request, 'reviews/review_list.html', {'section': section})
 
 def ReviewCreate(request):
     
@@ -69,7 +64,9 @@ def ReviewCreate(request):
          'product':product,
         }
     )
+from django.contrib.auth.decorators import login_required
 #리뷰삭제
+@login_required 
 @require_http_methods(["DELETE"])
 def delete_review(request, review_id):
     review = get_object_or_404(Review, pk=review_id)
@@ -82,6 +79,7 @@ def delete_review(request, review_id):
     
 
 #리뷰수정
+@login_required 
 def put_review(request, review_id):
     review = get_object_or_404(Review, pk=review_id)
     
@@ -142,38 +140,3 @@ def review_list(request,section):
             'review':review
         }
     )
-# from django.shortcuts import get_object_or_404
-# def ReviewCreate(request,order_id):
-#     obj = get_object_or_404(Order, id=order_id, user=request.user)
-
-#     if request.method == 'POST':
-#         form = ReviewCreateForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return HttpResponse('처리완료')
-#     else:
-#         form = ReviewCreateForm()
-
-#     return render(
-#         request,
-#         'reviews/review_form.html',
-#         {'form':form,
-#          'product':product
-#         }
-#     )
-  
-# 리뷰작성 유효성 검사 '/reviews/create/<int:order_id>' or '/product_detail/product_id/' 리다이렉트
-# views.detail
-# def review_create_from(request):
-#     if request.user.is_authenticated:
-#         user=request.user
-#         product_id = request.POST['product']
-        # order_id = Order.objects.fillter(user=request.user,product_id=product_id)
-        # product = Product.objects.get(pk=product_id)
-        # if not order_id:
-        #      return redirect('/product_detail/product_id/') 
-        # if Review.objects.filter(order_id=order_id).exists():
-        #      return redirect('/product_detail/product_id/') 
-        # return redirect('/reviews/create/<int:order_id>')
-        # return redirect('/create/')
-  
