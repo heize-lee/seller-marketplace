@@ -233,7 +233,7 @@
                     <h2>결제정보</h2>
                     <div>
                         <span class="order_summary_name"> 작품금액 </span>
-                        <span id="payment_total_price" class="summary_price">{{ payment_total_price|intcomma }}</span>
+                        <span id="payment_total_price" class="summary_price">{{ payment_total_price|intcomma }}원</span>
                     </div>
                     <div>
                         <span class="order_summary_name">배송비</span>
@@ -241,7 +241,7 @@
                     </div>
                     <div>
                         <strong>최종 결제 금액</strong>
-                        <strong id="pay_delv_total" class="summary_total_price">{{ payment_total_price|intcomma }}</strong>
+                        <strong id="pay_delv_total" class="summary_total_price">{{ payment_total_price|intcomma }}원</strong>
                     </div>
                     <form action="" method="post">
                         {% csrf_token %}
