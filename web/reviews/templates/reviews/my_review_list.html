@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block content %}
+
+<style>
+    .product_name{
+        color: #171A1F;
+        font-size: 14px;
+        font-family: Poppins;
+        font-weight: 700;
+        line-height: 22px;
+        word-wrap: break-word
+    }
+    a{
+        text-decoration-line: none;
+    }
+</style>
+<div class="mypage-container">
+    {% include 'accounts/navigation.html' %}
+    <div class="content">
+        <h1>작성 후기</h1>
+    {% for i in review %}
+        <div style="display: flex; margin-bottom: 10px;">
+            <img src="{{i.product.product_img.url}}" alt="" style="width: 100px; height: 100px;">
+            <div><a class="product_name" href="{% url 'product:product_detail' pk=i.product.pk %}">{{i.product.product_name}}</a><p style="justify-content: center;">{{i.comment}}</p></div>
+            <a href="/reviews/update/{{i.id}}/?product={{i.product.product_id}}" style="margin-left: auto;">수정하기</a>
+            <!-- <div style="margin-top: auto;">{{i.product.product_price|intcomma}}원</div> -->
+        </div>
+    {% endfor %}
+    </div>
+</div>
+{% endblock %}

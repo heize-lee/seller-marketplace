@@ -1,64 +1,26 @@
 from django.shortcuts import render, redirect
+from django.views import View
 from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 import uuid
 import requests
 import json
 import os
 import dotenv
 import urllib.parse
-
+from cart.models import Cart
+from products.models import Product
+from orders.models import Order, OrderItems
+from .models import Payment
 from django.views.decorators.csrf import csrf_exempt
-from django.views import View
+from django.utils import timezone
+from django.db import transaction
+
 
 from .services import SampleService
 
 # Create your views here.
-# 카카오페이 java 예제코드 > python
-class ReadyView(View):
-    def get(self, request, agent, open_type):
-        service = SampleService()
-        ready_response = service.ready(agent, open_type)
-
-        if agent == "mobile":
-            return redirect(ready_response.next_redirect_mobile_url)
-
-        if agent == "app":
-            context = {"webviewUrl": f"app://webview?url={ready_response.next_redirect_app_url}"}
-            return render(request, 'payment/ready.html', context)
-
-        context = {"response": ready_response}
-        return render(request, f"{agent}/{open_type}/ready.html", context)
-    
-    def post(self, request, agent, open_type):
-        service = SampleService()
-        ready_response = service.ready(agent, open_type)
-
-        if agent == "mobile":
-            return redirect(ready_response.next_redirect_mobile_url)
-
-        if agent == "app":
-            context = {"webviewUrl": f"app://webview?url={ready_response.next_redirect_app_url}"}
-            return render(request, 'payment/ready.html', context)
-
-        context = {"response": ready_response}
-        return render(request, f"{agent}/{open_type}/ready.html", context)
-
-class ApproveView(View):
-    def get(self, request, agent, open_type):
-        pg_token = request.GET.get("pg_token")
-        service = SampleService()
-        approve_response = service.approve(pg_token)
-        context = {"response": approve_response}
-        return render(request, f"{agent}/{open_type}/approve.html", context)
-
-class CancelView(View):
-    def get(self, request, agent, open_type):
-        return render(request, f"{agent}/{open_type}/cancel.html")
-
-class FailView(View):
-    def get(self, request, agent, open_type):
-        return render(request, f"{agent}/{open_type}/fail.html")
-
 
 # 고유한 주문 번호 생성
 order_no = str(uuid.uuid4())
@@ -75,43 +37,8 @@ dotenv.load_dotenv()
 @csrf_exempt
 def portone_payment(request):
     if request.method == "POST":
-            billing_key=os.getenv("billing_key")
-            PORTONE_API_KEY=os.getenv("PORTONE_API_KEY")
-            # print(request.method)
-            # 고객사에서 채번하는 새로운 결제 ID를 만듭니다.
-            payment_id = "test1" # 이 부분은 해당 함수의 Python 구현에 따라 다를 수 있습니다.
-            encoded_payment_id = urllib.parse.quote(payment_id)
-            # 포트원 빌링키 결제 API 호출
-            url = f"https://api.portone.io/payments/{encoded_payment_id}/billing-key"
-            headers = {
-                "Authorization": f"PortOne {PORTONE_API_KEY}",
-                "Content-Type": "application/json",
-            }
-
-            # 고객 정보와 요청 바디 구성
-            data = {
-                "billingKey": billing_key,
-                "orderName": "단건결제",
-                "customer": {
-                    "id": "seller",
-            },  # 실제 고객 정보로 채워야 합니다.
-                "amount": {
-                    "total": 900,
-                },
-                "currency": "KRW",
-            }
-            # v2의 API 키 발급 따로 받아야 함
-            # '{"type":"INVALID_REQUEST","message":"Invalid value for: body\\nexpected \'\\"\', offset: 0x0000000f, buf:\\n+----------+-------------------------------------------------+------------------+\\n|          |  0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f | 0123456789abcdef |\\n+----------+-------------------------------------------------+------------------+\\n| 00000000 | 7b 22 62 69 6c 6c 69 6e 67 4b 65 79 22 3a 20 6e | {\\"billingKey\\": n |\\n| 00000010 | 75 6c 6c 2c 20 22 6f 72 64 65 72 4e 61 6d 65 22 | ull, \\"orderName\\" |\\n| 00000020 | 3a 20 22 5c 75 63 36 64 34 5c 75 61 63 30 34 20 | : \\"\\\\uc6d4\\\\uac04  |\\n+----------+-------------------------------------------------+------------------+\\nThe original input: {\\"billingKey\\": null, \\"orderName\\": \\"\\\\uc6d4\\\\uac04 \\\\uc774\\\\uc6a9\\\\uad8c \\\\uc815\\\\uae30\\\\uacb0\\\\uc81c\\", \\"customer\\": {\\"id\\": \\"seller\\"}, \\"amount\\": {\\"total\\": 900}, \\"currency\\": \\"KRW\\"}"}'
-
-            response = requests.post(url, headers=headers, json=data)
-
-            # 응답 상태 검사
-            if not response.ok:
-                raise Exception(f"paymentResponse: {response.status_code} {response.text}")
-
-            # 응답 데이터 출력 또는 추가 처리
-            print(response.json())
-            return render(request, "payment/portone_done.html")
+        pass
+     
 
             # url: "https://api.portone.io/billing-keys"
             # method: "post"
@@ -175,139 +102,170 @@ def portone_payment(request):
 @csrf_exempt
 def kakao_payment(request):
     user = request.user
-    if request.method == "POST":
-            billing_key=os.getenv("billing_key")
-            PORTONE_API_KEY=os.getenv("PORTONE_API_KEY")
-            # print(request.method)
-            # 고객사에서 채번하는 새로운 결제 ID를 만듭니다.
-            payment_id = "test1" # 이 부분은 해당 함수의 Python 구현에 따라 다를 수 있습니다.
-            encoded_payment_id = urllib.parse.quote(payment_id)
-            # 포트원 빌링키 결제 API 호출
-            url = f"https://api.portone.io/payments/{encoded_payment_id}/billing-key"
-            headers = {
-                "Authorization": f"PortOne {PORTONE_API_KEY}",
-                "Content-Type": "application/json",
-            }
-
-            # 고객 정보와 요청 바디 구성
-            data = {
-                "billingKey": billing_key,
-                "orderName": "단건결제",
-                "customer": {
-                    "id": "seller",
-            },  # 실제 고객 정보로 채워야 합니다.
-                "amount": {
-                    "total": 900,
-                },
-                "currency": "KRW",
-            }
-            # v2의 API 키 발급 따로 받아야 함
-            # '{"type":"INVALID_REQUEST","message":"Invalid value for: body\\nexpected \'\\"\', offset: 0x0000000f, buf:\\n+----------+-------------------------------------------------+------------------+\\n|          |  0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f | 0123456789abcdef |\\n+----------+-------------------------------------------------+------------------+\\n| 00000000 | 7b 22 62 69 6c 6c 69 6e 67 4b 65 79 22 3a 20 6e | {\\"billingKey\\": n |\\n| 00000010 | 75 6c 6c 2c 20 22 6f 72 64 65 72 4e 61 6d 65 22 | ull, \\"orderName\\" |\\n| 00000020 | 3a 20 22 5c 75 63 36 64 34 5c 75 61 63 30 34 20 | : \\"\\\\uc6d4\\\\uac04  |\\n+----------+-------------------------------------------------+------------------+\\nThe original input: {\\"billingKey\\": null, \\"orderName\\": \\"\\\\uc6d4\\\\uac04 \\\\uc774\\\\uc6a9\\\\uad8c \\\\uc815\\\\uae30\\\\uacb0\\\\uc81c\\", \\"customer\\": {\\"id\\": \\"seller\\"}, \\"amount\\": {\\"total\\": 900}, \\"currency\\": \\"KRW\\"}"}'
-
-            response = requests.post(url, headers=headers, json=data)
-
-            # 응답 상태 검사
-            if not response.ok:
-                raise Exception(f"paymentResponse: {response.status_code} {response.text}")
-
-            # 응답 데이터 출력 또는 추가 처리
-            print(response.json())
-            return render(request, "payment/portone_done.html")
-
-
-    #     url = "https://open-api.kakaopay.com/online/v1/payment/ready"
-    #     headers = {
-    #         'Authorization': "KakaoAK " + "fe83a8063428f1aaa8bde37f101ec1a4",
-    #         'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
-    #     }
-    #     params = {
-    #         'cid': "TC0ONETIME",
-    #         'partner_order_id': order_no,
-    #         'partner_user_id': user,
-    #         'item_name': '포인트',
-    #         'quantity': 1,
-    #         'total_amount': 0,
-    #         'vat_amount': 200,
-    #         'tax_free_amount': 0,
-    #         'approval_url': 'http://localhost:8080', # 결제 성공 시 이동 url
-    #         'fail_url': 'http://localhost:8080',    # 결제 취소 시 이동 url
-    #         'cancel_url': 'http://localhost:8080', # 결제 실패 시 이동 url
-    #     }
-    #     response = requests.post(url, params=params, headers=headers)
-    #     if response.status_code == 200:
-    #         response_data = response.json()
-    #         next_redirect_pc_url = response_data.get('next_redirect_pc_url')
-    #         return redirect(next_redirect_pc_url)
-    #     else:
-    #         return render(request, 'payment/kakao_error.html', {'error': '카카오페이 결제 준비 중 오류가 발생했습니다.'})
-    #     # response = json.loads(response.text)
-    #     # return redirect(response) 
-    # return render(request, 'orders:order_done.html', )
+    cart = Cart.objects.filter(user=user)
+    total_price = request.POST.get('total-price')
+    quantity = request.POST.get('quantity')
+    storeId=os.getenv("storeId")
+    channelKey=os.getenv("channelKey")
     
-        # POST /online/v1/payment/ready HTTP/1.1
-        # Host: open-api.kakaopay.com
-        # Authorization: SECRET_KEY ${SECRET_KEY}
-        # Content-Type: application/json
-        # ####
-        # curl --location 'https://open-api.kakaopay.com/online/v1/payment/ready' \
-        # --header 'Authorization: SECRET_KEY ${SECRET_KEY}' \
-        # --header 'Content-Type: application/json' \
-        # --data '{
-        #         "cid": "TC0ONETIME",
-        #         "partner_order_id": "partner_order_id",
-        #         "partner_user_id": "partner_user_id",
-        #         "item_name": "초코파이",
-        #         "quantity": "1",
-        #         "total_amount": "2200",
-        #         "vat_amount": "200",
-        #         "tax_free_amount": "0",
-        #         "approval_url": "https://developers.kakao.com/success",
-        #         "fail_url": "https://developers.kakao.com/fail",
-        #         "cancel_url": "https://developers.kakao.com/cancel"
-        #     }'
+    
 
+    if quantity:
+        is_direct_purchase = True # 바로구매인 경우를 나타내는 플래그
+        product_id = request.POST.get('product')
+        product = Product.objects.get(product_id=product_id)
+        orderName = product
+
+        context={
+        "storeId":storeId,
+        "channelKey":channelKey,
+        "orderName": orderName,
+        "payment_total_price":total_price,
+        "total_price": total_price,
+        "quantity": quantity,
+        'is_direct_purchase': is_direct_purchase
+
+    }
+        
+
+    else:
+        is_direct_purchase = False # 일반 카트 구매를 나타내는 플래그
+        remaining_cart_count = len(cart)-1
+        first_cart =  cart[0].product.product_name
+        payment_total_price = sum(i.total_price for i in cart)
+        total_price = payment_total_price
+        amount = sum(i.amount for i in cart)
+
+
+        if remaining_cart_count > 0:
+            orderName = f"{first_cart} 외 {remaining_cart_count}건"
+        elif remaining_cart_count == 0:
+            orderName = first_cart
+        else:
+            raise ValueError('카트가 비어있습니다.')
+        
+        context={
+        "storeId":storeId,
+        "channelKey":channelKey,
+        "cart": cart,
+        "orderName": orderName,
+        "payment_total_price":payment_total_price,
+        "total_price": total_price,
+        "quantity": amount,
+        'is_direct_purchase': is_direct_purchase
+
+    }
+
+    print(request.method)
+    
+    
+
+    
+    return render(request, "payment/portone_kakao.html",context)
+
+@transaction.atomic
 @csrf_exempt
-def billings(request):
-    # 실제 로직은 위에서 billingkey를 발급받고 DB에 저장
-    # 경매가 완료되면 아래 프로세스 실행되도록 하면 되겠습니다!
+def handle_kakao_payment(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        payment_id = data.get('paymentId')
+        total_price = data.get('totalPrice')
+        orderName = data.get('orderName')
+        quantity = data.get('quantity')
+        isDirectPurchase = data.get('isDirectPurchase')
+        user = request.user
+        current_time = timezone.now()
+        formatted_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
 
-    billing_key=os.getenv("billing_key")
-    PORTONE_API_KEY=os.getenv("PORTONE_API_KEY")
-    # print(request.method)
-    # 고객사에서 채번하는 새로운 결제 ID를 만듭니다.
-    payment_id = "test1234" # 이 부분은 해당 함수의 Python 구현에 따라 다를 수 있습니다.
-    encoded_payment_id = urllib.parse.quote(payment_id)
-    # 포트원 빌링키 결제 API 호출
-    url = f"https://api.portone.io/payments/{encoded_payment_id}/billing-key"
-    headers = {
-        "Authorization": f"PortOne {PORTONE_API_KEY}",
-        "Content-Type": "application/json",
-    }
 
-    # 고객 정보와 요청 바디 구성
-    data = {
-        "billingKey": billing_key,
-        "orderName": "카카오 단건결제",
-        "customer": {
-            "id": "hans",
-    },  # 실제 고객 정보로 채워야 합니다.
-        "amount": {
-            "total": 8900,
-        },
-        "currency": "KRW",
-    }
-    # v2의 API 키 발급 따로 받아야 함
-    # '{"type":"INVALID_REQUEST","message":"Invalid value for: body\\nexpected \'\\"\', offset: 0x0000000f, buf:\\n+----------+-------------------------------------------------+------------------+\\n|          |  0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f | 0123456789abcdef |\\n+----------+-------------------------------------------------+------------------+\\n| 00000000 | 7b 22 62 69 6c 6c 69 6e 67 4b 65 79 22 3a 20 6e | {\\"billingKey\\": n |\\n| 00000010 | 75 6c 6c 2c 20 22 6f 72 64 65 72 4e 61 6d 65 22 | ull, \\"orderName\\" |\\n| 00000020 | 3a 20 22 5c 75 63 36 64 34 5c 75 61 63 30 34 20 | : \\"\\\\uc6d4\\\\uac04  |\\n+----------+-------------------------------------------------+------------------+\\nThe original input: {\\"billingKey\\": null, \\"orderName\\": \\"\\\\uc6d4\\\\uac04 \\\\uc774\\\\uc6a9\\\\uad8c \\\\uc815\\\\uae30\\\\uacb0\\\\uc81c\\", \\"customer\\": {\\"id\\": \\"hans\\"}, \\"amount\\": {\\"total\\": 8900}, \\"currency\\": \\"KRW\\"}"}'
+        # payment_id DB에 저장
+        payment = Payment.objects.create(
+            pay_date = formatted_time,
+            payment_uuid = payment_id, # 결제uuid 결제취소 시 사용
+            pay_method = "kakaoPay",
+            #******** 결제예정금액으로 업데이트 예정 ********
+            pay_total_price = total_price, 
+            pay_confirm = True,
+            user=request.user
+            )  # 마지막 카트 아이디 설정
+        payment.save()
+        
+        
+        # 주문번호 - 매일초기화
+        # YYMMDD(6자리)+분류(1자리)+업무절차 코드(3자리)
+        # 시간(6)
+        # 분류(1) category_id / 카트수량
+        # 업무절차(4) 처리프로세스(1) + order_id(3)
+        # 1 처리중
+        # 2 처리완료
+        # 3 취소/오류
 
-    response = requests.post(url, headers=headers, json=data)
+        # order테이블에 cart저장
+        cart = Cart.objects.filter(user=user)
+        
 
-    # 응답 상태 검사
-    if not response.ok:
-        raise Exception(f"paymentResponse: {response.status_code} {response.text}")
+        payment = Payment.objects.filter(user=user).last()
+        amount = sum(one.amount for one in cart)
+        if isDirectPurchase == 'True':
+            product_name = data.get('orderName')
+            product = Product.objects.get(product_name=product_name)
+            order = Order.objects.create(
+                user = user,
+                product = product,
+                payment = payment,
+                order_date = current_time,
+                amount = quantity,
+                total_price = payment.pay_total_price,
+                payment_total_price = payment.pay_total_price,
+            )
+        else:
+            order = Order.objects.create(
+                user = user,
+                product = cart[0].product,
+                payment = payment,
+                order_date = current_time,
+                amount = amount,
+                total_price = payment.pay_total_price,
+                payment_total_price = payment.pay_total_price,
+            )
 
-    # 응답 데이터 출력 또는 추가 처리
-    print(response.json())
-    return render(request, "index.html")
+        
+        code_current_date = current_time.strftime("%y%m%d")
+        code_cart_count = len(cart)
+        # 업무절차 코드 생성 (2는 고정, order_id는 3자리로 변환)
+        process_code = f"2{str(order.id).zfill(3)}"
+        
+        # 주문번호 생성 및 업데이트
+        order_number = f"{code_current_date}{code_cart_count}{process_code}"
+      
+        order.order_number = int(order_number)
+        order.save()
+
+        # 카트 비어있다면
+        # 카트 1개
+        # 카트 여러개
+        for one in cart: 
+            product_id = one.product
+            category = one.product.category.category_name
+            order_items = OrderItems.objects.create(
+                user=user,
+                order = order,
+                product = product_id,
+                category = category,
+                amount = one.amount,
+                total_price = one.total_price,
+            )
+            order_items.save()
+
+        # # 주문 생성 후 카트 비우기
+        cart.delete()   
+        return JsonResponse({'success': True})
+    else:
+        return JsonResponse({'success': False})
+
+
+   
+
 
 # tossPay API 연결
 @csrf_exempt

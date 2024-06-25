@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}  <!-- humanize 템플릿 태그를 로드 -->
+
+{% block title %}Order List{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% include 'accounts/navigation.html' %}
+    <div class="content">
+        <div class="order-container">
+            <div class="order-header">
+                <h1>Purchase history</h1>
+                <p>Check the status of recent orders, manage returns, and discover similar products.</p>
+            </div>
+            {% if orders %}
+                {% for order in orders %}
+                <div class="order-summary">
+                    <div class="order-info">
+                        <span class="order-number">Order #{{ order.order_number }}</span>
+                        <span class="delivery-date"> Delivery on {{ order.order_date }}</span>
+                    </div>
+                    <div class="order-actions">
+                        <a href="#">Manage order</a>
+                        <a href="#">View invoice</a>
+                    </div>
+                </div>
+                <div class="order-details">
+                    {% for item in order.orderitems_set.all %}
+                    <div class="product-detail">
+                        {% if item.product and item.product.product_img %}
+                        <img class="product-image" src="{{ item.product.product_img.url }}" alt="Product image"/>
+                        {% else %}
+                        <img class="product-image" src="https://via.placeholder.com/148x128" alt="Product image"/>
+                        {% endif %}
+                        <div class="product-info">
+                            <span class="product-name">{{ item.product.product_name }}</span> <!-- Product name -->
+                            <span class="product-quantity">Quantity: {{ item.amount }}</span> <!-- Quantity -->
+                            <span class="product-price">{{ item.total_price|intcomma }}원</span> <!-- Price in 원 with comma -->
+                        </div>
+                        <div class="product-actions">
+                            <button class="buy-again">Buy again</button>
+                            <button class="view-product">View product</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <hr class="order-divider"/>
+                {% endfor %}
+            {% else %}
+                <p>주문내역이 없습니다!</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

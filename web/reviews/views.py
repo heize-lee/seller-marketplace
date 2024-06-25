@@ -1,7 +1,9 @@
+from django.conf import settings
 from django.http import HttpResponse, HttpResponseForbidden,JsonResponse
 from django.shortcuts import redirect, render
 from django.views.generic import CreateView, UpdateView
 from .models import Review,Product
+from orders.models import Order
 from .forms import ReviewCreateForm
 from django.core.exceptions import PermissionDenied
 from django.contrib import messages
@@ -27,14 +29,14 @@ def ReviewCreate(request):
             if Review.objects.filter(user=request.user, product=product).exists():
                 messages.error(request, "이미 작성된 리뷰가 있습니다.")
                 return redirect('/product/'+ product_id,)  # 제품 상세 페이지로 리디렉션
-            
+            if not Order.objects.filter(user=request.user, product=product):
+                messages.error(request, "구매한 상품만 후기작성 가능합니다.")
+                return redirect('/product/'+product_id)
     if request.method == 'POST':
         form = ReviewCreateForm(request.POST,request.FILES)
          
         product_id = request.POST['product']
         product = Product.objects.get(pk=product_id)
-        
-            
         if request.POST['rating']=='0':
             form.add_error('rating', ' 평점을 선택해주세요.')
             if request.POST['comment']=='':
@@ -52,7 +54,7 @@ def ReviewCreate(request):
             # if 'image' in request.FILES:
             #     review.image = request.FILES['image']
             review.save()
-            return HttpResponse('처리완료')
+            return redirect('/product/'+product_id)
         
        
     return render(
@@ -62,6 +64,9 @@ def ReviewCreate(request):
          'product':product,
         }
     )
+from django.contrib.auth.decorators import login_required
+#리뷰삭제
+@login_required 
 @require_http_methods(["DELETE"])
 def delete_review(request, review_id):
     review = get_object_or_404(Review, pk=review_id)
@@ -72,22 +77,9 @@ def delete_review(request, review_id):
     else:
         return JsonResponse({'error': '리뷰를 삭제할 권한이 없습니다.'}, status=403)
     
-# class ReviewUpdateView(UpdateView):
-#     model = Review
-#     form_class = ReviewCreateForm
-#     template_name = 'review_form.html'
-#     success_url = reverse_lazy('product:product_detail')
 
-#     def get_context_data(self, kwargs):
-#         context = super().get_context_data(kwargs)
-#         product_id = self.request.GET.get('product')
-#         if product_id:
-#             context['product'] = get_object_or_404(Product, pk=product_id)
-#         return context
-
-#     def get_success_url(self):
-#         return '/product/' 
-
+#리뷰수정
+@login_required 
 def put_review(request, review_id):
     review = get_object_or_404(Review, pk=review_id)
     
@@ -96,6 +88,26 @@ def put_review(request, review_id):
         product_id = request.POST['product']
         product = Product.objects.get(pk=product_id)
         
+        if request.POST['rating']=='0':
+            form.add_error('rating', ' 평점을 선택해주세요.')
+            if request.POST['comment']=='':
+                form.add_error('comment', ' 후기를 작성해주세요.')
+            return render(request, 'reviews/review_update.html', {'form': form, 'product': product ,'review':review})
+        if request.POST['comment']=='':
+            form.add_error('comment', ' 후기를 작성해주세요.')
+            return render(request, 'reviews/review_update.html', {'form': form, 'product': product,'review':review})
+        # try:
+        #     reviews = Review.objects.filter(product_id=product.product_id)
+        #     cnt = reviews.count()
+        #     if cnt > 0 :
+        #         reviews_rating_mean = sum([i.rating for i in reviews])/cnt
+        #          # 평균 rating 값을 product 모델의 average_rating 필드에 저장
+        #     else:
+        #         reviews_rating_mean = 0
+        #     product.average_rating = reviews_rating_mean
+        #     product.save()
+        # except:
+        #     pass  
         if form.is_valid():
             review = form.save(commit=False)
             review.user = request.user  # 현재 로그인된 사용자
@@ -114,41 +126,17 @@ def put_review(request, review_id):
         'reviews/review_update.html',
         {'form':form,
          'product':product,
-         'review':review
+         'review':review,
+         'MEDIA_URL' : settings.MEDIA_URL
         }
     )
-# from django.shortcuts import get_object_or_404
-# def ReviewCreate(request,order_id):
-#     obj = get_object_or_404(Order, id=order_id, user=request.user)
 
-#     if request.method == 'POST':
-#         form = ReviewCreateForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return HttpResponse('처리완료')
-#     else:
-#         form = ReviewCreateForm()
-
-#     return render(
-#         request,
-#         'reviews/review_form.html',
-#         {'form':form,
-#          'product':product
-#         }
-#     )
-  
-# 리뷰작성 유효성 검사 '/reviews/create/<int:order_id>' or '/product_detail/product_id/' 리다이렉트
-# views.detail
-# def review_create_from(request):
-#     if request.user.is_authenticated:
-#         user=request.user
-#         product_id = request.POST['product']
-        # order_id = Order.objects.fillter(user=request.user,product_id=product_id)
-        # product = Product.objects.get(pk=product_id)
-        # if not order_id:
-        #      return redirect('/product_detail/product_id/') 
-        # if Review.objects.filter(order_id=order_id).exists():
-        #      return redirect('/product_detail/product_id/') 
-        # return redirect('/reviews/create/<int:order_id>')
-        # return redirect('/create/')
-  
+def review_list(request,section):
+    review = Review.objects.filter(user=request.user)
+    return render(
+        request,
+        'reviews/my_review_list.html',
+        {
+            'review':review
+        }
+    )

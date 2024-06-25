@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
+from django.conf import settings
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, phone_number, password=None, **extra_fields):
@@ -72,3 +73,16 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+# 배송지 모델
+class DeliveryAddress(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    
+    recipient = models.CharField(max_length=20) # 수령인
+    phone_number = PhoneNumberField(unique=True, blank=False) # 휴대폰
+    destination = models.CharField(max_length=50)  # 배송지명
+    postal_code = models.CharField(max_length=5)  # 우편번호
+    address = models.CharField(max_length=100)  # 주소
+    detail_address = models.CharField(max_length=100)  # 상세주소
+    is_default = models.BooleanField(default=False)  # 기본배송지 설정 여부
+

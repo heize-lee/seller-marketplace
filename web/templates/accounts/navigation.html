@@ -5,24 +5,25 @@
     </div>
     <div class="mypage-menu">
         <div class="mypage-menu-header">
-            <div class="mypage-menu-icon"></div>
             <h2>MY MENU</h2>
         </div>
         <ul>
             <li class="mypage-menu-item">
                 <div class="mypage-menu-item-header">
                     <a href="#"><span class="mypage-icon">🏠</span> 주문배송</a>
-                    <div class="mypage-toggle-icon"></div>
                 </div>
                 <ul class="mypage-submenu">
                     <li><a href="{% url 'mypage_section' section='orders' %}">주문내역</a></li>
-                    <li><a href="{% url 'mypage_section' section='cancellations' %}">취소/환불내역</a></li>
+                <ul class="submenu">
+                    <li><a href="{% url 'orders:order_list' %}">주문내역</a></li>
+                    <!-- <li><a href="{% url 'mypage_section' section='cancellations' %}">취소/환불내역</a></li> -->
                 </ul>
             </li>
-            <li class="mypage-menu-item"><a href="{% url 'mypage_section' section='reviews' %}"><span class="mypage-icon">💬</span> 나의 구매후기</a></li>
-            <li class="mypage-menu-item"><a href="{% url 'mypage_section' section='favorites' %}"><span class="mypage-icon">❤️</span> 관심</a></li>
-            <li class="mypage-menu-item"><a href="{% url 'mypage_section' section='seller_page' %}"><span class="mypage-icon">⚙️</span> 판매자 페이지</a></li>
-            <li class="mypage-menu-item"><a href="{% url 'mypage_section' section='edit_profile' %}"><span class="mypage-icon">⚙️</span> 내 정보 수정</a></li>
+            <li class="menu-item"><a href="{% url 'reviews:review_list' section='reviews' %}"><span class="icon">💬</span> 나의 구매후기</a></li>
+            <!-- <li class="menu-item"><a href="{% url 'mypage_section' section='favorites' %}"><span class="icon">❤️</span> 관심</a></li> -->
+            <!-- <li class="menu-item"><a href="{% url 'mypage_section' section='seller_page' %}"><span class="icon">⚙️</span> 판매자 페이지</a></li> -->
+            <li class="menu-item"><a href="{% url 'mypage_section' section='edit_profile' %}"><span class="icon">⚙️</span> 내 정보 수정</a></li>
+
         </ul>
     </div>
-</div>
+</div> 
